@@ -1,19 +1,42 @@
 package org.cloudbus.blockchain;
 
+import org.cloudbus.blockchain.nodes.MinerNode;
+import org.cloudbus.blockchain.nodes.Node;
+import org.cloudbus.blockchain.transactions.Transaction;
+
 import java.util.ArrayList;
+import java.util.Set;
 
 public class Block {
     private final Block previousBlock;
     private final long timestamp;
-    private final Node miner;
-    private final ArrayList<Transaction> transactionList;
-    private final int size;
+    private final MinerNode miner;
 
-    Block(Block previousBlock, Node miner, ArrayList<Transaction> transactionList, int size){
-        this.previousBlock = previousBlock;
+    private final Set<Transaction> transactionList;
+
+    private final boolean isGenesis;
+    public Block(Block previousBlock, MinerNode miner, Set<Transaction> transactionList){
+        if (!(previousBlock == null)) {
+            this.previousBlock = previousBlock;
+            isGenesis = false;
+        } else {
+            this.previousBlock = null;
+            isGenesis = true;
+        }
         timestamp = System.nanoTime();
         this.miner = miner;
         this.transactionList = transactionList;
-        this.size = size;
+    }
+
+    public Block getPreviousBlock() {
+        return previousBlock;
+    }
+
+    public Set<Transaction> getTransactionList() {
+        return transactionList;
+    }
+
+    public int getSize(){
+        return transactionList.size();
     }
 }
