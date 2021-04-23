@@ -6,8 +6,6 @@ import org.cloudbus.cloudsim.edge.core.edge.EdgeLet;
 
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 
 public class DataTransactionTest {
     private final static Random random = new Random();

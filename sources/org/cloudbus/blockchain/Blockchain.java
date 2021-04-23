@@ -1,19 +1,19 @@
 package org.cloudbus.blockchain;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.NoSuchElementException;
 
 public class Blockchain {
     private ArrayList<Block> ledger;
 
     public Blockchain(ArrayList<Block> ledger){
+        if (!isLedgerValid(ledger)){
+            throw new IllegalArgumentException("This ledger is invalid! Encountered a block that is not linked.");
+        }
         this.ledger = ledger;
     }
 
     public Blockchain(){
-        ledger = new ArrayList<>();
+        ledger = new ArrayList<Block>();
     }
 
     public void addBlock(Block block) throws IllegalArgumentException {
@@ -40,6 +40,15 @@ public class Blockchain {
         return this.ledger.equals(blockchain.ledger);
     }
 
+    public static boolean isLedgerValid(ArrayList<Block> ledger) {
+        for (int i = 0; i < ledger.size()-1; i++) {
+            if (ledger.get(i + 1).getPreviousBlock() != ledger.get(i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public Block getLastBlock(){
         return ledger.get(getLength()-1);
     }
@@ -60,8 +69,8 @@ public class Blockchain {
      * exception.
      * @return
      */
-    public LinkedList<Block> getNMostRecentBlocks(int n, boolean ignoreNonExistent) {
-        LinkedList<Block> list = new LinkedList<>();
+    public ArrayList<Block> getNMostRecentBlocks(int n, boolean ignoreNonExistent) {
+        ArrayList<Block> list = new ArrayList<>();
         for (int i = n; i > 0; i--) {
             try {
                 list.add(ledger.get(getLength()-i));
@@ -73,6 +82,10 @@ public class Blockchain {
             }
         }
         return list;
+    }
+
+    public void setLedger(ArrayList<Block> ledger) {
+        this.ledger = ledger;
     }
 
 }

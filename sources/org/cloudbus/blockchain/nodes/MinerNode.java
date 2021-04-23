@@ -1,6 +1,6 @@
 package org.cloudbus.blockchain.nodes;
 
-public class MinerNode extends Node {
+public class MinerNode extends BaseNode {
 
     // Total number of mined blocks
     private int noOfMinedBlocks;

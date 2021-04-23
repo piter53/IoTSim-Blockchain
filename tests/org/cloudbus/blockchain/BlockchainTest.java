@@ -1,6 +1,7 @@
 package org.cloudbus.blockchain;
 
 import org.cloudbus.blockchain.nodes.MinerNode;
+import org.cloudbus.blockchain.transactions.Transaction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 
+import static org.cloudbus.blockchain.Blockchain.isLedgerValid;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class BlockchainTest {
@@ -17,6 +19,14 @@ public class BlockchainTest {
     @BeforeEach
     void setUp(){
         blockchain = new Blockchain();
+    }
+
+    @Test
+    void testIsLedgerValid(){
+        blockchain = BlockchainTest.generateBlockchainWithNLinkedBlocks(20);
+        assertTrue(isLedgerValid(blockchain.getLedger()));
+        blockchain.getLedger().add(new Block(null, new MinerNode(), new HashSet<Transaction>()));
+        assertFalse(isLedgerValid(blockchain.getLedger()));
     }
 
     public static Blockchain generateBlockchainWithNLinkedBlocks(int n) {
@@ -78,5 +88,7 @@ public class BlockchainTest {
         }
         Blockchain blockchain1 = new Blockchain(chain);
         assertEquals(blockchain1.getLedger(), blockchain.getNMostRecentBlocks(10, true));
+        blockchain = generateBlockchainWithNLinkedBlocks(30);
+        assertThrows(Exception.class, () -> blockchain1.getNMostRecentBlocks(40, false));
     }
 }

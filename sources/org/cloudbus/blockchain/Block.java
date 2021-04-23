@@ -1,10 +1,8 @@
 package org.cloudbus.blockchain;
 
 import org.cloudbus.blockchain.nodes.MinerNode;
-import org.cloudbus.blockchain.nodes.Node;
 import org.cloudbus.blockchain.transactions.Transaction;
 
-import java.util.ArrayList;
 import java.util.Set;
 
 public class Block {
