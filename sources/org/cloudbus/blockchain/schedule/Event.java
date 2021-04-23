@@ -14,7 +14,7 @@ public class Event {
     private final Block block;
 
 
-    private enum EventType{
+    enum EventType{
         CREATION,
         RECEPTION;
     }
