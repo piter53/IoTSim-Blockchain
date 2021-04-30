@@ -76,7 +76,7 @@ public abstract class IoTDevice extends SimEntity {
 			this.sensing(ev);
 			break;
 			
-		case  OsmosisTags.updateIoTBW:
+		case OsmosisTags.updateIoTBW:
 			this.removeFlow(ev);
 			break;
 
@@ -134,7 +134,7 @@ public abstract class IoTDevice extends SimEntity {
 		this.enabled = enabled;
 	}
 	
-	private void sensing(SimEvent ev) {
+	protected void sensing(SimEvent ev) {
 		OsmesisAppDescription app = (OsmesisAppDescription) ev.getData();
 
 		// if the battery is drained,
@@ -169,7 +169,7 @@ public abstract class IoTDevice extends SimEntity {
 		sendNow(flow.getDatacenterId(), OsmosisTags.TRANSMIT_IOT_DATA, flow);		
 	}
 
-	private Flow createFlow(OsmesisAppDescription app) {
+	protected Flow createFlow(OsmesisAppDescription app) {
 		int melId = app.getMelId();
 		int datacenterId = -1;
 		datacenterId = app.getEdgeDcId();					
@@ -207,7 +207,7 @@ public abstract class IoTDevice extends SimEntity {
 		updateBandwidth();	
 	}
 	
-	private void updateBandwidth(){			
+	protected void updateBandwidth(){
 		this.usedBw = this.getBw() / this.flowList.size(); // the updated bw 		
 		for(Flow getFlow : this.flowList){
 			getFlow.updateSourceBw(this.usedBw);

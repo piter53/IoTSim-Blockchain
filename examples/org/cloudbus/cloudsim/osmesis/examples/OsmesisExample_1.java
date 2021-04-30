@@ -103,7 +103,7 @@ public class OsmesisExample_1 {
 		}
 		
 		Log.printLine();		
-		LogPrinter.printEnergyConsumption(topologyBuilder.getSdWanController().getName(), null, topologyBuilder.getSdWanController().getSwitchList(), startTime);		
+		LogPrinter.printEnergyConsumption(topologyBuilder.getSdWanController().getName(), null, topologyBuilder.getSdWanController().getSwitchList(), startTime);
 		Log.printLine();
 		Log.printLine("Simulation Finished!");
 

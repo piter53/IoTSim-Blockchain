@@ -42,139 +42,112 @@ public class OsmosisOrchestrator extends SimEntity {
 	
 	private List<Channel> channelsHistory = new ArrayList<>();
 	
-    public void setDatacenters(List<CloudDatacenter> datacentres){
-    	this.datacentres = datacentres;
-	
-    }
-    
-    public List<CloudDatacenter> getDatacentres() {
-        return datacentres;
-    }	
-	
 	public OsmosisOrchestrator() {
 		super("Osmesis_Orchestrator");
-		this.channelTable = new Hashtable<String, Channel>();	
+		this.channelTable = new Hashtable<String, Channel>();
 		// TODO Auto-generated constructor stub
-	}
-			
-	public List<SDNController> getSdnControllers() {
-		return this.controllers;
-	}
-	
-	public void setSdnControllers(List<SDNController> sdnControllers) {
-		this.controllers= sdnControllers;
-	}
-		
-	public void findDest(){
-	   
-   }
-
-	@Override
-	public void startEntity() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void processEvent(SimEvent ev) {
 		int tag = ev.getTag();
-		
-		switch(tag){		
-		case OsmosisTags.START_TRANSMISSION:		
-			Flow flow = (Flow) ev.getData();			
+//		ev.toString();
+		switch(tag){
+		case OsmosisTags.START_TRANSMISSION:
+			Flow flow = (Flow) ev.getData();
 			transmitFlow(flow);
 			break;
-			case OsmosisTags.SDN_INTERNAL_EVENT: 
-			internalFlowProcess(); 
+			case OsmosisTags.SDN_INTERNAL_EVENT:
+			internalFlowProcess();
 			break;
-		default: 
+		default:
 			System.out.println(this.getName() + ": Unknown event received by "+super.getName()+". Tag:"+ev.getTag());
 			break;
 		}
 	}
 
-	private void transmitFlow(Flow flow) {		
+	private void transmitFlow(Flow flow) {
 		createChannel(flow);
 	}
-	
-	protected void createChannel(Flow flow) { 	
+
+	protected void createChannel(Flow flow) {
 		flowList.add(flow);
 		flow.setStartTime(CloudSim.clock());
-		int flowId = flow.getFlowId();			
-		updateFlowProcessing();		
-		Channel channel = flow.getChannel(); 
-		int src = flow.getOrigin(); 
+		int flowId = flow.getFlowId();
+		updateFlowProcessing();
+		Channel channel = flow.getChannel();
+		int src = flow.getOrigin();
 		int dst = flow.getDestination();
 
-		if(channel == null) {	
-			List<NetworkNIC> nodes = flow.getNodeOnRouteList();			
-			List<Link> links = flow.getLinkList();			
+		if(channel == null) {
+			List<NetworkNIC> nodes = flow.getNodeOnRouteList();
+			List<Link> links = flow.getLinkList();
 			channel = new Channel(flowId, src, dst, nodes, links);
 		}
-				
-		this.channelTable.put(getKey(src, dst, flowId), channel);		
+
+		this.channelTable.put(getKey(src, dst, flowId), channel);
 		channel.initialize();
-		adjustAllChannels(); // all channel get an equal among of BW   		
-		
+		adjustAllChannels(); // all channel get an equal among of BW
+
 		this.channelsHistory.add(channel);
-		channel.addFlowToList(flow);			
+		channel.addFlowToList(flow);
 		channel.addTransmission(flow);
 
-		sendInternalEvent();	
+		sendInternalEvent();
 	}
-	
+
 	protected void internalFlowProcess() {
 		if(updateFlowProcessing()) {
 			sendInternalEvent();
 		}
 	}
-	
-	public boolean updateFlowProcessing() {		
-		boolean needSendEvent = false;			
+
+	public boolean updateFlowProcessing() {
+		boolean needSendEvent = false;
 		LinkedList<Channel> completeChannels = new LinkedList<Channel>();
 		for(Channel ch:channelTable.values()){
-			boolean isCompleted = ch.updateFlowProcessing();						
+			boolean isCompleted = ch.updateFlowProcessing();
 			needSendEvent = needSendEvent || isCompleted;
 			completeChannels.add(ch);
 		}
-		
+
 		if(completeChannels.size() != 0) {
 			updateChannel();
-			processCompleteFlows(completeChannels);		
+			processCompleteFlows(completeChannels);
 		}
 
 		return needSendEvent;
 	}
-	
+
 	protected void processCompleteFlows(List<Channel> channels){
-		for(Channel ch:channels) {												
+		for(Channel ch:channels) {
 			for (Flow flow : ch.getFinishedFlows()){
 				removeCompletedFlows(flow);
 				flow.setTransmissionTime(CloudSim.clock());
 			}
 		}
 	}
-	
-	protected void removeCompletedFlows(Flow flow ){				
-		flow.setFinishTime(CloudSim.clock());				
-		sendNow(OsmesisBroker.brokerID, OsmosisTags.Transmission_SDWAN_ACK, flow);							
+
+	protected void removeCompletedFlows(Flow flow ){
+		flow.setFinishTime(CloudSim.clock());
+		sendNow(OsmesisBroker.brokerID, OsmosisTags.Transmission_SDWAN_ACK, flow);
 	}
-	
+
 	private Channel removeChannel(String key) {
-		Channel ch = this.channelTable.remove(key);		
+		Channel ch = this.channelTable.remove(key);
 		ch.terminate();
-		adjustAllChannels();	
+		adjustAllChannels();
 		return ch;
 	}
-		
+
 	protected void adjustAllChannels() {
 		for(Channel ch:this.channelTable.values()) {
-			ch.adjustSharedBandwidthAlongLink();				
+			ch.adjustSharedBandwidthAlongLink();
 		}
 	}
-		
+
 	private void updateChannel() {
-		List<String> removeCh = new ArrayList<String>();  
+		List<String> removeCh = new ArrayList<String>();
 		for(String key:this.channelTable.keySet()) {
 			Channel ch = this.channelTable.get(key);
 			if(ch.getActiveTransmissionNum() == 0) {
@@ -182,22 +155,22 @@ public class OsmosisOrchestrator extends SimEntity {
 				removeCh.add(key);
 			}
 		}
-		
+
 		for(String key:removeCh) {
 			removeChannel(key);
 		}
 	}
-	
+
 	private String getKey(int origin, int destination) {
 		return origin+"-"+destination;
 	}
-	
+
 	protected String getKey(int origin, int destination, int appId) {
-		//System.out.println(getKey(origin,destination)+"-"+appId); 
+		//System.out.println(getKey(origin,destination)+"-"+appId);
 		// value --> 4-5--1
 		return getKey(origin,destination)+"-"+appId;
 	}
-	
+
 	protected Channel findChannel(int from, int to, int channelId) {
 		// check if there is a pre-configured channel for this application
 		Channel channel = channelTable.get(getKey(from,to, channelId));
@@ -208,36 +181,62 @@ public class OsmosisOrchestrator extends SimEntity {
 		}
 		return channel;
 	}
-	
+
 	protected void sendInternalEvent() {
 		CloudSim.cancelAll(getId(), new PredicateType(OsmosisTags.SDN_INTERNAL_EVENT));
 		if(channelTable.size() != 0) {
-			// More to process. Send event again		
-			double delay = this.nextFinishTime();					
+			// More to process. Send event again
+			double delay = this.nextFinishTime();
 			send(this.getId(), delay, OsmosisTags.SDN_INTERNAL_EVENT);
-		}		
+		}
 	}
 
 	private double nextFinishTime() {
 		double earliestEft = Double.POSITIVE_INFINITY;
 		for(Channel ch:channelTable.values()){
-			
+
 			double eft = ch.nextFinishTime();
 			if (eft<earliestEft){
 				earliestEft=eft;
 			}
 		}
-		
+
 		if(earliestEft == Double.POSITIVE_INFINITY) {
 			throw new IllegalArgumentException("NOS.nextFinishTime(): next finish time is infinite!");
 		}
 		return earliestEft;
-		
+
 	}
 
 	@Override
 	public void shutdownEntity() {
 		// TODO Auto-generated method stub
-		
+
 	}
+
+    public void findDest(){
+
+    }
+
+    @Override
+    public void startEntity() {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void setDatacenters(List<CloudDatacenter> datacentres){
+        this.datacentres = datacentres;
+    }
+
+    public List<CloudDatacenter> getDatacentres() {
+        return datacentres;
+    }
+
+    public List<SDNController> getSdnControllers() {
+        return this.controllers;
+    }
+
+    public void setSdnControllers(List<SDNController> sdnControllers) {
+        this.controllers= sdnControllers;
+    }
 }

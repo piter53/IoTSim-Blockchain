@@ -55,7 +55,7 @@ public class Flow {
 	private int datacenterId;
 	private double flowBandwidth = 0;
 
-	private String labelPlace; // used to identify the desintation of the flow (inside datacenters or outside datacenters)
+	private String labelPlace; // used to identify the desintation of the flow (inside dantacenters or outside datacenters)
 
 	private long osmesisEdgeletSize;
 	private WorkflowInfo workflowTag;	

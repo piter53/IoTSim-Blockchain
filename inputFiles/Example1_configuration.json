@@ -39,7 +39,7 @@
 		"MELEntities":[
 		{
 			"name":"MEL_1",								
-			"bw":100,				 
+    			"bw":100,
 			"mips":250,			
 			"ram":10000,
 			"pesNumber":1,

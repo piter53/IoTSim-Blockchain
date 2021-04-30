@@ -1,6 +1,8 @@
 package org.cloudbus.blockchain.policies;
 
+import org.cloudbus.blockchain.schedule.Event;
 import org.cloudbus.cloudsim.edge.core.edge.EdgeLet;
+import org.cloudbus.osmosis.core.Flow;
 
 public class TransmissionPolicySizeBased implements TransmissionPolicy{
 
@@ -11,8 +13,16 @@ public class TransmissionPolicySizeBased implements TransmissionPolicy{
     }
 
     @Override
-    public boolean canTransmitThroughBlockchain(EdgeLet edgeLet) {
-        return edgeLet.getCloudletFileSize() <= maxEdgeLetSize;
+    public boolean canTransmitThroughBlockchain(Object o) {
+        Flow event;
+        try {
+            event = (Flow) o;
+            return event.getAmountToBeProcessed() <= maxEdgeLetSize;
+        } catch (ClassCastException e) {
+            e.printStackTrace();
+        }
+        // TODO different object types
+        return false;
     }
 
 }

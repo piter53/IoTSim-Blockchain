@@ -2,12 +2,13 @@ package org.cloudbus.blockchain;
 
 import org.cloudbus.blockchain.nodes.MinerNode;
 import org.cloudbus.blockchain.transactions.Transaction;
+import org.cloudbus.cloudsim.core.CloudSim;
 
 import java.util.Set;
 
 public class Block {
     private final Block previousBlock;
-    private final long timestamp;
+    private final double timestamp;
     private final MinerNode miner;
 
     private final Set<Transaction> transactionList;
@@ -21,7 +22,7 @@ public class Block {
             this.previousBlock = null;
             isGenesis = true;
         }
-        timestamp = System.nanoTime();
+        timestamp = CloudSim.clock();
         this.miner = miner;
         this.transactionList = transactionList;
     }
