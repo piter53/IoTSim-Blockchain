@@ -13,27 +13,32 @@
 package org.cloudbus.cloudsim.edge.core.edge;
 
 import java.util.List;
+
+import org.cloudbus.blockchain.devices.EdgeBlockchainDevice;
+import org.cloudbus.blockchain.nodes.BaseNode;
+import org.cloudbus.blockchain.policies.TransmissionPolicy;
 import org.cloudbus.cloudsim.edge.core.edge.Mobility.Location;
 import lombok.Data;
 
 /**
- * 
+ *
  * @author Khaled Alwasel
  * @contact kalwasel@gmail.com
  * @since IoTSim-Osmosis 1.0
- * 
+ *
 **/
 
 @Data
 public class ConfiguationEntity {
 	private LogEntity logEntity;
-	private boolean trace_flag;	
-	
+	private boolean trace_flag;
+
 	private List<EdgeDataCenterEntity> edgeDatacenter;
+	private List<EdgeBlockchainDeviceEntity> edgeBlockchainDatacenter;
 	private List<CloudDataCenterEntity> cloudDatacenter;
 	private List<WanEntity> sdwan;
 //    private List<ConnectionEntity> connections;
-	
+
 	@Data
 	public static class LogEntity {
 		private String logLevel;
@@ -41,35 +46,36 @@ public class ConfiguationEntity {
 		private String logFilePath;
 		private boolean append;
 	}
-	
+
 	@Data
 	public static class EdgeDataCenterEntity {
 		private String name;
 		private String type;
-		private double schedulingInterval;		
+		private double schedulingInterval;
 		private VmAllcationPolicyEntity vmAllocationPolicy;
 		private EdgeDatacenterCharacteristicsEntity characteristics;
-		private List<EdgeDeviceEntity> hosts;		
-		private List<MELEntities> MELEntities;		
+		private List<EdgeDeviceEntity> hosts;
+		private List<MELEntities> MELEntities;
 		private List<ControllerEntity> controllers;
-		private List<SwitchEntity> switches;		
+		private List<SwitchEntity> switches;
 		private List<LinkEntity> links;
 		private List<IotDeviceEntity> ioTDevices;
+		private List<IoTBlockchainDeviceEntity> ioTBlockchainDevices;
 		private List<WirelessConnections> IoT_MEL_Wireless_Connections;
 	}
 
 	@Data
 	public static class CloudDataCenterEntity {
-	    private String name;		
+	    private String name;
 		private String type;
-	    private String vmAllocationPolicy;	    	   	    
+	    private String vmAllocationPolicy;
 	    private List<HostEntity> hosts;
 	    private List<VMEntity> VMs;
 	    private List<ControllerEntity> controllers;
 	    private List<SwitchEntity> switches;
 	    private List<LinkEntity> links;
 	}
-	
+
 	@Data
 	public class WanEntity {
 	    private ControllerEntity controllers;
@@ -86,61 +92,61 @@ public class ConfiguationEntity {
 
 	@Data
 	public static class EdgeDeviceEntity {
-		String name;		
+		String name;
 		long storage;
 		int pes;
 		int ramSize;
 		int mips;
-		int bwSize;					
+		int bwSize;
 	}
-	
+
 	@Data
 	public static class HostEntity{
 	    private String name;
 	    private long pes;
 	    private long mips;
 	    private Integer ram;
-	    private Long storage;	  
+	    private Long storage;
 	    private long bw;
 	}
-	
-	@Data 
+
+	@Data
 	public static class VMEntity{
-		String name; 		
+		String name;
 		int pes;
 		double mips;
 		int ram;
 		double storage;
 		private long bw;
-		String cloudletPolicy; 
+		String cloudletPolicy;
 	}
-	
+
 	@Data
 	public class ControllerEntity{
 	    private String name;
 	    private String trafficPolicy;
 	    private String routingPolicy;
 	}
-	
+
 	@Data
 	public class SwitchEntity{
 	    private String type;  // enum
 	    private String name;
 	    private String controller;
-	    private Long iops;	    
+	    private Long iops;
 
 	    public boolean isGateway(){
 	        return this.type.equals("gateway");
 	    }
 	}
-	
+
 	@Data
 	public class LinkEntity{
 	    private String source;
 	    private String destination;
 	    private long bw;
 	}
-	
+
 	@Data
 	public static class EdgeDatacenterCharacteristicsEntity {
 		String architecture;
@@ -151,27 +157,27 @@ public class ConfiguationEntity {
 		double costPerSec;
 		double costPerMem;
 		double costPerStorage;
-		double costPerBw;			
+		double costPerBw;
 	}
 
 	@Data
 	public static class MELEntities {
 		String name;
-		String host;		
+		String host;
 		int mips;
 		int ram; // vm memory (MB)
 		long bw;
 		int pesNumber; // number of cpus
 		String vmm; // VMM name
-		String cloudletSchedulerClassName;		
+		String cloudletSchedulerClassName;
 		float datasizeShrinkFactor;
 
 	}
-	
+
 	@Data
 	public static class IotDeviceEntity {
-		private MobilityEntity mobilityEntity;				
-		public String ioTClassName;		
+		private MobilityEntity mobilityEntity;
+		public String ioTClassName;
 		String name;
 		double data_frequency;
 		double dataGenerationTime;
@@ -180,19 +186,66 @@ public class ConfiguationEntity {
 		NetworkModelEntity networkModelEntity; // e.g. Wifi and xmpp
 		double max_battery_capacity;
 		double battery_sensing_rate;
-		double battery_sending_rate;		
+		double battery_sending_rate;
 		double processingAbility;
 		EdgeLetEntity dataTemplate;
 		double bw;
-
 	}
+
+    /**
+     * Class representing a configuration entity of a blockchain-enabled IoTDevice
+     * @author Piotr Grela
+     * @since IoTSim-Blockchain 1.0
+     */
+	@Data
+    public static class IoTBlockchainDeviceEntity {
+	    public IotDeviceEntity iotDeviceEntity;
+        public BaseNodeEntity baseNodeEntity;
+        public TransmissionPolicyEntity transmissionPolicy;
+    }
+
+    /**
+     * Class representing a configuration entity of a Blockchain Node
+     * @author Piotr Grela
+     * @since IoTSim-Blockchain 1.0
+     */
+    @Data
+    public static class BaseNodeEntity {
+        public String className;
+        public int blockchainDepth;
+    }
+
+    /**
+     * Class representing a configuration entity of a TransmissionPolicy deployed
+     * in each BaseNode
+     * @author Piotr Grela
+     * @since IoTSim-Blockchain 1.0
+     */
+    @Data
+    public static class TransmissionPolicyEntity {
+	    public String className;
+	    public Object object;
+    }
+
+    /**
+     * Class representing a configuration entity of an EdgeBlockchainDevice
+     * @author Piotr Grela
+     * @since IoTSim-Blockchain 1.0
+     */
+    @Data
+    public static class EdgeBlockchainDeviceEntity {
+	    public EdgeDataCenterEntity edgeDataCenterEntity;
+	    public BaseNodeEntity baseNodeEntity;
+	    public TransmissionPolicyEntity transmissionPolicy;
+    }
+
 
 	@Data
 	public static class WirelessConnections {
 		private int vmId;
-		private int assigmentIoTId; 
+		private int assigmentIoTId;
 	}
-	
+
 	@Data
 	public static class EdgeLetEntity {
 

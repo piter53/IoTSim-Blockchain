@@ -8,7 +8,7 @@ public class TransmissionPolicySizeBased implements TransmissionPolicy{
 
     private long maxEdgeLetSize;
 
-    public TransmissionPolicySizeBased(long maxEdgeLetSize) {
+    public TransmissionPolicySizeBased(Long maxEdgeLetSize) {
         this.maxEdgeLetSize = maxEdgeLetSize;
     }
 

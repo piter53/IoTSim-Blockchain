@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.cloudbus</groupId>
-    <artifactId>IoTSim-Osmosis</artifactId>
+    <artifactId>IoTSim-Blockchain</artifactId>
     <version>1.0</version>
 
     <build>
@@ -55,7 +55,7 @@
 		    <groupId>org.apache.poi</groupId>
 		    <artifactId>poi-ooxml</artifactId>
 		    <version>3.17</version>
-		</dependency>		      
+    </dependency>
 		
 		<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
 <dependency>
@@ -69,6 +69,12 @@
     <artifactId>lombok</artifactId>
     <version>1.18.12</version>
     <scope>provided</scope>
-</dependency>  		        
+</dependency>
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter</artifactId>
+        <version>5.4.0</version>
+        <scope>test</scope>
+      </dependency>
     </dependencies>
 </project>

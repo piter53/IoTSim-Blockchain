@@ -1,5 +1,6 @@
 package org.cloudbus.blockchain.devices;
 
+import org.cloudbus.blockchain.BlockchainTags;
 import org.cloudbus.blockchain.network.Network;
 import org.cloudbus.blockchain.nodes.BaseNode;
 import org.cloudbus.blockchain.policies.TransmissionPolicy;
@@ -11,10 +12,16 @@ import org.cloudbus.cloudsim.edge.iot.network.EdgeNetworkInfo;
 import org.cloudbus.cloudsim.edge.utils.LogUtil;
 import org.cloudbus.osmosis.core.*;
 
-public abstract class IoTBlockchainDevice extends IoTDevice {
+/**
+ * Representation of IoTDevice deployed as a given blockchain node type, functioning under given TransmissionPolicy
+ * @author Piotr Grela
+ * @since IoTSim-Blockchain 1.0
+ */
+public abstract class IoTBlockchainDevice extends IoTDevice implements BlockchainDevice{
 
     private BaseNode blockchainNode;
     private TransmissionPolicy transmissionPolicy;
+    private static Network blockchainNetwork = Network.getInstance();
 
     public IoTBlockchainDevice(String name, EdgeNetworkInfo networkModel, double bandwidth, BaseNode node, TransmissionPolicy transmissionPolicy) {
         super(name, networkModel, bandwidth);
@@ -55,19 +62,29 @@ public abstract class IoTBlockchainDevice extends IoTDevice {
         flow.addPacketSize(app.getIoTDeviceOutputSize());
         updateBandwidth();
 
-        if (transmissionPolicy.canTransmitThroughBlockchain(flow)) {
-            broadcastTransaction(flow, OsmosisTags.TRANSMIT_IOT_DATA);
-        }
-        else {
+//        if (transmissionPolicy.canTransmitThroughBlockchain(flow)) {
+//            broadcastTransaction(flow, BlockchainTags.BROADCAST_TRANSACTION);
+//        }
+//        else {
             sendNow(flow.getDatacenterId(), OsmosisTags.TRANSMIT_IOT_DATA, flow);
-        }
-
+//        }
     }
 
-    void broadcastTransaction(Flow flow, int tag) {
-        for (SimEntity n : Network.getBlockchainNodesList()) {
-            sendNow(n.getId(), tag, flow);
+    @Override
+    public void broadcastTransaction(Flow flow, int tag) {
+        for (BlockchainDevice n : blockchainNetwork.getBlockchainDevicesSet()) {
+            sendNow(((SimEntity)n).getId(), tag, flow);
         }
+    }
+
+    @Override
+    public void setBlockchainNode(BaseNode blockchainNode) {
+        this.blockchainNode = blockchainNode;
+    }
+
+    @Override
+    public void setTransmissionPolicy(TransmissionPolicy transmissionPolicy) {
+        this.transmissionPolicy = transmissionPolicy;
     }
 
 }

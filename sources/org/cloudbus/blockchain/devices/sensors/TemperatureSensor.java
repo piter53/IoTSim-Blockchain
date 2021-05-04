@@ -33,6 +33,10 @@ public class TemperatureSensor extends IoTBlockchainDevice {
 		super(name, networkModel, bandwidth, node, transmissionPolicy);
 	}
 
+    public TemperatureSensor(EdgeNetworkInfo networkModel, String name, double bandwidth) {
+        super(name, networkModel, bandwidth, null, null);
+    }
+
 	@Override
 	public boolean updateBatteryBySensing() {
 		battery.setCurrentCapacity(battery.getCurrentCapacity() - battery.getBatterySensingRate());
