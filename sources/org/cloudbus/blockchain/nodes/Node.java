@@ -6,7 +6,7 @@ public class Node extends BaseNode {
         super();
     }
 
-    public Node(int blockchainDepth) {
+    public Node(Integer blockchainDepth) {
         super(blockchainDepth);
     }
 }

@@ -6,7 +6,11 @@ public class MinerNode extends BaseNode {
     private int noOfMinedBlocks;
 
     public MinerNode() {
-        super();
+        this(0);
+    }
+
+    public MinerNode(Integer blockchainDepth) {
+        super(blockchainDepth);
         noOfMinedBlocks = 0;
     }
 

@@ -1,5 +1,6 @@
 package org.cloudbus.blockchain.devices;
 
+import org.cloudbus.blockchain.BlockchainTags;
 import org.cloudbus.blockchain.network.Network;
 import org.cloudbus.blockchain.nodes.BaseNode;
 import org.cloudbus.blockchain.policies.TransmissionPolicy;
@@ -28,9 +29,9 @@ public class EdgeBlockchainDevice extends EdgeDataCenter implements BlockchainDe
     }
 
     @Override
-    public void broadcastTransaction(Flow flow, int tag) {
+    public void broadcastTransaction(Flow flow) {
         for (BlockchainDevice n : blockchainNetwork.getBlockchainDevicesSet()) {
-            sendNow(((SimEntity)n).getId(), tag, flow);
+            sendNow(((SimEntity)n).getId(), BlockchainTags.BROADCAST_TRANSACTION, flow);
         }
     }
 

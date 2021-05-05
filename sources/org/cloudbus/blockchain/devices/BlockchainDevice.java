@@ -6,7 +6,7 @@ import org.cloudbus.osmosis.core.Flow;
 
 public interface BlockchainDevice {
 
-    void broadcastTransaction(Flow flow, int tag);
+    void broadcastTransaction(Flow flow);
 
     void setBlockchainNode(BaseNode blockchainNode);
 

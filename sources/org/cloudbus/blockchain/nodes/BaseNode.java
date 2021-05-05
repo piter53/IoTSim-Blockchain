@@ -89,8 +89,8 @@ public abstract class BaseNode {
      * @param block
      */
     public void updateTransactionsPool(Block block) {
-        for (Transaction t : block.getTransactionList()) {
-            for (Transaction n : transactionPool) {
+        for (Object t : block.getTransactionList()) {
+            for (Object n : transactionPool) {
                 if (t == n) {
                     transactionPool.remove(n);
                     break;

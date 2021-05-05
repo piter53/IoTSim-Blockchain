@@ -191,36 +191,15 @@
                             "className": "org.cloudbus.blockchain.policies.TransmissionPolicySizeBased",
                             "object": 100
                         }
-                    }
-                ],
-                "ioTDevices": [
-                    {
-                        "name": "temperature_3",
-                        "bw": 100,
-                        "max_battery_capacity": 100.0,
-                        "battery_sensing_rate": 0.001,
-                        "battery_sending_rate": 0.001,
-                        "ioTClassName": "org.cloudbus.cloudsim.edge.iot.TemperatureSensor",
-                        "mobilityEntity": {
-                            "movable": false,
-                            "location": {
-                                "x": 0.0,
-                                "y": 0.0,
-                                "z": 0.0
-                            }
-                        },
-                        "networkModelEntity": {
-                            "communicationProtocol": "xmpp",
-                            "networkType": "wifi"
-                        }
                     },
                     {
+                        "iotDeviceEntity": {
                         "name": "temperature_2",
                         "bw": 100,
                         "max_battery_capacity": 100.0,
                         "battery_sensing_rate": 0.001,
                         "battery_sending_rate": 0.001,
-                        "ioTClassName": "org.cloudbus.cloudsim.edge.iot.TemperatureSensor",
+                        "ioTClassName": "org.cloudbus.blockchain.devices.sensors.TemperatureSensor",
                         "mobilityEntity": {
                             "movable": false,
                             "location": {
@@ -233,7 +212,49 @@
                             "communicationProtocol": "xmpp",
                             "networkType": "wifi"
                         }
+                        },
+                        "baseNodeEntity": {
+                            "className": "org.cloudbus.blockchain.nodes.Node",
+                            "blockchainDepth": 100
+                        },
+                        "transmissionPolicy": {
+                            "className": "org.cloudbus.blockchain.policies.TransmissionPolicySizeBased",
+                            "object": 100
+                        }
                     },
+                    {
+                        "iotDeviceEntity": {
+                            "name": "temperature_3",
+                            "bw": 100,
+                            "max_battery_capacity": 100.0,
+                            "battery_sensing_rate": 0.001,
+                            "battery_sending_rate": 0.001,
+                            "ioTClassName": "org.cloudbus.blockchain.devices.sensors.TemperatureSensor",
+                            "mobilityEntity": {
+                                "movable": false,
+                                "location": {
+                                    "x": 0.0,
+                                    "y": 0.0,
+                                    "z": 0.0
+                                }
+                            },
+                            "networkModelEntity": {
+                                "communicationProtocol": "xmpp",
+                                "networkType": "wifi"
+                            }
+                        },
+                        "baseNodeEntity": {
+                            "className": "org.cloudbus.blockchain.nodes.Node",
+                            "blockchainDepth": 100
+                        },
+                        "transmissionPolicy": {
+                            "className": "org.cloudbus.blockchain.policies.TransmissionPolicySizeBased",
+                            "object": 100
+                        }
+                    }
+
+                ],
+                "ioTDevices": [
                     {
                         "name": "temperature_4",
                         "bw": 100,

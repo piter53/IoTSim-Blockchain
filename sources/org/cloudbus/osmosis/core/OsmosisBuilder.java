@@ -602,8 +602,8 @@ public class OsmosisBuilder {
     private BaseNode createBaseNode(ConfiguationEntity.BaseNodeEntity baseNodeEntity) {
         try {
             Class<?> aClass = Class.forName(baseNodeEntity.className);
-            if (!IoTBlockchainDevice.class.isAssignableFrom(aClass)) {
-                System.out.println("this class is not correct type of ioT-Blockchain Device");
+            if (!BaseNode.class.isAssignableFrom(aClass)) {
+                System.out.println("Class \"" + aClass + "\" is not a correct BaseNode");
                 return null;
             }
             Constructor<?> constructor;
@@ -632,7 +632,7 @@ public class OsmosisBuilder {
         try {
             Class<?> aClass = Class.forName(transmissionPolicyEntity.className);
             if (!TransmissionPolicy.class.isAssignableFrom(aClass)) {
-                System.out.println("this class is not correct type of ioT-Blockchain Device");
+                System.out.println("Class \"" + aClass + "\" is not a correct type of TransmissionPolicy");
                 return null;
             }
             Constructor<?> constructor;
