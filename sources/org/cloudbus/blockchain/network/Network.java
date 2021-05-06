@@ -33,16 +33,30 @@ public class Network {
         this.blockchainDevicesSet.addAll(blockchainDevices);
     }
 
+    private void addBlockchainNode(BlockchainDevice device) {
+        this.blockchainDevicesSet.add(device);
+    }
+
     public void addIoTBlockchainDevices(Set<IoTBlockchainDevice> ioTBlockchainDevices) {
         this.ioTBlockchainDevicesSet.addAll(ioTBlockchainDevices);
         Set<BlockchainDevice> newSet = new HashSet<>(ioTBlockchainDevices);
         addBlockchainNodes(newSet);
     }
 
+    public void addIoTBlockchainDevice(IoTBlockchainDevice device) {
+        this.ioTBlockchainDevicesSet.add(device);
+        addBlockchainNode(device);
+    }
+
     public void addEdgeBlockchainDevices(Set<EdgeBlockchainDevice> edgeBlockchainDevices) {
         this.edgeBlockchainDataCentersSet.addAll(edgeBlockchainDevices);
         Set<BlockchainDevice> newSet = new HashSet<>(edgeBlockchainDevices);
         addBlockchainNodes(newSet);
+    }
+
+    public void addEdgeBlockchainDevice(EdgeBlockchainDevice device) {
+        this.edgeBlockchainDataCentersSet.add(device);
+        addBlockchainNode(device);
     }
 
     public Set<BlockchainDevice> getBlockchainDevicesSet() {

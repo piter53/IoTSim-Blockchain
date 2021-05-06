@@ -2,10 +2,13 @@ package org.cloudbus.osmosis.core;
 
 import org.cloudbus.cloudsim.edge.core.edge.ConfiguationEntity;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,6 +32,23 @@ class OsmosisBuilderTest {
             }
         } else {
             throw new NullPointerException("ConfiguationEntity object is null");
+        }
+
+    }
+
+    // TODO
+    @Test
+    void testIfCorrectEdgeDatacentersCreated() {
+        List<ConfiguationEntity.EdgeDataCenterEntity> entities = new ArrayList<>();
+        ConfiguationEntity.EdgeDataCenterEntity edgeDataCenterEntity;
+        for (int i = 0; i < 50; i++) {
+            if (i % 2 == 0) {
+                edgeDataCenterEntity = new ConfiguationEntity.EdgeDataCenterEntity();
+            } else {
+                edgeDataCenterEntity = new ConfiguationEntity.EdgeBlockchainDeviceEntity();
+                ConfiguationEntity.EdgeBlockchainDeviceEntity blockchainDeviceEntity = (ConfiguationEntity.EdgeBlockchainDeviceEntity) edgeDataCenterEntity;
+            }
+
         }
     }
 
