@@ -372,20 +372,26 @@ public class OsmosisBuilder {
             // 6. Finally, we need to create a PowerDatacenter object.
             EdgeDataCenter datacenter = null;
             VmAllocationPolicy vmAllocationPolicy = null;
+            String deviceClassName = edgeDCEntity.getClassName();
             try {
                 switch (className) {
                     case "VmAllocationPolicyCombinedLeastFullFirst":
                         vmAllocationPolicy = new VmMELAllocationPolicyCombinedLeastFullFirst();
                         break;
                 }
-                if (edgeDCEntity instanceof ConfiguationEntity.EdgeBlockchainDeviceEntity) {
-                    BaseNode node = createBaseNode(((ConfiguationEntity.EdgeBlockchainDeviceEntity) edgeDCEntity).baseNodeEntity);
-                    TransmissionPolicy policy = createTransmissionPolicy(((ConfiguationEntity.EdgeBlockchainDeviceEntity) edgeDCEntity).transmissionPolicy);
-                    datacenter = new EdgeBlockchainDevice(edgeDCEntity.getName(), characteristics, vmAllocationPolicy, storageList,
-                        edgeDCEntity.getSchedulingInterval(), node, policy);
-                } else {
-                    datacenter = new EdgeDataCenter(edgeDCEntity.getName(), characteristics, vmAllocationPolicy, storageList,
-                        edgeDCEntity.getSchedulingInterval());// , switchesList);
+                Class<?> aClass = Class.forName(deviceClassName);
+                if (!EdgeDataCenter.class.isAssignableFrom(aClass)) {
+                    System.out.println("Class " + aClass + " is not a correct EdgeDataCenter class");
+                    return null;
+                }
+                Constructor<?> constructor = aClass.getConstructor(String.class, DatacenterCharacteristics.class, VmAllocationPolicy.class, List.class, Double.class);
+                datacenter = (EdgeDataCenter) constructor.newInstance(edgeDCEntity.getName(), characteristics, vmAllocationPolicy, storageList,
+                    edgeDCEntity.getSchedulingInterval());
+                if (datacenter instanceof EdgeBlockchainDevice) {
+                    BaseNode node = createBaseNode(((ConfiguationEntity.EdgeBlockchainDeviceEntity) edgeDCEntity).getBaseNodeEntity());
+                    TransmissionPolicy policy = createTransmissionPolicy(((ConfiguationEntity.EdgeBlockchainDeviceEntity) edgeDCEntity).getTransmissionPolicy());
+                    ((EdgeBlockchainDevice) datacenter).setBlockchainNode(node);
+                    ((EdgeBlockchainDevice) datacenter).setTransmissionPolicy(policy);
                 }
                 datacenter.setDcType(edgeDCEntity.getType());
 
@@ -538,8 +544,8 @@ public class OsmosisBuilder {
                 if (newInstance instanceof IoTBlockchainDevice) {
                     IoTBlockchainDevice blockchainDevice = (IoTBlockchainDevice)newInstance;
                     ConfiguationEntity.IoTBlockchainDeviceEntity blockchainDeviceEntity = (ConfiguationEntity.IoTBlockchainDeviceEntity)iotDevice;
-                    blockchainDevice.setBlockchainNode(createBaseNode(blockchainDeviceEntity.baseNodeEntity));
-                    blockchainDevice.setTransmissionPolicy(createTransmissionPolicy(blockchainDeviceEntity.transmissionPolicy));
+                    blockchainDevice.setBlockchainNode(createBaseNode(blockchainDeviceEntity.getBaseNodeEntity()));
+                    blockchainDevice.setTransmissionPolicy(createTransmissionPolicy(blockchainDeviceEntity.getTransmissionPolicy()));
                     blockchainNetwork.addIoTBlockchainDevice(blockchainDevice);
                     newInstance = blockchainDevice;
                 }
@@ -596,18 +602,18 @@ public class OsmosisBuilder {
      */
     private BaseNode createBaseNode(ConfiguationEntity.BaseNodeEntity baseNodeEntity) {
         try {
-            Class<?> aClass = Class.forName(baseNodeEntity.className);
+            Class<?> aClass = Class.forName(baseNodeEntity.getClassName());
             if (!BaseNode.class.isAssignableFrom(aClass)) {
                 System.out.println("Class \"" + aClass + "\" is not a correct BaseNode");
                 return null;
             }
             Constructor<?> constructor;
-            if (baseNodeEntity.blockchainDepth != 0) {
+            if (baseNodeEntity.getBlockchainDepth() != 0) {
                 constructor = aClass.getConstructor(Integer.class);
             } else {
                 constructor = aClass.getConstructor();
             }
-            return (BaseNode) constructor.newInstance(baseNodeEntity.blockchainDepth);
+            return (BaseNode) constructor.newInstance(baseNodeEntity.getBlockchainDepth());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -625,7 +631,7 @@ public class OsmosisBuilder {
      */
     private TransmissionPolicy createTransmissionPolicy(ConfiguationEntity.TransmissionPolicyEntity transmissionPolicyEntity) {
         try {
-            Class<?> aClass = Class.forName(transmissionPolicyEntity.className);
+            Class<?> aClass = Class.forName(transmissionPolicyEntity.getClassName());
             if (!TransmissionPolicy.class.isAssignableFrom(aClass)) {
                 System.out.println("Class \"" + aClass + "\" is not a correct type of TransmissionPolicy");
                 return null;
@@ -633,10 +639,10 @@ public class OsmosisBuilder {
             Constructor<?> constructor;
             if (TransmissionPolicySizeBased.class.isAssignableFrom(aClass)) {
                 constructor = aClass.getConstructor(Long.class);
-                return (TransmissionPolicy) constructor.newInstance(((Double) transmissionPolicyEntity.object).longValue());
+                return (TransmissionPolicy) constructor.newInstance(((Double) transmissionPolicyEntity.getObject()).longValue());
             }
             constructor = aClass.getConstructor(Object.class);
-            return (TransmissionPolicy) constructor.newInstance(transmissionPolicyEntity.object);
+            return (TransmissionPolicy) constructor.newInstance(transmissionPolicyEntity.getObject());
         } catch (Exception e) {
             e.printStackTrace();
         }

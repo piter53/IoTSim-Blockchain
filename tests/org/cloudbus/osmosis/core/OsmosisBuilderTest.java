@@ -68,4 +68,21 @@ class OsmosisBuilderTest {
         return conf;
     }
 
+    @Test
+    void testCreateIoTDevices() {
+        List<ConfiguationEntity.IotDeviceEntity> list = new ArrayList<>();
+        ConfiguationEntity.IotDeviceEntity entity;
+        for (int i = 0; i < 100; i++) {
+            entity = new ConfiguationEntity.IotDeviceEntity();
+            entity.setMobilityEntity(new ConfiguationEntity.MobilityEntity());
+            entity.setName("dupa "+i);
+            if (i % 2 == 0) {
+                entity.setIoTClassName("org.cloudbus.cloudsim.edge.iot.TemperatureSensor");
+            } else {
+                entity.setIoTClassName("org.cloudbus.blockchain.devices.sensors.TemperatureSensor");
+            }
+        }
+
+    }
+
 }

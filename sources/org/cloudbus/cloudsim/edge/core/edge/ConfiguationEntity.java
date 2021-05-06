@@ -14,6 +14,7 @@ package org.cloudbus.cloudsim.edge.core.edge;
 
 import java.util.List;
 
+import lombok.EqualsAndHashCode;
 import org.cloudbus.blockchain.devices.EdgeBlockchainDevice;
 import org.cloudbus.blockchain.nodes.BaseNode;
 import org.cloudbus.blockchain.policies.TransmissionPolicy;
@@ -50,6 +51,7 @@ public class ConfiguationEntity {
 	public static class EdgeDataCenterEntity {
 		private String name;
 		private String type;
+		private String className;
 		private double schedulingInterval;
 		private VmAllcationPolicyEntity vmAllocationPolicy;
 		private EdgeDatacenterCharacteristicsEntity characteristics;
@@ -175,7 +177,7 @@ public class ConfiguationEntity {
 	@Data
 	public static class IotDeviceEntity {
 		private MobilityEntity mobilityEntity;
-		public String ioTClassName;
+		private String ioTClassName;
 		String name;
 		double data_frequency;
 		double dataGenerationTime;
@@ -197,8 +199,8 @@ public class ConfiguationEntity {
      */
 	@Data
     public static class IoTBlockchainDeviceEntity extends IotDeviceEntity {
-        public BaseNodeEntity baseNodeEntity;
-        public TransmissionPolicyEntity transmissionPolicy;
+        private BaseNodeEntity baseNodeEntity;
+        private TransmissionPolicyEntity transmissionPolicy;
     }
 
     /**
@@ -208,8 +210,8 @@ public class ConfiguationEntity {
      */
     @Data
     public static class BaseNodeEntity {
-        public String className;
-        public int blockchainDepth;
+        private String className;
+        private int blockchainDepth;
     }
 
     /**
@@ -220,8 +222,8 @@ public class ConfiguationEntity {
      */
     @Data
     public static class TransmissionPolicyEntity {
-	    public String className;
-	    public Object object;
+	    private String className;
+	    private Object object;
     }
 
     /**
@@ -229,10 +231,19 @@ public class ConfiguationEntity {
      * @author Piotr Grela
      * @since IoTSim-Blockchain 1.0
      */
-    @Data
+//    @EqualsAndHashCode(callSuper = true)
+//    @Data
     public static class EdgeBlockchainDeviceEntity extends EdgeDataCenterEntity {
 	    public BaseNodeEntity baseNodeEntity;
 	    public TransmissionPolicyEntity transmissionPolicy;
+
+        public BaseNodeEntity getBaseNodeEntity() {
+            return baseNodeEntity;
+        }
+
+        public TransmissionPolicyEntity getTransmissionPolicy() {
+            return transmissionPolicy;
+        }
     }
 
 

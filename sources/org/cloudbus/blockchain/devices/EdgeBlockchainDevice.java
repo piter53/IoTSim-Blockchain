@@ -28,6 +28,10 @@ public class EdgeBlockchainDevice extends EdgeDataCenter implements BlockchainDe
         this.transmissionPolicy = transmissionPolicy;
     }
 
+    public EdgeBlockchainDevice(String name, DatacenterCharacteristics characteristics, VmAllocationPolicy vmAllocationPolicy, List<Storage> storageList, Double schedulingInterval) throws Exception{
+        this(name, characteristics, vmAllocationPolicy, storageList, schedulingInterval, null, null);
+    }
+
     @Override
     public void broadcastTransaction(Flow flow) {
         for (BlockchainDevice n : blockchainNetwork.getBlockchainDevicesSet()) {
