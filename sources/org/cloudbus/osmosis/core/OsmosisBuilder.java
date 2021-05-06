@@ -19,7 +19,6 @@ import org.cloudbus.blockchain.network.Network;
 import org.cloudbus.blockchain.nodes.BaseNode;
 import org.cloudbus.blockchain.policies.TransmissionPolicy;
 import org.cloudbus.blockchain.policies.TransmissionPolicySizeBased;
-import org.cloudbus.blockchain.transactions.Transaction;
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.edge.core.edge.ConfiguationEntity;
 import org.cloudbus.cloudsim.edge.core.edge.EdgeDataCenter;
@@ -119,8 +118,17 @@ public class OsmosisBuilder {
         osmesisDatacentres.addAll(this.cloudDatacentres);
 
         List<EdgeDataCenterEntity> edgeDatacenerEntites = topologyEntity.getEdgeDatacenter();
-        edgeDatacentres = buildEdgeDatacentres(edgeDatacenerEntites);
+        if (edgeDatacenerEntites != null && !edgeDatacenerEntites.isEmpty()) {
+            edgeDatacentres = buildEdgeDatacentres(edgeDatacenerEntites);
+        }
+        List<EdgeDataCenterEntity> edgeBlockchainDatacenterEntities = new ArrayList<>(topologyEntity.getEdgeBlockchainDatacentre());
+        if (edgeBlockchainDatacenterEntities != null && !edgeBlockchainDatacenterEntities.isEmpty()) {
+            edgeDatacentres = new ArrayList<>();
+            edgeDatacentres.addAll(buildEdgeDatacentres(edgeBlockchainDatacenterEntities));
+        }
         osmesisDatacentres.addAll(edgeDatacentres);
+
+
 
         initLog(topologyEntity);
         List<Switch> datacenterGateways = new ArrayList<>();
@@ -388,8 +396,9 @@ public class OsmosisBuilder {
                 datacenter = (EdgeDataCenter) constructor.newInstance(edgeDCEntity.getName(), characteristics, vmAllocationPolicy, storageList,
                     edgeDCEntity.getSchedulingInterval());
                 if (datacenter instanceof EdgeBlockchainDevice) {
-                    BaseNode node = createBaseNode(((ConfiguationEntity.EdgeBlockchainDeviceEntity) edgeDCEntity).getBaseNodeEntity());
-                    TransmissionPolicy policy = createTransmissionPolicy(((ConfiguationEntity.EdgeBlockchainDeviceEntity) edgeDCEntity).getTransmissionPolicy());
+                    ConfiguationEntity.EdgeBlockchainDeviceEntity blockchainEntity = (ConfiguationEntity.EdgeBlockchainDeviceEntity) edgeDCEntity;
+                    BaseNode node = createBaseNode(blockchainEntity.getBaseNodeEntity());
+                    TransmissionPolicy policy = createTransmissionPolicy(blockchainEntity.getTransmissionPolicy());
                     ((EdgeBlockchainDevice) datacenter).setBlockchainNode(node);
                     ((EdgeBlockchainDevice) datacenter).setTransmissionPolicy(policy);
                 }
@@ -423,6 +432,9 @@ public class OsmosisBuilder {
 
             List<IoTDevice> devices = createIoTDevice(edgeDCEntity.getIoTDevices());
             this.broker.setIoTDevices(devices);
+            List<IotDeviceEntity> entities = new ArrayList<>(edgeDCEntity.getIoTBlockchainDevices());
+            devices = createIoTDevice(entities);
+            this.broker.setIoTDevices(devices);
 
             edgeDC.add(datacenter);
             if (datacenter instanceof EdgeBlockchainDevice) {
@@ -433,13 +445,13 @@ public class OsmosisBuilder {
         return edgeDC;
     }
 
-    /**
-     * Creates a list of EdgeBlockchainDevice based on list of EdgeBlockchainDeviceEntity passed in a parameter.
-     *
-     * @param edgeBlockchainDeviceEntities
-     * @return
-     * @author Piotr Grela
-     */
+//    /**
+//     * Creates a list of EdgeBlockchainDevice based on list of EdgeBlockchainDeviceEntity passed in a parameter.
+//     *
+//     * @param edgeBlockchainDeviceEntities
+//     * @return
+//     * @author Piotr Grela
+//     */
 //    private List<EdgeBlockchainDevice> buildBlockchainEdgeDatacentres(List<ConfiguationEntity.EdgeBlockchainDeviceEntity> edgeBlockchainDeviceEntities) {
 //        List<EdgeDataCenterEntity> edgeDataCenterEntities = new ArrayList<>();
 //        for (ConfiguationEntity.EdgeBlockchainDeviceEntity e : edgeBlockchainDeviceEntities) {

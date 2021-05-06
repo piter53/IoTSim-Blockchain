@@ -35,6 +35,7 @@ public class ConfiguationEntity {
 	private boolean trace_flag;
 
 	private List<EdgeDataCenterEntity> edgeDatacenter;
+	private List<EdgeBlockchainDeviceEntity> edgeBlockchainDatacentre;
 	private List<CloudDataCenterEntity> cloudDatacenter;
 	private List<WanEntity> sdwan;
 //    private List<ConnectionEntity> connections;
@@ -61,6 +62,7 @@ public class ConfiguationEntity {
 		private List<SwitchEntity> switches;
 		private List<LinkEntity> links;
 		private List<IotDeviceEntity> ioTDevices;
+		private List<IoTBlockchainDeviceEntity> ioTBlockchainDevices;
 		private List<WirelessConnections> IoT_MEL_Wireless_Connections;
 	}
 
@@ -232,18 +234,10 @@ public class ConfiguationEntity {
      * @since IoTSim-Blockchain 1.0
      */
 //    @EqualsAndHashCode(callSuper = true)
-//    @Data
+    @Data
     public static class EdgeBlockchainDeviceEntity extends EdgeDataCenterEntity {
-	    public BaseNodeEntity baseNodeEntity;
-	    public TransmissionPolicyEntity transmissionPolicy;
-
-        public BaseNodeEntity getBaseNodeEntity() {
-            return baseNodeEntity;
-        }
-
-        public TransmissionPolicyEntity getTransmissionPolicy() {
-            return transmissionPolicy;
-        }
+	    private BaseNodeEntity baseNodeEntity;
+	    private TransmissionPolicyEntity transmissionPolicy;
     }
 
 

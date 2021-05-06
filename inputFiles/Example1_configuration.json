@@ -1,5 +1,5 @@
 {
-    "edgeDatacenter": [
+    "edgeBlockchainDatacentre": [
         {
             "className" : "org.cloudbus.blockchain.devices.EdgeBlockchainDevice",
             "name": "Edge_1",
@@ -161,14 +161,14 @@
                     "bw": 100
                 }
             ],
-            "ioTDevices": [
+            "ioTBlockchainDevices": [
                 {
                     "name": "temperature_1",
                     "bw": 100,
                     "max_battery_capacity": 100.0,
                     "battery_sensing_rate": 0.001,
                     "battery_sending_rate": 0.001,
-                    "ioTClassName": "org.cloudbus.cloudsim.edge.iot.TemperatureSensor",
+                    "ioTClassName": "org.cloudbus.blockchain.devices.sensors.TemperatureSensor",
                     "mobilityEntity": {
                         "movable": false,
                         "location": {
@@ -180,6 +180,14 @@
                     "networkModelEntity": {
                         "communicationProtocol": "xmpp",
                         "networkType": "wifi"
+                    },
+                    "baseNodeEntity" : {
+                        "className" : "org.cloudbus.blockchain.nodes.Node",
+                        "blockchainDepth" : "100"
+                    },
+                    "transmissionPolicy" : {
+                        "className" : "org.cloudbus.blockchain.policies.TransmissionPolicySizeBased",
+                        "object" : 100
                     }
                 },
                 {
@@ -188,7 +196,7 @@
                     "max_battery_capacity": 100.0,
                     "battery_sensing_rate": 0.001,
                     "battery_sending_rate": 0.001,
-                    "ioTClassName": "org.cloudbus.cloudsim.edge.iot.TemperatureSensor",
+                    "ioTClassName": "org.cloudbus.blockchain.devices.sensors.TemperatureSensor",
                     "mobilityEntity": {
                         "movable": false,
                         "location": {
@@ -200,6 +208,14 @@
                     "networkModelEntity": {
                         "communicationProtocol": "xmpp",
                         "networkType": "wifi"
+                    },
+                    "baseNodeEntity" : {
+                        "className" : "org.cloudbus.blockchain.nodes.Node",
+                        "blockchainDepth" : "100"
+                    },
+                    "transmissionPolicy" : {
+                        "className" : "org.cloudbus.blockchain.policies.TransmissionPolicySizeBased",
+                        "object" : 100
                     }
                 },
                 {
@@ -208,7 +224,7 @@
                     "max_battery_capacity": 100.0,
                     "battery_sensing_rate": 0.001,
                     "battery_sending_rate": 0.001,
-                    "ioTClassName": "org.cloudbus.cloudsim.edge.iot.TemperatureSensor",
+                    "ioTClassName": "org.cloudbus.blockchain.devices.sensors.TemperatureSensor",
                     "mobilityEntity": {
                         "movable": false,
                         "location": {
@@ -220,6 +236,14 @@
                     "networkModelEntity": {
                         "communicationProtocol": "xmpp",
                         "networkType": "wifi"
+                    },
+                    "baseNodeEntity" : {
+                        "className" : "org.cloudbus.blockchain.nodes.Node",
+                        "blockchainDepth" : "100"
+                    },
+                    "transmissionPolicy" : {
+                        "className" : "org.cloudbus.blockchain.policies.TransmissionPolicySizeBased",
+                        "object" : 100
                     }
                 },
                 {
@@ -228,7 +252,7 @@
                     "max_battery_capacity": 100.0,
                     "battery_sensing_rate": 0.001,
                     "battery_sending_rate": 0.001,
-                    "ioTClassName": "org.cloudbus.cloudsim.edge.iot.TemperatureSensor",
+                    "ioTClassName": "org.cloudbus.blockchain.devices.sensors.TemperatureSensor",
                     "mobilityEntity": {
                         "movable": false,
                         "location": {
@@ -240,8 +264,18 @@
                     "networkModelEntity": {
                         "communicationProtocol": "xmpp",
                         "networkType": "wifi"
+                    },
+                    "baseNodeEntity" : {
+                        "className" : "org.cloudbus.blockchain.nodes.Node",
+                        "blockchainDepth" : "100"
+                    },
+                    "transmissionPolicy" : {
+                        "className" : "org.cloudbus.blockchain.policies.TransmissionPolicySizeBased",
+                        "object" : 100
                     }
-                },
+                }
+            ],
+            "ioTDevices": [
                 {
                     "name": "temperature_5",
                     "bw": 100,
@@ -364,15 +398,13 @@
                 }
             ],
             "baseNodeEntity" : {
-                "className" : "MinerNode",
+                "className" : "org.cloudbus.blockchain.nodes.MinerNode",
                 "blockchainDepth" : "100"
             },
             "transmissionPolicy" : {
-                "className" : "TransmissionPolicySizeBased",
-                "object" : {
-                    "value" : 1000
-                }
-        }
+                "className" : "org.cloudbus.blockchain.policies.TransmissionPolicySizeBased",
+                "object" : 1000
+            }
         }
     ],
     "logEntity": {
