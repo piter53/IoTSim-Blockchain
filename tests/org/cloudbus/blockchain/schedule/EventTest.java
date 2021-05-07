@@ -1,13 +1,9 @@
 package org.cloudbus.blockchain.schedule;
 
-import org.cloudbus.blockchain.Block;
 import org.cloudbus.blockchain.BlockTest;
-import org.cloudbus.blockchain.nodes.MinerNode;
 import org.cloudbus.blockchain.nodes.Node;
 
 import java.util.Random;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class EventTest {
 

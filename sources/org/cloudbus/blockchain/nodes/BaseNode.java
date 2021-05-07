@@ -99,6 +99,17 @@ public abstract class BaseNode {
         }
     }
 
+    private boolean isValidTransaction(Transaction transaction) {
+        return true;
+        // TODO
+    }
+
+    public void appendTransactionsPool(Transaction transaction) {
+        if (isValidTransaction(transaction)) {
+            transactionPool.add(transaction);
+        }
+    }
+
     public int getBlockchainDepth() {
         return blockchainDepth;
     }

@@ -4,12 +4,15 @@ import org.cloudbus.blockchain.BlockchainTags;
 import org.cloudbus.blockchain.network.Network;
 import org.cloudbus.blockchain.nodes.BaseNode;
 import org.cloudbus.blockchain.policies.TransmissionPolicy;
+import org.cloudbus.blockchain.transactions.Transaction;
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.SimEntity;
+import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.cloudsim.edge.core.edge.EdgeDataCenter;
-import org.cloudbus.osmosis.core.Flow;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * This class represents EdgeDataCenter deployed as a blockchain node.
@@ -18,7 +21,6 @@ import java.util.List;
  */
 public class EdgeBlockchainDevice extends EdgeDataCenter implements BlockchainDevice {
 
-    private static Network blockchainNetwork = Network.getInstance();
     private BaseNode blockchainNode;
     private TransmissionPolicy transmissionPolicy;
 
@@ -33,10 +35,33 @@ public class EdgeBlockchainDevice extends EdgeDataCenter implements BlockchainDe
     }
 
     @Override
-    public void broadcastTransaction(Flow flow) {
-        for (BlockchainDevice n : blockchainNetwork.getBlockchainDevicesSet()) {
-            sendNow(((SimEntity)n).getId(), BlockchainTags.BROADCAST_TRANSACTION, flow);
+    public void processEvent(SimEvent event) {
+        int tag = event.getTag();
+        switch (tag) {
+            case BlockchainTags.BROADCAST_TRANSACTION: {
+                appendTransactionPool((Transaction) event.getData());
+                break;
+            }
+            default: {
+                super.processEvent(event);
+            }
         }
+
+    }
+
+    @Override
+    public BaseNode getNode() {
+        return blockchainNode;
+    }
+
+    @Override
+    public void sendNow(int id, int tag, Object o) {
+        super.sendNow(id, tag, o);
+    }
+
+    @Override
+    public TransmissionPolicy getTransmissionPolicy() {
+        return transmissionPolicy;
     }
 
     @Override
@@ -48,4 +73,5 @@ public class EdgeBlockchainDevice extends EdgeDataCenter implements BlockchainDe
     public void setTransmissionPolicy(TransmissionPolicy transmissionPolicy) {
         this.transmissionPolicy = transmissionPolicy;
     }
+
 }

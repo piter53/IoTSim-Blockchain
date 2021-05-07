@@ -1,25 +1,24 @@
 package org.cloudbus.blockchain.transactions;
 
+import org.cloudbus.blockchain.nodes.BaseNode;
 import org.cloudbus.blockchain.nodes.Node;
 import org.cloudbus.cloudsim.core.CloudSim;
-import org.cloudbus.cloudsim.edge.core.edge.EdgeLet;
 
 public class DataTransaction extends Transaction {
 
-    private final Object edgeLet;
+    private final Object data;
 
-    public DataTransaction(double creationTime, Node senderNode, Node receiverNode, Object edgeLet) {
+    public DataTransaction(double creationTime, BaseNode senderNode, BaseNode receiverNode, Object data) {
         super(creationTime, senderNode, receiverNode);
-        this.edgeLet = edgeLet;
+        this.data = data;
     }
 
-    public DataTransaction(Node senderNode, Node receiverNode, Object edgeLet){
-        this(CloudSim.clock(), senderNode, receiverNode, edgeLet);
+    public DataTransaction(BaseNode senderNode, BaseNode receiverNode, Object data){
+        this(CloudSim.clock(), senderNode, receiverNode, data);
     }
 
-    public Object getEdgeLet() {
-        return edgeLet;
+    public Object getData() {
+        return data;
     }
-
 
 }

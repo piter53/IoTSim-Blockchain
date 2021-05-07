@@ -3,6 +3,9 @@ package org.cloudbus.blockchain.network;
 import org.cloudbus.blockchain.devices.BlockchainDevice;
 import org.cloudbus.blockchain.devices.EdgeBlockchainDevice;
 import org.cloudbus.blockchain.devices.IoTBlockchainDevice;
+import org.cloudbus.blockchain.nodes.BaseNode;
+import org.cloudbus.blockchain.nodes.Node;
+import org.cloudbus.cloudsim.core.SimEntity;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -61,6 +64,15 @@ public class Network {
 
     public Set<BlockchainDevice> getBlockchainDevicesSet() {
         return blockchainDevicesSet;
+    }
+
+    public BaseNode getNodeByEntityId(int id) {
+        for (BlockchainDevice device : blockchainDevicesSet) {
+            if (((SimEntity) device).getId() == id) {
+                return device.getNode();
+            }
+        }
+        return null;
     }
 
     public Set<IoTBlockchainDevice> getIoTBlockchainDevicesSet() {

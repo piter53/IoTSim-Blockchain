@@ -220,8 +220,8 @@ public class OsmesisBroker extends DatacenterBroker {
 					app.setAppStartTime(CloudSim.clock());
 				}
 //				sendNow(iotDeviceID, OsmosisTags.SENSING, app);
-				double dealy = app.getDataRate();
-				send(this.getId(), dealy, OsmosisTags.GENERATE_OSMESIS, app);
+				double delay = app.getDataRate();
+				send(this.getId(), delay, OsmosisTags.GENERATE_OSMESIS, app);
 			}
 		}
 	}

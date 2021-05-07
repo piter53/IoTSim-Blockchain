@@ -1,5 +1,7 @@
 package org.cloudbus.blockchain.devices;
 
+import org.cloudbus.blockchain.Block;
+import org.cloudbus.blockchain.BlockchainItem;
 import org.cloudbus.blockchain.BlockchainTags;
 import org.cloudbus.blockchain.network.Network;
 import org.cloudbus.blockchain.nodes.BaseNode;
@@ -23,7 +25,6 @@ public abstract class IoTBlockchainDevice extends IoTDevice implements Blockchai
 
     private BaseNode blockchainNode;
     private TransmissionPolicy transmissionPolicy;
-    private static Network blockchainNetwork = Network.getInstance();
 
     public IoTBlockchainDevice(String name, EdgeNetworkInfo networkModel, double bandwidth, BaseNode node, TransmissionPolicy transmissionPolicy) {
         super(name, networkModel, bandwidth);
@@ -36,8 +37,11 @@ public abstract class IoTBlockchainDevice extends IoTDevice implements Blockchai
         int tag = event.getTag();
         switch (tag) {
             case BlockchainTags.BROADCAST_TRANSACTION:{
-                addTransaction(event);
+                appendTransactionPool((Transaction) event.getData());
                 break;
+            }
+            default: {
+                super.processEvent(event);
             }
         }
     }
@@ -74,9 +78,8 @@ public abstract class IoTBlockchainDevice extends IoTDevice implements Blockchai
         OsmesisBroker.workflowTag.add(workflowTag);
         flow.addPacketSize(app.getIoTDeviceOutputSize());
         updateBandwidth();
-
         if (transmissionPolicy.canTransmitThroughBlockchain(flow)) {
-            broadcastTransaction(flow);
+            broadcast(flow);
         }
         else {
             sendNow(flow.getDatacenterId(), OsmosisTags.TRANSMIT_IOT_DATA, flow);
@@ -84,10 +87,18 @@ public abstract class IoTBlockchainDevice extends IoTDevice implements Blockchai
     }
 
     @Override
-    public void broadcastTransaction(Flow flow) {
-        for (BlockchainDevice n : blockchainNetwork.getBlockchainDevicesSet()) {
-            sendNow(((SimEntity)n).getId(), BlockchainTags.BROADCAST_TRANSACTION, flow);
-        }
+    public BaseNode getNode() {
+        return blockchainNode;
+    }
+
+    @Override
+    public void sendNow(int id, int tag, Object o) {
+        super.sendNow(id, tag, o);
+    }
+
+    @Override
+    public TransmissionPolicy getTransmissionPolicy() {
+        return transmissionPolicy;
     }
 
     @Override
@@ -98,11 +109,6 @@ public abstract class IoTBlockchainDevice extends IoTDevice implements Blockchai
     @Override
     public void setTransmissionPolicy(TransmissionPolicy transmissionPolicy) {
         this.transmissionPolicy = transmissionPolicy;
-    }
-
-    private void addTransaction(Object transaction){
-        Transaction newTransaction = new DataTransaction(CloudSim.clock(), null, null, transaction);
-        blockchainNode.addTransaction(newTransaction);
     }
 
 }

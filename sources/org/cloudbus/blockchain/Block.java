@@ -6,7 +6,7 @@ import org.cloudbus.cloudsim.core.CloudSim;
 
 import java.util.Set;
 
-public class Block {
+public class Block implements BlockchainItem {
     private final Block previousBlock;
     private final double timestamp;
     private final MinerNode miner;
