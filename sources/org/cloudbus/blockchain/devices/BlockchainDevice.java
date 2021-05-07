@@ -1,9 +1,6 @@
 package org.cloudbus.blockchain.devices;
 
-import org.cloudbus.blockchain.Block;
-import org.cloudbus.blockchain.BlockchainItem;
-import org.cloudbus.blockchain.BlockchainTags;
-import org.cloudbus.blockchain.network.Network;
+import org.cloudbus.blockchain.*;
 import org.cloudbus.blockchain.nodes.BaseNode;
 import org.cloudbus.blockchain.policies.TransmissionPolicy;
 import org.cloudbus.blockchain.transactions.DataTransaction;
@@ -13,6 +10,10 @@ import org.cloudbus.cloudsim.core.SimEntity;
 import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.osmosis.core.Flow;
 
+/**
+ * @author Piotr Grela
+ * @since IoTSim-Blockchain 1.0
+ */
 public interface BlockchainDevice {
 
     default void broadcast(Object object) {
@@ -21,7 +22,7 @@ public interface BlockchainDevice {
         } else if (object instanceof Flow) {
             Flow flow = (Flow) object;
             BaseNode recipentNode = getNetwork().getNodeByEntityId(flow.getDatacenterId());
-            Transaction transaction = new DataTransaction(CloudSim.clock(), getNode(), recipentNode, flow);
+            Transaction transaction = new DataTransaction(CloudSim.clock(), getBlockchainNode(), recipentNode, flow, flow.getSize(), Transaction.calculateTransactionFee(flow.getSize()));
             broadcastItem(transaction);
         }
     }
@@ -43,10 +44,14 @@ public interface BlockchainDevice {
     }
 
     default void appendTransactionPool(Transaction transaction) {
-        getNode().appendTransactionsPool(transaction);
+        getBlockchainNode().appendTransactionsPool(transaction);
     }
 
-    BaseNode getNode();
+    default boolean canTransmitThroughBlockchain(Object o){
+        return Transaction.canTransmitThroughBlockchain(o) && getTransmissionPolicy().canTransmitThroughBlockchain(o);
+    }
+
+    BaseNode getBlockchainNode();
 
     void sendNow(int id, int tag, Object o);
 

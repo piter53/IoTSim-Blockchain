@@ -2,7 +2,6 @@ package org.cloudbus.blockchain.schedule;
 
 import org.cloudbus.blockchain.Block;
 import org.cloudbus.blockchain.nodes.BaseNode;
-import org.cloudbus.blockchain.nodes.Node;
 
 public class Event {
 

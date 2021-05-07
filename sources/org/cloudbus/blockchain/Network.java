@@ -1,22 +1,39 @@
-package org.cloudbus.blockchain.network;
+package org.cloudbus.blockchain;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.cloudbus.blockchain.devices.BlockchainDevice;
 import org.cloudbus.blockchain.devices.EdgeBlockchainDevice;
 import org.cloudbus.blockchain.devices.IoTBlockchainDevice;
 import org.cloudbus.blockchain.nodes.BaseNode;
-import org.cloudbus.blockchain.nodes.Node;
+import org.cloudbus.blockchain.policies.TransmissionPolicy;
+import org.cloudbus.blockchain.policies.TransmissionPolicySizeBased;
 import org.cloudbus.cloudsim.core.SimEntity;
 
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * @author Piotr Grela
+ * @since IoTSim-Blockchain 1.0
+ */
 public class Network {
 
+    @Getter @Setter
     private Set<BlockchainDevice> blockchainDevicesSet;
 
+    @Getter
+    private static Double blockInterval = 10000000.0;
+
+    @Getter
+    private TransmissionPolicy globalTransmissionPolicy = new TransmissionPolicySizeBased((long)100);
+
+    @Getter
     private Set<IoTBlockchainDevice> ioTBlockchainDevicesSet;
 
+    @Setter
     private Set<EdgeBlockchainDevice> edgeBlockchainDataCentersSet;
+
     private static Network singleInstance = null;
 
     private Network() {
@@ -62,24 +79,13 @@ public class Network {
         addBlockchainNode(device);
     }
 
-    public Set<BlockchainDevice> getBlockchainDevicesSet() {
-        return blockchainDevicesSet;
-    }
-
     public BaseNode getNodeByEntityId(int id) {
         for (BlockchainDevice device : blockchainDevicesSet) {
             if (((SimEntity) device).getId() == id) {
-                return device.getNode();
+                return device.getBlockchainNode();
             }
         }
         return null;
     }
 
-    public Set<IoTBlockchainDevice> getIoTBlockchainDevicesSet() {
-        return ioTBlockchainDevicesSet;
-    }
-
-    public Set<EdgeBlockchainDevice> getEdgeBlockchainDataCentersSet() {
-        return edgeBlockchainDataCentersSet;
-    }
 }

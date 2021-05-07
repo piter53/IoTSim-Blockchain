@@ -10,10 +10,12 @@ public class Block implements BlockchainItem {
     private final Block previousBlock;
     private final double timestamp;
     private final MinerNode miner;
+    private final boolean isGenesis;
+
+    public static final Block GENESIS_BLOCK = new Block(null, null, null);
 
     private final Set<Transaction> transactionList;
 
-    private final boolean isGenesis;
     public Block(Block previousBlock, MinerNode miner, Set<Transaction> transactionList){
         if (!(previousBlock == null)) {
             this.previousBlock = previousBlock;
@@ -37,5 +39,9 @@ public class Block implements BlockchainItem {
 
     public int getSize(){
         return transactionList.size();
+    }
+
+    public boolean isGenesis() {
+        return isGenesis;
     }
 }

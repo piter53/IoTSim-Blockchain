@@ -1,8 +1,14 @@
 package org.cloudbus.blockchain;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.cloudbus.blockchain.transactions.Transaction;
+
 import java.util.ArrayList;
 
 public class Blockchain {
+
+    @Setter @Getter
     private ArrayList<Block> ledger;
 
     public Blockchain(ArrayList<Block> ledger){
@@ -13,19 +19,21 @@ public class Blockchain {
     }
 
     public Blockchain(){
-        ledger = new ArrayList<Block>();
+        this(new ArrayList<Block>());
     }
 
-    public void addBlock(Block block) throws IllegalArgumentException {
-        if (getLength() > 0) {
-            if (block.getPreviousBlock() == getLastBlock()) {
-                ledger.add(block);
-            } else {
-                throw new IllegalArgumentException("Passed block's previous block is not the same as last block in the ledger");
-            }
-        } else {
+    public void addBlock(Block block) {
+        if (isBlockValid(block)) {
             ledger.add(block);
         }
+    }
+
+    public boolean isBlockValid(Block block){
+        if (getLength() >= 0 &&
+            block.getPreviousBlock() != getLastBlock()) {
+            return false;
+        }
+        return Transaction.isTransactionCollectionValid(block.getTransactionList());
     }
 
     @Override
@@ -51,10 +59,6 @@ public class Blockchain {
 
     public Block getLastBlock(){
         return ledger.get(getLength()-1);
-    }
-
-    public ArrayList<Block> getLedger() {
-        return ledger;
     }
 
     public int getLength() {
@@ -83,9 +87,4 @@ public class Blockchain {
         }
         return list;
     }
-
-    public void setLedger(ArrayList<Block> ledger) {
-        this.ledger = ledger;
-    }
-
 }

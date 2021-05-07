@@ -1,18 +1,16 @@
 package org.cloudbus.blockchain.devices;
 
 import org.cloudbus.blockchain.BlockchainTags;
-import org.cloudbus.blockchain.network.Network;
 import org.cloudbus.blockchain.nodes.BaseNode;
 import org.cloudbus.blockchain.policies.TransmissionPolicy;
 import org.cloudbus.blockchain.transactions.Transaction;
-import org.cloudbus.cloudsim.*;
-import org.cloudbus.cloudsim.core.SimEntity;
+import org.cloudbus.cloudsim.DatacenterCharacteristics;
+import org.cloudbus.cloudsim.Storage;
+import org.cloudbus.cloudsim.VmAllocationPolicy;
 import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.cloudsim.edge.core.edge.EdgeDataCenter;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * This class represents EdgeDataCenter deployed as a blockchain node.
@@ -50,7 +48,7 @@ public class EdgeBlockchainDevice extends EdgeDataCenter implements BlockchainDe
     }
 
     @Override
-    public BaseNode getNode() {
+    public BaseNode getBlockchainNode() {
         return blockchainNode;
     }
 

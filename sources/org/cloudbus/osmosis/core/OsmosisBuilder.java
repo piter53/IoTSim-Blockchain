@@ -15,7 +15,7 @@ package org.cloudbus.osmosis.core;
 import com.google.gson.Gson;
 import org.cloudbus.blockchain.devices.EdgeBlockchainDevice;
 import org.cloudbus.blockchain.devices.IoTBlockchainDevice;
-import org.cloudbus.blockchain.network.Network;
+import org.cloudbus.blockchain.Network;
 import org.cloudbus.blockchain.nodes.BaseNode;
 import org.cloudbus.blockchain.policies.TransmissionPolicy;
 import org.cloudbus.blockchain.policies.TransmissionPolicySizeBased;

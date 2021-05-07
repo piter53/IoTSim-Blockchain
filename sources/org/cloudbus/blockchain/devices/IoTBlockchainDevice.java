@@ -1,15 +1,12 @@
 package org.cloudbus.blockchain.devices;
 
-import org.cloudbus.blockchain.Block;
-import org.cloudbus.blockchain.BlockchainItem;
+import lombok.Getter;
+import lombok.Setter;
 import org.cloudbus.blockchain.BlockchainTags;
-import org.cloudbus.blockchain.network.Network;
 import org.cloudbus.blockchain.nodes.BaseNode;
 import org.cloudbus.blockchain.policies.TransmissionPolicy;
-import org.cloudbus.blockchain.transactions.DataTransaction;
 import org.cloudbus.blockchain.transactions.Transaction;
 import org.cloudbus.cloudsim.core.CloudSim;
-import org.cloudbus.cloudsim.core.SimEntity;
 import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.cloudsim.edge.iot.IoTDevice;
 import org.cloudbus.cloudsim.edge.iot.network.EdgeNetworkInfo;
@@ -23,7 +20,10 @@ import org.cloudbus.osmosis.core.*;
  */
 public abstract class IoTBlockchainDevice extends IoTDevice implements BlockchainDevice{
 
+    @Setter @Getter
     private BaseNode blockchainNode;
+
+    @Getter @Setter
     private TransmissionPolicy transmissionPolicy;
 
     public IoTBlockchainDevice(String name, EdgeNetworkInfo networkModel, double bandwidth, BaseNode node, TransmissionPolicy transmissionPolicy) {
@@ -38,6 +38,10 @@ public abstract class IoTBlockchainDevice extends IoTDevice implements Blockchai
         switch (tag) {
             case BlockchainTags.BROADCAST_TRANSACTION:{
                 appendTransactionPool((Transaction) event.getData());
+                break;
+            }
+            case BlockchainTags.BROADCAST_BLOCK:{
+
                 break;
             }
             default: {
@@ -87,28 +91,8 @@ public abstract class IoTBlockchainDevice extends IoTDevice implements Blockchai
     }
 
     @Override
-    public BaseNode getNode() {
-        return blockchainNode;
-    }
-
-    @Override
     public void sendNow(int id, int tag, Object o) {
         super.sendNow(id, tag, o);
-    }
-
-    @Override
-    public TransmissionPolicy getTransmissionPolicy() {
-        return transmissionPolicy;
-    }
-
-    @Override
-    public void setBlockchainNode(BaseNode blockchainNode) {
-        this.blockchainNode = blockchainNode;
-    }
-
-    @Override
-    public void setTransmissionPolicy(TransmissionPolicy transmissionPolicy) {
-        this.transmissionPolicy = transmissionPolicy;
     }
 
 }

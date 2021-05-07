@@ -5,8 +5,6 @@ import org.cloudbus.blockchain.transactions.Transaction;
 
 import java.util.HashSet;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 public class BlockTest {
 
     public static Block generateRandomBlock() {

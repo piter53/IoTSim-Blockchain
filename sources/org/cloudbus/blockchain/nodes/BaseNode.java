@@ -1,26 +1,34 @@
 package org.cloudbus.blockchain.nodes;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.cloudbus.blockchain.Block;
 import org.cloudbus.blockchain.Blockchain;
+import org.cloudbus.blockchain.Consensus;
 import org.cloudbus.blockchain.transactions.Transaction;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * @author Piotr Grela
+ * @since IoTSim-Blockchain 1.0
+ */
 public abstract class BaseNode {
-    // Genesis block
-    private static final Block genesisBlock = new Block(null, null, null);
     // Local blockchain
+    @Setter @Getter
     private Blockchain blockchain;
     // Local transaction pool
+    @Getter @Setter
     private Set<Transaction> transactionPool;
     // Currency balance
-    private int currencyBalance;
-
+    @Getter
+    private double currencyBalance;
     // Depth of locally maintained blockchain
-
+    @Getter
     private int blockchainDepth;
+
     public BaseNode() {
         this(0);
     }
@@ -37,28 +45,8 @@ public abstract class BaseNode {
         transactionPool.add(transaction);
     }
 
-    void setBlockchain(Blockchain blockchain) {
-        this.blockchain = blockchain;
-    }
-
-    public Blockchain getBlockchain() {
-        return blockchain;
-    }
-
-    public Set<Transaction> getTransactionPool() {
-        return transactionPool;
-    }
-
-    public void setTransactionPool(Set<Transaction> transactionPool) {
-        this.transactionPool = transactionPool;
-    }
-
-    public int getCurrencyBalance() {
-        return currencyBalance;
-    }
-
     private static Block getGenesisBlock(){
-        return genesisBlock;
+        return Block.GENESIS_BLOCK;
     }
 
     /**
@@ -99,19 +87,8 @@ public abstract class BaseNode {
         }
     }
 
-    private boolean isValidTransaction(Transaction transaction) {
-        return true;
-        // TODO
-    }
-
     public void appendTransactionsPool(Transaction transaction) {
-        if (isValidTransaction(transaction)) {
-            transactionPool.add(transaction);
-        }
-    }
-
-    public int getBlockchainDepth() {
-        return blockchainDepth;
+        transactionPool.add(transaction);
     }
 
 }
