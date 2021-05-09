@@ -2,6 +2,7 @@ package org.cloudbus.blockchain;
 
 import org.cloudbus.blockchain.nodes.MinerNode;
 import org.cloudbus.blockchain.transactions.Transaction;
+import org.cloudbus.blockchain.transactions.TransactionTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -30,11 +31,12 @@ public class BlockchainTest {
 
     public static Blockchain generateBlockchainWithNLinkedBlocks(int n) {
         Blockchain blockchain = new Blockchain();
-        Block previousBlock = null;
+        Block previousBlock = Block.GENESIS_BLOCK;
+        blockchain.getLedger().add(previousBlock);
         Block block;
-        for (int i = 0; i < n; i++) {
-            block = new Block(previousBlock, new MinerNode(), new HashSet<>());
-            blockchain.addBlock(block);
+        for (int i = 0; i < n-1; i++) {
+            block = new Block(previousBlock, new MinerNode(), new HashSet<>(TransactionTest.generateRandomTransactionSet(10)));
+            blockchain.getLedger().add(block);
             previousBlock = block;
         }
         return blockchain;
@@ -61,8 +63,8 @@ public class BlockchainTest {
     void testGetLastBlock() {
         Block block = new Block(null, new MinerNode(), new HashSet<>());
         Block block1 = new Block(block, new MinerNode(), new HashSet<>());
-        blockchain.addBlock(block);
-        blockchain.addBlock(block1);
+        blockchain.getLedger().add(block);
+        blockchain.getLedger().add(block1);
         assertEquals(blockchain.getLastBlock(), block1);
     }
 
@@ -71,7 +73,7 @@ public class BlockchainTest {
         Block block = new Block(null, new MinerNode(), new HashSet<>());
         final Block block1 = new Block(null, new MinerNode(), new HashSet<>());
         blockchain.addBlock(block);
-        Exception exception = assertThrows(Exception.class, () -> blockchain.addBlock(new Block(null, new MinerNode(), new HashSet<>())));
+        assertFalse(blockchain.addBlock(new Block(null, new MinerNode(), new HashSet<>())));
         blockchain = new Blockchain();
         blockchain.addBlock(block);
         assertDoesNotThrow(() -> blockchain.addBlock(new Block(block, new MinerNode(), new HashSet<>())));

@@ -620,12 +620,13 @@ public class OsmosisBuilder {
                 return null;
             }
             Constructor<?> constructor;
-            if (baseNodeEntity.getBlockchainDepth() != 0) {
-                constructor = aClass.getConstructor(Integer.class);
+            if (baseNodeEntity.getBlockchainDepth() != 0 && baseNodeEntity.getHashpower() != 0) {
+                constructor = aClass.getConstructor(Integer.class, Long.class);
+                return (BaseNode) constructor.newInstance(baseNodeEntity.getBlockchainDepth(), baseNodeEntity.getHashpower());
             } else {
                 constructor = aClass.getConstructor();
+                return (BaseNode) constructor.newInstance();
             }
-            return (BaseNode) constructor.newInstance(baseNodeEntity.getBlockchainDepth());
         } catch (Exception e) {
             e.printStackTrace();
         }

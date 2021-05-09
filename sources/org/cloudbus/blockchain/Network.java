@@ -6,10 +6,13 @@ import org.cloudbus.blockchain.devices.BlockchainDevice;
 import org.cloudbus.blockchain.devices.EdgeBlockchainDevice;
 import org.cloudbus.blockchain.devices.IoTBlockchainDevice;
 import org.cloudbus.blockchain.nodes.BaseNode;
+import org.cloudbus.blockchain.nodes.MinerNode;
 import org.cloudbus.blockchain.policies.TransmissionPolicy;
 import org.cloudbus.blockchain.policies.TransmissionPolicySizeBased;
+import org.cloudbus.blockchain.transactions.Transaction;
 import org.cloudbus.cloudsim.core.SimEntity;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,7 +26,13 @@ public class Network {
     private Set<BlockchainDevice> blockchainDevicesSet;
 
     @Getter
-    private static Double blockInterval = 10000000.0;
+    private Double blockInterval = 10000000.0;
+
+    @Getter
+    private Comparator<Transaction> transactionComparator = Comparator.comparingDouble(Transaction::getCreationTimestamp);
+
+    @Getter
+    private long maxBlockSize = 1000;
 
     @Getter
     private TransmissionPolicy globalTransmissionPolicy = new TransmissionPolicySizeBased((long)100);
@@ -55,6 +64,15 @@ public class Network {
 
     private void addBlockchainNode(BlockchainDevice device) {
         this.blockchainDevicesSet.add(device);
+    }
+
+    public boolean doesNodeExist(BaseNode node) {
+        for (BlockchainDevice device : blockchainDevicesSet) {
+            if (device.getBlockchainNode() == node) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void addIoTBlockchainDevices(Set<IoTBlockchainDevice> ioTBlockchainDevices) {

@@ -80,8 +80,8 @@ class NodeTest {
 
     @Test
     void testUpdateTransactionsPool() {
-        Set<Transaction> transactionPool = TransactionTest.generateRandomTransactionSet(50);
-        node.setTransactionPool(transactionPool);
+        Collection<Transaction> transactionPool = TransactionTest.generateRandomTransactionSet(50);
+        node.appendTransactionsPool(transactionPool);
         Set<Transaction> dataTransactions = new HashSet<>();
         Set<Transaction> coinTransactions = new HashSet<>();
         for (Transaction t : transactionPool) {

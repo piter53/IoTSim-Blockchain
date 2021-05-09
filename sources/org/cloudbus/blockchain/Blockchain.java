@@ -2,7 +2,6 @@ package org.cloudbus.blockchain;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.cloudbus.blockchain.transactions.Transaction;
 
 import java.util.ArrayList;
 
@@ -22,18 +21,19 @@ public class Blockchain {
         this(new ArrayList<Block>());
     }
 
-    public void addBlock(Block block) {
+    public boolean addBlock(Block block) {
         if (isBlockValid(block)) {
             ledger.add(block);
+            return true;
         }
+        return false;
     }
 
     public boolean isBlockValid(Block block){
-        if (getLength() >= 0 &&
-            block.getPreviousBlock() != getLastBlock()) {
+        if (getLength() >= 0 && block.getPreviousBlock() != getLastBlock()) {
             return false;
         }
-        return Transaction.isTransactionCollectionValid(block.getTransactionList());
+        return Block.isBlockValid(block);
     }
 
     @Override
@@ -58,7 +58,11 @@ public class Blockchain {
     }
 
     public Block getLastBlock(){
-        return ledger.get(getLength()-1);
+        if (!ledger.isEmpty()) {
+            return ledger.get(getLength() - 1);
+        } else {
+            return null;
+        }
     }
 
     public int getLength() {

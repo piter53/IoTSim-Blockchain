@@ -2,10 +2,8 @@ package org.cloudbus.blockchain.devices;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.cloudbus.blockchain.BlockchainTags;
 import org.cloudbus.blockchain.nodes.BaseNode;
 import org.cloudbus.blockchain.policies.TransmissionPolicy;
-import org.cloudbus.blockchain.transactions.Transaction;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.cloudsim.edge.iot.IoTDevice;
@@ -30,24 +28,6 @@ public abstract class IoTBlockchainDevice extends IoTDevice implements Blockchai
         super(name, networkModel, bandwidth);
         this.blockchainNode = node;
         this.transmissionPolicy = transmissionPolicy;
-    }
-
-    @Override
-    public void processEvent(SimEvent event) {
-        int tag = event.getTag();
-        switch (tag) {
-            case BlockchainTags.BROADCAST_TRANSACTION:{
-                appendTransactionPool((Transaction) event.getData());
-                break;
-            }
-            case BlockchainTags.BROADCAST_BLOCK:{
-
-                break;
-            }
-            default: {
-                super.processEvent(event);
-            }
-        }
     }
 
     @Override
@@ -83,10 +63,17 @@ public abstract class IoTBlockchainDevice extends IoTDevice implements Blockchai
         flow.addPacketSize(app.getIoTDeviceOutputSize());
         updateBandwidth();
         if (transmissionPolicy.canTransmitThroughBlockchain(flow)) {
-            broadcast(flow);
+            broadcastObject(flow);
         }
         else {
             sendNow(flow.getDatacenterId(), OsmosisTags.TRANSMIT_IOT_DATA, flow);
+        }
+    }
+
+    @Override
+    public void processEvent(SimEvent event) {
+        if (!processBlockchainEvent(event)){
+            super.processEvent(event);
         }
     }
 

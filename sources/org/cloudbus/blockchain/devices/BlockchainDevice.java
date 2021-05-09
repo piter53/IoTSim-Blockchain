@@ -16,26 +16,26 @@ import org.cloudbus.osmosis.core.Flow;
  */
 public interface BlockchainDevice {
 
-    default void broadcast(Object object) {
+    default void broadcastObject(Object object) {
         if (object instanceof BlockchainItem) {
-            broadcastItem((BlockchainItem) object);
+            broadcastBlockchainItem((BlockchainItem) object);
         } else if (object instanceof Flow) {
             Flow flow = (Flow) object;
             BaseNode recipentNode = getNetwork().getNodeByEntityId(flow.getDatacenterId());
             Transaction transaction = new DataTransaction(CloudSim.clock(), getBlockchainNode(), recipentNode, flow, flow.getSize(), Transaction.calculateTransactionFee(flow.getSize()));
-            broadcastItem(transaction);
+            broadcastBlockchainItem(transaction);
         }
     }
 
-    default void broadcastItem(BlockchainItem transaction) {
+    default void broadcastBlockchainItem(BlockchainItem blockchainItem) {
+        int tag = -1;
+        if (blockchainItem instanceof Transaction) {
+            tag = BlockchainTags.BROADCAST_TRANSACTION;
+        } else if (blockchainItem instanceof Block) {
+            tag = BlockchainTags.BROADCAST_BLOCK;
+        }
         for (BlockchainDevice n : getNetwork().getBlockchainDevicesSet()) {
-            int tag = -1;
-            if (transaction instanceof Transaction) {
-                tag = BlockchainTags.BROADCAST_TRANSACTION;
-            } else if (transaction instanceof Block) {
-                tag = BlockchainTags.BROADCAST_BLOCK;
-            }
-            sendNow(((SimEntity) n).getId(), tag, transaction);
+            sendNow(((SimEntity) n).getId(), tag, blockchainItem);
         }
     }
 
@@ -43,12 +43,34 @@ public interface BlockchainDevice {
         return Network.getInstance();
     }
 
+    default boolean processBlockchainEvent(SimEvent event) {
+        int tag = event.getTag();
+        switch (tag) {
+            case BlockchainTags.BROADCAST_TRANSACTION: {
+                appendTransactionPool((Transaction) event.getData());
+                break;
+            }
+            case BlockchainTags.BROADCAST_BLOCK: {
+                appendLocalBlockchain((Block) event.getData());
+                break;
+            }
+            default: {
+                return false;
+            }
+        }
+        return true;
+    }
+
     default void appendTransactionPool(Transaction transaction) {
         getBlockchainNode().appendTransactionsPool(transaction);
     }
 
+    default void appendLocalBlockchain(Block block) {
+        getBlockchainNode().appendLocalBlockchain(block);
+    }
+
     default boolean canTransmitThroughBlockchain(Object o){
-        return Transaction.canTransmitThroughBlockchain(o) && getTransmissionPolicy().canTransmitThroughBlockchain(o);
+        return Transaction.canBeTransmittedThroughBlockchain(o) && getTransmissionPolicy().canTransmitThroughBlockchain(o);
     }
 
     BaseNode getBlockchainNode();

@@ -213,7 +213,8 @@ public class ConfiguationEntity {
     @Data
     public static class BaseNodeEntity {
         private String className;
-        private int blockchainDepth;
+        private int blockchainDepth = 0;
+        private long hashpower = 0;
     }
 
     /**

@@ -11,12 +11,10 @@ public class DataTransaction extends Transaction {
 
     private final Object data;
 
-    private final long size;
-
     public DataTransaction(double creationTime, BaseNode senderNode, BaseNode receiverNode, Object data, long size, double fee) {
         super(creationTime, senderNode, receiverNode, fee);
         this.data = data;
-        this.size = size;
+        this.size += size;
     }
 
     public DataTransaction(BaseNode senderNode, BaseNode receiverNode, Object data, long size, double fee){

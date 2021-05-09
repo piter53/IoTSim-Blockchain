@@ -1,5 +1,7 @@
 package org.cloudbus.blockchain;
 
+import org.cloudbus.blockchain.transactions.Transaction;
+
 /**
  * @author Piotr Grela
  */

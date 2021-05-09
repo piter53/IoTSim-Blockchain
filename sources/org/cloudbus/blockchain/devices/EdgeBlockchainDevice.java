@@ -1,5 +1,7 @@
 package org.cloudbus.blockchain.devices;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.cloudbus.blockchain.BlockchainTags;
 import org.cloudbus.blockchain.nodes.BaseNode;
 import org.cloudbus.blockchain.policies.TransmissionPolicy;
@@ -19,7 +21,9 @@ import java.util.List;
  */
 public class EdgeBlockchainDevice extends EdgeDataCenter implements BlockchainDevice {
 
+    @Getter @Setter
     private BaseNode blockchainNode;
+    @Getter @Setter
     private TransmissionPolicy transmissionPolicy;
 
     public EdgeBlockchainDevice(String name, DatacenterCharacteristics characteristics, VmAllocationPolicy vmAllocationPolicy, List<Storage> storageList, double schedulingInterval, BaseNode node, TransmissionPolicy transmissionPolicy) throws Exception {
@@ -34,42 +38,14 @@ public class EdgeBlockchainDevice extends EdgeDataCenter implements BlockchainDe
 
     @Override
     public void processEvent(SimEvent event) {
-        int tag = event.getTag();
-        switch (tag) {
-            case BlockchainTags.BROADCAST_TRANSACTION: {
-                appendTransactionPool((Transaction) event.getData());
-                break;
-            }
-            default: {
-                super.processEvent(event);
-            }
+        if (!processBlockchainEvent(event)){
+            super.processEvent(event);
         }
-
-    }
-
-    @Override
-    public BaseNode getBlockchainNode() {
-        return blockchainNode;
     }
 
     @Override
     public void sendNow(int id, int tag, Object o) {
         super.sendNow(id, tag, o);
-    }
-
-    @Override
-    public TransmissionPolicy getTransmissionPolicy() {
-        return transmissionPolicy;
-    }
-
-    @Override
-    public void setBlockchainNode(BaseNode blockchainNode) {
-        this.blockchainNode = blockchainNode;
-    }
-
-    @Override
-    public void setTransmissionPolicy(TransmissionPolicy transmissionPolicy) {
-        this.transmissionPolicy = transmissionPolicy;
     }
 
 }

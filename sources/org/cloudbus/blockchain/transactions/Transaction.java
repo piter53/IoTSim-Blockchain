@@ -28,6 +28,9 @@ public abstract class Transaction implements BlockchainItem {
     @Getter
     private final double fee;
 
+    @Getter
+    long size = 1;
+
     private final static Network network = Network.getInstance();
 
     Transaction(double creationTimestamp, BaseNode senderNode, BaseNode recipentNode, double fee){
@@ -41,15 +44,6 @@ public abstract class Transaction implements BlockchainItem {
         this(CloudSim.clock(), senderNode, recipentNode, fee);
     }
 
-    public static boolean isTransactionValid(Transaction transaction) {
-        return isTransactionFeeCorrect(transaction) &&
-            canTransmitThroughBlockchain(transaction);
-    }
-
-    private static boolean isTransactionFeeCorrect(Transaction transaction) {
-        return transaction.getFee() == calculateTransactionFee(transaction);
-    }
-
     public static boolean isTransactionCollectionValid(Collection<Transaction> transactions) {
         for (Transaction transaction : transactions) {
             if (!isTransactionValid(transaction)) {
@@ -57,6 +51,16 @@ public abstract class Transaction implements BlockchainItem {
             }
         }
         return true;
+    }
+
+    public static boolean isTransactionValid(Transaction transaction) {
+        return isTransactionFeeCorrect(transaction) &&
+            canBeTransmittedThroughBlockchain(transaction) &&
+            Transaction.hasCorrectSenderAndRecipent(transaction);
+    }
+
+    private static boolean isTransactionFeeCorrect(Transaction transaction) {
+        return transaction.getFee() == calculateTransactionFee(transaction);
     }
 
     public static double calculateTransactionFee(Transaction transaction) {
@@ -72,7 +76,7 @@ public abstract class Transaction implements BlockchainItem {
         return Consensus.getTransactionFee() + size / 500.0;
     }
 
-    public static boolean canTransmitThroughBlockchain(Object o) {
+    public static boolean canBeTransmittedThroughBlockchain(Object o) {
         if (network.getGlobalTransmissionPolicy() != null) {
             return network.getGlobalTransmissionPolicy().canTransmitThroughBlockchain(o);
         } else {
@@ -80,4 +84,7 @@ public abstract class Transaction implements BlockchainItem {
         }
     }
 
+    static boolean hasCorrectSenderAndRecipent(Transaction transaction) {
+        return network.doesNodeExist(transaction.recipentNode) && network.doesNodeExist(transaction.senderNode);
+    }
 }

@@ -5,11 +5,10 @@ import lombok.Setter;
 import org.cloudbus.blockchain.Block;
 import org.cloudbus.blockchain.Blockchain;
 import org.cloudbus.blockchain.Consensus;
+import org.cloudbus.blockchain.Network;
 import org.cloudbus.blockchain.transactions.Transaction;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Piotr Grela
@@ -20,8 +19,8 @@ public abstract class BaseNode {
     @Setter @Getter
     private Blockchain blockchain;
     // Local transaction pool
-    @Getter @Setter
-    private Set<Transaction> transactionPool;
+    @Getter
+    private Queue<Transaction> transactionPool;
     // Currency balance
     @Getter
     private double currencyBalance;
@@ -33,20 +32,20 @@ public abstract class BaseNode {
         this(0);
     }
 
-    public BaseNode(int blockchainDepth) {
+    public BaseNode(Integer blockchainDepth) {
         blockchain = new Blockchain();
         blockchain.addBlock(getGenesisBlock());
-        transactionPool = new HashSet<>();
+        // Transactions are inserted into a queue sorted by creation time.
+        transactionPool = new PriorityQueue<Transaction>(1, Network.getInstance().getTransactionComparator());
         currencyBalance = 0;
         this.blockchainDepth = blockchainDepth;
     }
 
-    public void addTransaction(Transaction transaction){
-        transactionPool.add(transaction);
-    }
+    public void appendLocalBlockchain(Block block) {
+        if (blockchain.addBlock(block)) {
 
-    private static Block getGenesisBlock(){
-        return Block.GENESIS_BLOCK;
+            updateTransactionsPool(block);
+        }
     }
 
     /**
@@ -77,18 +76,27 @@ public abstract class BaseNode {
      * @param block
      */
     public void updateTransactionsPool(Block block) {
-        for (Object t : block.getTransactionList()) {
-            for (Object n : transactionPool) {
-                if (t == n) {
-                    transactionPool.remove(n);
-                    break;
+        if (!(block.getTransactionList() == null || block.getTransactionList().isEmpty())) {
+            for (Object t : block.getTransactionList()) {
+                for (Object n : transactionPool) {
+                    if (t == n) {
+                        transactionPool.remove(n);
+                        break;
+                    }
                 }
             }
-        }
-    }
+        }    }
 
     public void appendTransactionsPool(Transaction transaction) {
         transactionPool.add(transaction);
+    }
+
+    public void appendTransactionsPool(Collection<Transaction> transactions) {
+        transactionPool.addAll(transactions);
+    }
+
+    private static Block getGenesisBlock(){
+        return Block.GENESIS_BLOCK;
     }
 
 }
