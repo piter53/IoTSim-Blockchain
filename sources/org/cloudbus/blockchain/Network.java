@@ -6,7 +6,6 @@ import org.cloudbus.blockchain.devices.BlockchainDevice;
 import org.cloudbus.blockchain.devices.EdgeBlockchainDevice;
 import org.cloudbus.blockchain.devices.IoTBlockchainDevice;
 import org.cloudbus.blockchain.nodes.BaseNode;
-import org.cloudbus.blockchain.nodes.MinerNode;
 import org.cloudbus.blockchain.policies.TransmissionPolicy;
 import org.cloudbus.blockchain.policies.TransmissionPolicySizeBased;
 import org.cloudbus.blockchain.transactions.Transaction;
@@ -51,7 +50,7 @@ public class Network {
         return singleInstance;
     }
 
-    public MinerNode pickNewMiner() {
+    public void pickNewMiner() {
 
     }
 

@@ -35,7 +35,7 @@ public class BlockchainBuilder extends OsmosisBuilder {
     }
 
     @Override
-    private List<EdgeDataCenter> buildEdgeDatacentres(List<ConfiguationEntity.EdgeDataCenterEntity> edgeDatacenerEntites) {
+    public List<EdgeDataCenter> buildEdgeDatacentres(List<ConfiguationEntity.EdgeDataCenterEntity> edgeDatacenerEntites) {
         List<EdgeDataCenter> edgeDC = new ArrayList<EdgeDataCenter>();
 
         for (ConfiguationEntity.EdgeDataCenterEntity edgeDCEntity : edgeDatacenerEntites) {
@@ -126,22 +126,22 @@ public class BlockchainBuilder extends OsmosisBuilder {
 
             datacenter.setGateway(datacenter.getSdnController().getGateway());
 
-            List<MEL> MELList = createMEL(edgeDCEntity.getMELEntities(), datacenter.getId(), this.broker);
+            List<MEL> MELList = createMEL(edgeDCEntity.getMELEntities(), datacenter.getId(), this.getBroker());
             datacenter.setVmList(MELList);
 
             for (MEL mel : MELList) {
                 datacenter.mapVmNameToID(mel.getId(), mel.getVmName());
             }
 
-            this.broker.mapVmNameToId(datacenter.getVmNameToIdList());
+            this.getBroker().mapVmNameToId(datacenter.getVmNameToIdList());
             datacenter.getVmAllocationPolicy().setUpVmTopology(hostList);
             datacenter.getSdnController().addVmsToSDNhosts(MELList);
 
             List<IoTDevice> devices = createIoTDevice(edgeDCEntity.getIoTDevices());
-            this.broker.setIoTDevices(devices);
+            this.getBroker().setIoTDevices(devices);
             List<ConfiguationEntity.IotDeviceEntity> entities = new ArrayList<>(edgeDCEntity.getIoTBlockchainDevices());
             devices = createIoTDevice(entities);
-            this.broker.setIoTDevices(devices);
+            this.getBroker().setIoTDevices(devices);
 
             edgeDC.add(datacenter);
             if (datacenter instanceof EdgeBlockchainDevice) {
@@ -156,19 +156,19 @@ public class BlockchainBuilder extends OsmosisBuilder {
     @Override
     public void buildTopology(ConfiguationEntity topologyEntity) throws Exception {
         List<ConfiguationEntity.CloudDataCenterEntity> datacentreEntities = topologyEntity.getCloudDatacenter();
-        this.cloudDatacentres = buildCloudDatacentres(datacentreEntities);
-        osmesisDatacentres.addAll(this.cloudDatacentres);
+        this.setCloudDatacentres(buildCloudDatacentres(datacentreEntities));
+        getOsmesisDatacentres().addAll(this.getCloudDatacentres());
 
         List<ConfiguationEntity.EdgeDataCenterEntity> edgeDatacenerEntites = topologyEntity.getEdgeDatacenter();
         if (edgeDatacenerEntites != null && !edgeDatacenerEntites.isEmpty()) {
             edgeDatacentres = buildEdgeDatacentres(edgeDatacenerEntites);
         }
         List<ConfiguationEntity.EdgeDataCenterEntity> edgeBlockchainDatacenterEntities = new ArrayList<>(topologyEntity.getEdgeBlockchainDatacentre());
-        if (edgeBlockchainDatacenterEntities != null && !edgeBlockchainDatacenterEntities.isEmpty()) {
+        if (!edgeBlockchainDatacenterEntities.isEmpty()) {
             edgeDatacentres = new ArrayList<>();
             edgeDatacentres.addAll(buildEdgeDatacentres(edgeBlockchainDatacenterEntities));
         }
-        osmesisDatacentres.addAll(edgeDatacentres);
+        getOsmesisDatacentres().addAll(edgeDatacentres);
 
 
 
@@ -180,13 +180,13 @@ public class BlockchainBuilder extends OsmosisBuilder {
 
         }
         List<ConfiguationEntity.WanEntity> wanEntities = topologyEntity.getSdwan();
-        this.sdWanController = buildWan(wanEntities, datacenterGateways);
-        setWanControllerToDatacenters(sdWanController, osmesisDatacentres);
-        sdWanController.addAllDatacenters(osmesisDatacentres);
+        this.setSdWanController(buildWan(wanEntities, datacenterGateways));
+        setWanControllerToDatacenters(getSdWanController(), getOsmesisDatacentres());
+        getSdWanController().addAllDatacenters(getOsmesisDatacentres());
     }
 
     @Override
-    private List<IoTDevice> createIoTDevice(List<ConfiguationEntity.IotDeviceEntity> iotDeviceEntityList) {
+    public List<IoTDevice> createIoTDevice(List<ConfiguationEntity.IotDeviceEntity> iotDeviceEntityList) {
         List<IoTDevice> devices = new ArrayList<>();
         for (ConfiguationEntity.IotDeviceEntity iotDevice : iotDeviceEntityList) {
             String ioTClassName = iotDevice.getIoTClassName();
