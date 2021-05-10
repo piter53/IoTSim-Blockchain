@@ -445,38 +445,6 @@ public class OsmosisBuilder {
         return edgeDC;
     }
 
-//    /**
-//     * Creates a list of EdgeBlockchainDevice based on list of EdgeBlockchainDeviceEntity passed in a parameter.
-//     *
-//     * @param edgeBlockchainDeviceEntities
-//     * @return
-//     * @author Piotr Grela
-//     */
-//    private List<EdgeBlockchainDevice> buildBlockchainEdgeDatacentres(List<ConfiguationEntity.EdgeBlockchainDeviceEntity> edgeBlockchainDeviceEntities) {
-//        List<EdgeDataCenterEntity> edgeDataCenterEntities = new ArrayList<>();
-//        for (ConfiguationEntity.EdgeBlockchainDeviceEntity e : edgeBlockchainDeviceEntities) {
-//            edgeDataCenterEntities.add(e.edgeDataCenterEntity);
-//        }
-//        List<EdgeDataCenter> edgeDataCenters = buildEdgeDatacentres(edgeDataCenterEntities, true);
-//        List<EdgeBlockchainDevice> edgeBlockchainDevices = new ArrayList<>();
-//        for (int i = 0; i < edgeDataCenters.size(); i++) {
-//            EdgeDataCenter dataCenter = edgeDataCenters.get(i);
-//            ConfiguationEntity.EdgeBlockchainDeviceEntity deviceEntity = edgeBlockchainDeviceEntities.get(i);
-//            BaseNode node = createBaseNode(deviceEntity.baseNodeEntity);
-//            TransmissionPolicy policy = createTransmissionPolicy(deviceEntity.transmissionPolicy);
-//            EdgeBlockchainDevice newDevice;
-//            if (dataCenter instanceof EdgeBlockchainDevice) {
-//                newDevice = (EdgeBlockchainDevice) dataCenter;
-//                newDevice.setBlockchainNode(node);
-//                newDevice.setTransmissionPolicy(policy);
-//            } else {
-//                throw new ClassCastException("Object is not an instance of EdgeBlockchainDevice class");
-//            }
-//            edgeBlockchainDevices.add(newDevice);
-//        }
-//        return edgeBlockchainDevices;
-//    }
-
     protected SDNController creatEdgeSDNController(ControllerEntity controllerEntity) {
         SDNTrafficSchedulingPolicy sdnMapReducePolicy = null;
         SDNRoutingPolicy sdnRoutingPolicy = null;
@@ -573,36 +541,6 @@ public class OsmosisBuilder {
         return devices;
     }
 
-//    /**
-//     * Based on passed list of configuration entities, creates and returns a list of IoTBlockchainDevice
-//     *
-//     * @param ioTBlockchainDeviceEntities
-//     * @return
-//     * @author Piotr Grela
-//     */
-//    private List<IoTBlockchainDevice> createIoTBlockchainDevice(List<ConfiguationEntity.IoTBlockchainDeviceEntity> ioTBlockchainDeviceEntities) {
-//        List<IotDeviceEntity> ioTDeviceEntityList = new ArrayList<>();
-//        for (ConfiguationEntity.IoTBlockchainDeviceEntity e : ioTBlockchainDeviceEntities) {
-//            ioTDeviceEntityList.add(e.iotDeviceEntity);
-//        }
-//        List<IoTDevice> ioTDeviceList = createIoTDevice(ioTDeviceEntityList);
-//        List<IoTBlockchainDevice> ioTBlockchainDevices = new ArrayList<>();
-//        for (int i = 0; i < ioTDeviceList.size(); i++) {
-//            IoTDevice device = ioTDeviceList.get(i);
-//            BaseNode newNode = createBaseNode(ioTBlockchainDeviceEntities.get(i).baseNodeEntity);
-//            TransmissionPolicy newTransmissionPolicy = createTransmissionPolicy(ioTBlockchainDeviceEntities.get(i).transmissionPolicy);
-//            IoTBlockchainDevice ioTBlockchainDevice;
-//            if (device instanceof IoTBlockchainDevice) {
-//                ioTBlockchainDevice = (IoTBlockchainDevice) device;
-//                ioTBlockchainDevice.setBlockchainNode(newNode);
-//                ioTBlockchainDevice.setTransmissionPolicy(newTransmissionPolicy);
-//            } else {
-//                throw new ClassCastException("Object is not an instance of IoTBlockchainDevice class");
-//            }
-//            ioTBlockchainDevices.add(ioTBlockchainDevice);
-//        }
-//        return ioTBlockchainDevices;
-//    }
 
     /**
      * Create BaseNode object based on BaseNodeEntity passed as a parameter.

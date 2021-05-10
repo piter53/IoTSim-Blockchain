@@ -24,25 +24,18 @@ public class Network {
 
     @Getter @Setter
     private Set<BlockchainDevice> blockchainDevicesSet;
-
     @Getter
-    private Double blockInterval = 10000000.0;
-
+    private Double blockInterval = 20.0;
     @Getter
     private Comparator<Transaction> transactionComparator = Comparator.comparingDouble(Transaction::getCreationTimestamp);
-
     @Getter
     private long maxBlockSize = 1000;
-
     @Getter
     private TransmissionPolicy globalTransmissionPolicy = new TransmissionPolicySizeBased((long)100);
-
     @Getter
     private Set<IoTBlockchainDevice> ioTBlockchainDevicesSet;
-
     @Setter
     private Set<EdgeBlockchainDevice> edgeBlockchainDataCentersSet;
-
     private static Network singleInstance = null;
 
     private Network() {
@@ -56,6 +49,10 @@ public class Network {
             singleInstance = new Network();
         }
         return singleInstance;
+    }
+
+    public MinerNode pickNewMiner() {
+
     }
 
     private void addBlockchainNodes(Set<BlockchainDevice> blockchainDevices) {

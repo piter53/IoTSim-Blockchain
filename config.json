@@ -1,7 +1,7 @@
 {
     "edgeBlockchainDatacentre": [
         {
-            "className": "org.cloudbus.blockchain.devices.EdgeBlockchainDevice",
+            "className" : "org.cloudbus.blockchain.devices.EdgeBlockchainDevice",
             "name": "Edge_1",
             "type": "edge",
             "schedulingInterval": 1.0,
@@ -181,13 +181,13 @@
                         "communicationProtocol": "xmpp",
                         "networkType": "wifi"
                     },
-                    "baseNodeEntity": {
-                        "className": "org.cloudbus.blockchain.nodes.Node",
-                        "blockchainDepth": "100"
+                    "baseNodeEntity" : {
+                        "className" : "org.cloudbus.blockchain.nodes.Node",
+                        "blockchainDepth" : "100"
                     },
-                    "transmissionPolicy": {
-                        "className": "org.cloudbus.blockchain.policies.TransmissionPolicySizeBased",
-                        "object": 100
+                    "transmissionPolicy" : {
+                        "className" : "org.cloudbus.blockchain.policies.TransmissionPolicySizeBased",
+                        "object" : 100
                     }
                 },
                 {
@@ -209,13 +209,13 @@
                         "communicationProtocol": "xmpp",
                         "networkType": "wifi"
                     },
-                    "baseNodeEntity": {
-                        "className": "org.cloudbus.blockchain.nodes.Node",
-                        "blockchainDepth": "100"
+                    "baseNodeEntity" : {
+                        "className" : "org.cloudbus.blockchain.nodes.Node",
+                        "blockchainDepth" : "100"
                     },
-                    "transmissionPolicy": {
-                        "className": "org.cloudbus.blockchain.policies.TransmissionPolicySizeBased",
-                        "object": 100
+                    "transmissionPolicy" : {
+                        "className" : "org.cloudbus.blockchain.policies.TransmissionPolicySizeBased",
+                        "object" : 100
                     }
                 },
                 {
@@ -237,13 +237,13 @@
                         "communicationProtocol": "xmpp",
                         "networkType": "wifi"
                     },
-                    "baseNodeEntity": {
-                        "className": "org.cloudbus.blockchain.nodes.Node",
-                        "blockchainDepth": "100"
+                    "baseNodeEntity" : {
+                        "className" : "org.cloudbus.blockchain.nodes.Node",
+                        "blockchainDepth" : "100"
                     },
-                    "transmissionPolicy": {
-                        "className": "org.cloudbus.blockchain.policies.TransmissionPolicySizeBased",
-                        "object": 100
+                    "transmissionPolicy" : {
+                        "className" : "org.cloudbus.blockchain.policies.TransmissionPolicySizeBased",
+                        "object" : 100
                     }
                 },
                 {
@@ -265,13 +265,13 @@
                         "communicationProtocol": "xmpp",
                         "networkType": "wifi"
                     },
-                    "baseNodeEntity": {
-                        "className": "org.cloudbus.blockchain.nodes.Node",
-                        "blockchainDepth": "100"
+                    "baseNodeEntity" : {
+                        "className" : "org.cloudbus.blockchain.nodes.Node",
+                        "blockchainDepth" : "100"
                     },
-                    "transmissionPolicy": {
-                        "className": "org.cloudbus.blockchain.policies.TransmissionPolicySizeBased",
-                        "object": 100
+                    "transmissionPolicy" : {
+                        "className" : "org.cloudbus.blockchain.policies.TransmissionPolicySizeBased",
+                        "object" : 100
                     }
                 }
             ],
@@ -397,14 +397,13 @@
                     }
                 }
             ],
-            "baseNodeEntity": {
-                "className": "org.cloudbus.blockchain.nodes.MinerNode",
-                "blockchainDepth": 100,
-                "hashpower": 1000
+            "baseNodeEntity" : {
+                "className" : "org.cloudbus.blockchain.nodes.MinerNode",
+                "blockchainDepth" : "100"
             },
-            "transmissionPolicy": {
-                "className": "org.cloudbus.blockchain.policies.TransmissionPolicySizeBased",
-                "object": 1000
+            "transmissionPolicy" : {
+                "className" : "org.cloudbus.blockchain.policies.TransmissionPolicySizeBased",
+                "object" : 1000
             }
         }
     ],

@@ -4,8 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.cloudbus.blockchain.Block;
 import org.cloudbus.blockchain.Blockchain;
-import org.cloudbus.blockchain.Consensus;
 import org.cloudbus.blockchain.Network;
+import org.cloudbus.blockchain.transactions.DataTransaction;
 import org.cloudbus.blockchain.transactions.Transaction;
 
 import java.util.*;
@@ -41,12 +41,22 @@ public abstract class BaseNode {
         this.blockchainDepth = blockchainDepth;
     }
 
-    public void appendLocalBlockchain(Block block) {
-        if (blockchain.addBlock(block)) {
-
-            updateTransactionsPool(block);
+    public boolean appendLocalBlockchain(Block block) {
+        if (blockchain.isBlockValid(block)) {
+            if (block.getMiner().getBlockchain().getLastBlock().getPreviousBlock() != getBlockchain().getLastBlock()) {
+                updateLocalBlockchain(block.getMiner().getBlockchain());
+            }
+            else {
+                blockchain.addBlockwithoutChecking(block);
+            }
+            updateTransactionsPool();
+            return true;
+        }
+        else {
+            throw new IllegalArgumentException("appendLocalBlockchain(): Block is not valid");
         }
     }
+
 
     /**
      * Update the local blockchain at a given depth, to match miner's version.
@@ -57,15 +67,18 @@ public abstract class BaseNode {
         int depth = getBlockchainDepth();
         ArrayList<Block> trimmed = blockchain.getNMostRecentBlocks(depth, true);
         this.blockchain.setLedger(trimmed);
-        for (Block b : blockchain.getLedger()) {
-            updateTransactionsPool(b);
-        }
         trimBlockchain();
     }
 
     void trimBlockchain() {
         if (blockchain.getLength() > getBlockchainDepth()) {
             blockchain.setLedger(blockchain.getNMostRecentBlocks(blockchainDepth, true));
+        }
+    }
+
+    public void updateTransactionsPool() {
+        for (Block b : blockchain.getLedger()) {
+            updateTransactionsPool(b);
         }
     }
 

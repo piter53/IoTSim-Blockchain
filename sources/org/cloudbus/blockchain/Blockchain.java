@@ -2,6 +2,7 @@ package org.cloudbus.blockchain;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.cloudbus.blockchain.nodes.BaseNode;
 
 import java.util.ArrayList;
 
@@ -27,6 +28,10 @@ public class Blockchain {
             return true;
         }
         return false;
+    }
+
+    public void addBlockwithoutChecking(Block block) {
+        ledger.add(block);
     }
 
     public boolean isBlockValid(Block block){

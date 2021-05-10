@@ -51,7 +51,10 @@ public interface BlockchainDevice {
                 break;
             }
             case BlockchainTags.BROADCAST_BLOCK: {
-                appendLocalBlockchain((Block) event.getData());
+                Block block = (Block) event.getData();
+                if (appendLocalBlockchain(block)){
+                    processAcceptedTransactions(block);
+                }
                 break;
             }
             default: {
@@ -65,8 +68,19 @@ public interface BlockchainDevice {
         getBlockchainNode().appendTransactionsPool(transaction);
     }
 
-    default void appendLocalBlockchain(Block block) {
-        getBlockchainNode().appendLocalBlockchain(block);
+    default void processAcceptedTransactions(Block block){
+        for (Transaction transaction : block.getTransactionList()) {
+            if (transaction.getRecipentNode() == this.getBlockchainNode()){
+                if (transaction instanceof DataTransaction) {
+                    SimEvent event = (SimEvent)((DataTransaction) transaction).getData();
+                    processBlockchainEvent(event);
+                }
+            }
+        }
+    }
+
+    default boolean appendLocalBlockchain(Block block) {
+        return getBlockchainNode().appendLocalBlockchain(block);
     }
 
     default boolean canTransmitThroughBlockchain(Object o){
