@@ -494,31 +494,31 @@
                 },
                 {
                     "type": "edge",
-                    "name": "edge1",
+                    "name": "edge6",
                     "controller": "edge2_sdn1",
                     "iops": 1000000000
                 },
                 {
                     "type": "edge",
-                    "name": "edge2",
+                    "name": "edge7",
                     "controller": "edge2_sdn1",
                     "iops": 1000000000
                 },
                 {
                     "type": "edge",
-                    "name": "edge3",
+                    "name": "edge8",
                     "controller": "edge2_sdn1",
                     "iops": 1000000000
                 },
                 {
                     "type": "edge",
-                    "name": "edge4",
+                    "name": "edge9",
                     "controller": "edge2_sdn1",
                     "iops": 1000000000
                 },
                 {
                     "type": "edge",
-                    "name": "edge5",
+                    "name": "edge10",
                     "controller": "edge2_sdn1",
                     "iops": 1000000000
                 }
@@ -536,36 +536,36 @@
                 },
                 {
                     "source": "core1",
-                    "destination": "edge1",
+                    "destination": "edge6",
                     "bw": 100
                 },
                 {
                     "source": "core1",
-                    "destination": "edge2",
+                    "destination": "edge7",
                     "bw": 100
                 },
                 {
                     "source": "core2",
-                    "destination": "edge3",
+                    "destination": "edge8",
                     "bw": 100
                 },
                 {
                     "source": "core2",
-                    "destination": "edge4",
+                    "destination": "edge9",
                     "bw": 100
                 },
                 {
                     "source": "core2",
-                    "destination": "edge5",
+                    "destination": "edge10",
                     "bw": 100
                 },
                 {
-                    "source": "edge1",
+                    "source": "edge6",
                     "destination": "edgeDevice_3",
                     "bw": 100
                 },
                 {
-                    "source": "edge2",
+                    "source": "edge7",
                     "destination": "edgeDevice_4",
                     "bw": 100
                 }
