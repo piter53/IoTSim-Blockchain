@@ -36,7 +36,7 @@ public abstract class BaseNode {
         blockchain = new Blockchain();
         blockchain.addBlock(getGenesisBlock());
         // Transactions are inserted into a queue sorted by creation time.
-        transactionPool = new PriorityQueue<Transaction>(1, Network.getInstance().getTransactionComparator());
+        transactionPool = new PriorityQueue<Transaction>(1, Network.getInstance().getConsensusAlgorithm().getTransactionComparator());
         currencyBalance = 0;
         this.blockchainDepth = blockchainDepth;
     }

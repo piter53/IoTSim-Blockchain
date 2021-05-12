@@ -3,9 +3,10 @@ package org.cloudbus.blockchain.transactions;
 import lombok.Getter;
 import lombok.Setter;
 import org.cloudbus.blockchain.BlockchainItem;
-import org.cloudbus.blockchain.Consensus;
 import org.cloudbus.blockchain.Network;
+import org.cloudbus.blockchain.consensus.ConsensusAlgorithm;
 import org.cloudbus.blockchain.nodes.BaseNode;
+import org.cloudbus.blockchain.policies.TransmissionPolicy;
 import org.cloudbus.cloudsim.core.CloudSim;
 
 import java.util.Collection;
@@ -17,7 +18,7 @@ public abstract class Transaction implements BlockchainItem {
     private final double creationTimestamp;
     // The time when the transaction was received.
     @Getter @Setter
-    private long receptionTimestamp = 0;
+    private double receptionTimestamp = 0;
     // Sending node
     @Getter
     private final BaseNode senderNode;
@@ -25,23 +26,25 @@ public abstract class Transaction implements BlockchainItem {
     @Getter
     private final BaseNode recipentNode;
     // Transaction fee
-    @Getter
-    private final double fee;
+    @Getter @Setter
+    private double fee;
 
     @Getter
     long size = 1;
 
+    @Getter
     private final static Network network = Network.getInstance();
+    @Getter
+    private static final ConsensusAlgorithm consensus = network.getConsensusAlgorithm();
 
-    Transaction(double creationTimestamp, BaseNode senderNode, BaseNode recipentNode, double fee){
+    Transaction(double creationTimestamp, BaseNode senderNode, BaseNode recipentNode){
         this.creationTimestamp = creationTimestamp;
         this.senderNode = senderNode;
         this.recipentNode = recipentNode;
-        this.fee = fee;
     }
 
-    Transaction(BaseNode senderNode, BaseNode recipentNode, double fee) {
-        this(CloudSim.clock(), senderNode, recipentNode, fee);
+    Transaction(BaseNode senderNode, BaseNode recipentNode) {
+        this(CloudSim.clock(), senderNode, recipentNode);
     }
 
     public static boolean isTransactionCollectionValid(Collection<Transaction> transactions) {
@@ -56,35 +59,23 @@ public abstract class Transaction implements BlockchainItem {
     public static boolean isTransactionValid(Transaction transaction) {
         return isTransactionFeeCorrect(transaction) &&
             canBeTransmittedThroughBlockchain(transaction) &&
-            Transaction.hasCorrectSenderAndRecipent(transaction);
+            hasCorrectSenderAndRecipent(transaction);
     }
 
     private static boolean isTransactionFeeCorrect(Transaction transaction) {
-        return transaction.getFee() == calculateTransactionFee(transaction);
+        return transaction.getFee() == consensus.calculateTransactionFee(transaction);
     }
 
-    public static double calculateTransactionFee(Transaction transaction) {
-        if (transaction instanceof CoinTransaction) {
-            return Consensus.getTransactionFee();
-        } else if (transaction instanceof DataTransaction) {
-            return calculateTransactionFee(((DataTransaction) transaction).getSize());
+    public static boolean canBeTransmittedThroughBlockchain(Transaction o) {
+        try {
+            return network.getConsensusAlgorithm().getGlobalTransmissionPolicy().canTransmitThroughBlockchain(o);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
         }
-        return 0;
+        return false;
     }
 
-    public static double calculateTransactionFee(long size) {
-        return Consensus.getTransactionFee() + size / 500.0;
-    }
-
-    public static boolean canBeTransmittedThroughBlockchain(Object o) {
-        if (network.getGlobalTransmissionPolicy() != null) {
-            return network.getGlobalTransmissionPolicy().canTransmitThroughBlockchain(o);
-        } else {
-            return true;
-        }
-    }
-
-    static boolean hasCorrectSenderAndRecipent(Transaction transaction) {
+    public static boolean hasCorrectSenderAndRecipent(Transaction transaction) {
         return network.doesNodeExist(transaction.recipentNode) && network.doesNodeExist(transaction.senderNode);
     }
 }

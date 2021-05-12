@@ -9,6 +9,7 @@ import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.SimEntity;
 import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.osmosis.core.Flow;
+import org.cloudbus.osmosis.core.OsmosisTags;
 
 /**
  * @author Piotr Grela
@@ -16,14 +17,25 @@ import org.cloudbus.osmosis.core.Flow;
  */
 public interface BlockchainDevice {
 
-    default void broadcastObject(Object object) {
-        if (object instanceof BlockchainItem) {
-            broadcastBlockchainItem((BlockchainItem) object);
-        } else if (object instanceof Flow) {
-            Flow flow = (Flow) object;
-            BaseNode recipentNode = getNetwork().getNodeByEntityId(flow.getDatacenterId());
-            Transaction transaction = new DataTransaction(CloudSim.clock(), getBlockchainNode(), recipentNode, flow, flow.getSize(), Transaction.calculateTransactionFee(flow.getSize()));
-            broadcastBlockchainItem(transaction);
+    default void broadcastThroughBlockchainIfPossible(Object object, int destinationId) {
+        try {
+            if (getTransmissionPolicy().canTransmitThroughBlockchain(object) &&
+                getNetwork().getConsensusAlgorithm().getGlobalTransmissionPolicy().canTransmitThroughBlockchain(object)) {
+                if (object instanceof BlockchainItem) {
+                    broadcastBlockchainItem((BlockchainItem) object);
+                } else if (object instanceof Flow) {
+                    Flow flow = (Flow) object;
+                    BaseNode recipentNode = getNetwork().getNodeByEntityId(flow.getDatacenterId());
+                    Transaction transaction = new DataTransaction(CloudSim.clock(), getBlockchainNode(), recipentNode, flow, flow.getSize());
+                    broadcastBlockchainItem(transaction);
+                }
+            }
+            else {
+                sendNow(destinationId, OsmosisTags.TRANSMIT_IOT_DATA, (Flow) object);
+            }
+        }
+        catch (NullPointerException e){
+            e.printStackTrace();
         }
     }
 
@@ -35,7 +47,9 @@ public interface BlockchainDevice {
             tag = BlockchainTags.BROADCAST_BLOCK;
         }
         for (BlockchainDevice n : getNetwork().getBlockchainDevicesSet()) {
-            sendNow(((SimEntity) n).getId(), tag, blockchainItem);
+            if (n != this) {
+                sendNow(((SimEntity) n).getId(), tag, blockchainItem);
+            }
         }
     }
 
@@ -71,10 +85,12 @@ public interface BlockchainDevice {
     default void processAcceptedTransactions(Block block){
         for (Transaction transaction : block.getTransactionList()) {
             if (transaction.getRecipentNode() == this.getBlockchainNode()){
+                transaction.setReceptionTimestamp(CloudSim.clock());
                 if (transaction instanceof DataTransaction) {
                     SimEvent event = (SimEvent)((DataTransaction) transaction).getData();
                     processBlockchainEvent(event);
                 }
+                // TODO finish method and include currency deduction based on fee
             }
         }
     }
@@ -84,7 +100,7 @@ public interface BlockchainDevice {
     }
 
     default boolean canTransmitThroughBlockchain(Object o){
-        return Transaction.canBeTransmittedThroughBlockchain(o) && getTransmissionPolicy().canTransmitThroughBlockchain(o);
+        return Transaction.canBeTransmittedThroughBlockchain((Transaction)o) && getTransmissionPolicy().canTransmitThroughBlockchain(o);
     }
 
     BaseNode getBlockchainNode();

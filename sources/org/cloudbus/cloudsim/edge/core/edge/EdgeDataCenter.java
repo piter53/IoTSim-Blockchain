@@ -51,7 +51,7 @@ public class EdgeDataCenter extends OsmesisDatacenter{
 	private List<Flow> flowListHis = new ArrayList<>(); 
 	
 	public EdgeDataCenter(String name, DatacenterCharacteristics characteristics,
-			VmAllocationPolicy vmAllocationPolicy, List<Storage> storageList, double schedulingInterval)
+			VmAllocationPolicy vmAllocationPolicy, List<Storage> storageList, Double schedulingInterval)
 			throws Exception {
 		super(name, characteristics, vmAllocationPolicy, storageList, schedulingInterval);
 	}

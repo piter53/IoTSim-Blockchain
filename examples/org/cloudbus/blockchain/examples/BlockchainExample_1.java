@@ -11,6 +11,7 @@
 
 package org.cloudbus.blockchain.examples;
 
+import org.cloudbus.blockchain.BlockchainBroker;
 import org.cloudbus.blockchain.BlockchainBuilder;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Vm;
@@ -60,7 +61,7 @@ public class BlockchainExample_1 {
 
 		// Initialize the CloudSim library
 		CloudSim.init(num_user, calendar, trace_flag);
-		osmesisBroker  = new OsmesisBroker("OsmesisBroker");
+		osmesisBroker  = new BlockchainBroker("OsmesisBroker");
 		topologyBuilder = new BlockchainBuilder(osmesisBroker);
 		ConfiguationEntity config = buildTopologyFromFile(configurationFile);
         if(config !=  null) {

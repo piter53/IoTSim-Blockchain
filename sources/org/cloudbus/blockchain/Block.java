@@ -18,6 +18,8 @@ public class Block implements BlockchainItem {
     private final boolean isGenesis;
     @Getter
     private final Collection<Transaction> transactionList;
+    @Getter
+    private long sizeMb = 0;
 
     public static final Block GENESIS_BLOCK = new Block(null, null, null);
     private final static Network network = Network.getInstance();
@@ -34,6 +36,11 @@ public class Block implements BlockchainItem {
         generationTimestamp = CloudSim.clock();
         this.miner = miner;
         this.transactionList = transactionList;
+        if (transactionList != null){
+            for (Transaction transaction : transactionList) {
+                sizeMb += transaction.getSize();
+            }
+        }
     }
 
     public static boolean isBlockValid(Block block) {

@@ -19,6 +19,7 @@ import org.cloudbus.osmosis.core.SDNController;
 import org.cloudbus.osmosis.core.polocies.VmMELAllocationPolicyCombinedLeastFullFirst;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -37,7 +38,6 @@ public class BlockchainBuilder extends OsmosisBuilder {
     @Override
     public List<EdgeDataCenter> buildEdgeDatacentres(List<ConfiguationEntity.EdgeDataCenterEntity> edgeDatacenerEntites) {
         List<EdgeDataCenter> edgeDC = new ArrayList<EdgeDataCenter>();
-
         for (ConfiguationEntity.EdgeDataCenterEntity edgeDCEntity : edgeDatacenerEntites) {
             List<ConfiguationEntity.EdgeDeviceEntity> hostListEntities = edgeDCEntity.getHosts();
             List<EdgeDevice> hostList = new ArrayList<EdgeDevice>();
@@ -139,13 +139,12 @@ public class BlockchainBuilder extends OsmosisBuilder {
 
             List<IoTDevice> devices = createIoTDevice(edgeDCEntity.getIoTDevices());
             this.getBroker().setIoTDevices(devices);
-            List<ConfiguationEntity.IotDeviceEntity> entities = new ArrayList<>(edgeDCEntity.getIoTBlockchainDevices());
-            devices = createIoTDevice(entities);
-            this.getBroker().setIoTDevices(devices);
-
             edgeDC.add(datacenter);
             if (datacenter instanceof EdgeBlockchainDevice) {
                 blockchainNetwork.addEdgeBlockchainDevice((EdgeBlockchainDevice) datacenter);
+                List<ConfiguationEntity.IotDeviceEntity> entities = new ArrayList<>(edgeDCEntity.getIoTBlockchainDevices());
+                devices = createIoTDevice(entities);
+                this.getBroker().setIoTDevices(devices);
             }
 
         }
@@ -252,14 +251,23 @@ public class BlockchainBuilder extends OsmosisBuilder {
                 return null;
             }
             Constructor<?> constructor;
-            if (baseNodeEntity.getBlockchainDepth() != 0 && baseNodeEntity.getHashpower() != 0) {
-                constructor = aClass.getConstructor(Integer.class, Long.class);
-                return (BaseNode) constructor.newInstance(baseNodeEntity.getBlockchainDepth(), baseNodeEntity.getHashpower());
+            if (baseNodeEntity.getBlockchainDepth() != 0) {
+                if (baseNodeEntity.getHashpower() != 0) {
+                    constructor = aClass.getConstructor(Integer.class, Long.class);
+                    return (BaseNode) constructor.newInstance(baseNodeEntity.getBlockchainDepth(), baseNodeEntity.getHashpower());
+                }
+                else {
+                    constructor = aClass.getConstructor(Integer.class);
+                    return (BaseNode) constructor.newInstance(baseNodeEntity.getBlockchainDepth());
+                }
             } else {
                 constructor = aClass.getConstructor();
                 return (BaseNode) constructor.newInstance();
             }
         } catch (Exception e) {
+            if (e instanceof InvocationTargetException) {
+                e.getCause();
+            }
             e.printStackTrace();
         }
         return null;

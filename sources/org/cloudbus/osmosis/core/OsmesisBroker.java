@@ -226,14 +226,12 @@ public class OsmesisBroker extends DatacenterBroker {
 		}
 	}
 
-	private void generateIoTData(SimEvent ev){
+	public void generateIoTData(SimEvent ev){
 		OsmesisAppDescription app = (OsmesisAppDescription) ev.getData();
 		if(CloudSim.clock() < app.getStopDataGenerationTime() && !app.getIsIoTDeviceDied()){
 			sendNow(app.getIoTDeviceId(), OsmosisTags.SENSING, app);
 			double delay = app.getDataRate();
 			send(this.getId(), delay, OsmosisTags.GENERATE_OSMESIS, app);
-		} else {
-
 		}
 	}
 

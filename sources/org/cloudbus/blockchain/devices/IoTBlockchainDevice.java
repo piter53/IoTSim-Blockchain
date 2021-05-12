@@ -2,6 +2,7 @@ package org.cloudbus.blockchain.devices;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.cloudbus.blockchain.Network;
 import org.cloudbus.blockchain.nodes.BaseNode;
 import org.cloudbus.blockchain.policies.TransmissionPolicy;
 import org.cloudbus.cloudsim.core.CloudSim;
@@ -23,6 +24,9 @@ public abstract class IoTBlockchainDevice extends IoTDevice implements Blockchai
 
     @Getter @Setter
     private TransmissionPolicy transmissionPolicy;
+
+    @Getter
+    private Network network = Network.getInstance();
 
     public IoTBlockchainDevice(String name, EdgeNetworkInfo networkModel, double bandwidth, BaseNode node, TransmissionPolicy transmissionPolicy) {
         super(name, networkModel, bandwidth);
@@ -62,12 +66,7 @@ public abstract class IoTBlockchainDevice extends IoTDevice implements Blockchai
         OsmesisBroker.workflowTag.add(workflowTag);
         flow.addPacketSize(app.getIoTDeviceOutputSize());
         updateBandwidth();
-        if (transmissionPolicy.canTransmitThroughBlockchain(flow)) {
-            broadcastObject(flow);
-        }
-        else {
-            sendNow(flow.getDatacenterId(), OsmosisTags.TRANSMIT_IOT_DATA, flow);
-        }
+        broadcastThroughBlockchainIfPossible(flow, flow.getDatacenterId());
     }
 
     @Override

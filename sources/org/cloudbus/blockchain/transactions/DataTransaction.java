@@ -11,14 +11,15 @@ public class DataTransaction extends Transaction {
 
     private final Object data;
 
-    public DataTransaction(double creationTime, BaseNode senderNode, BaseNode receiverNode, Object data, long size, double fee) {
-        super(creationTime, senderNode, receiverNode, fee);
+    public DataTransaction(double creationTime, BaseNode senderNode, BaseNode receiverNode, Object data, long size) {
+        super(creationTime, senderNode, receiverNode);
         this.data = data;
         this.size += size;
+        this.setFee(getConsensus().calculateTransactionFee(this));
     }
 
-    public DataTransaction(BaseNode senderNode, BaseNode receiverNode, Object data, long size, double fee){
-        this(CloudSim.clock(), senderNode, receiverNode, data, size, fee);
+    public DataTransaction(BaseNode senderNode, BaseNode receiverNode, Object data, long size){
+        this(CloudSim.clock(), senderNode, receiverNode, data, size);
     }
 
     public Object getData() {

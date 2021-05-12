@@ -24,7 +24,7 @@ public class Blockchain {
 
     public boolean addBlock(Block block) {
         if (isBlockValid(block)) {
-            ledger.add(block);
+            addBlockwithoutChecking(block);
             return true;
         }
         return false;

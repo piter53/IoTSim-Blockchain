@@ -2,15 +2,19 @@ package org.cloudbus.blockchain;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.cloudbus.blockchain.consensus.ConsensusAlgorithm;
+import org.cloudbus.blockchain.consensus.ProofOfWork;
 import org.cloudbus.blockchain.devices.BlockchainDevice;
 import org.cloudbus.blockchain.devices.EdgeBlockchainDevice;
 import org.cloudbus.blockchain.devices.IoTBlockchainDevice;
 import org.cloudbus.blockchain.nodes.BaseNode;
+import org.cloudbus.blockchain.nodes.MinerNode;
 import org.cloudbus.blockchain.policies.TransmissionPolicy;
 import org.cloudbus.blockchain.policies.TransmissionPolicySizeBased;
 import org.cloudbus.blockchain.transactions.Transaction;
 import org.cloudbus.cloudsim.core.SimEntity;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
@@ -21,26 +25,26 @@ import java.util.Set;
  */
 public class Network {
 
+    @Getter
+    private ConsensusAlgorithm consensusAlgorithm;
     @Getter @Setter
-    private Set<BlockchainDevice> blockchainDevicesSet;
-    @Getter
-    private Double blockInterval = 20.0;
-    @Getter
-    private Comparator<Transaction> transactionComparator = Comparator.comparingDouble(Transaction::getCreationTimestamp);
+    private Collection<BlockchainDevice> blockchainDevicesSet;
     @Getter
     private long maxBlockSize = 1000;
     @Getter
-    private TransmissionPolicy globalTransmissionPolicy = new TransmissionPolicySizeBased((long)100);
-    @Getter
-    private Set<IoTBlockchainDevice> ioTBlockchainDevicesSet;
+    private Collection<IoTBlockchainDevice> ioTBlockchainDevicesSet;
     @Setter
-    private Set<EdgeBlockchainDevice> edgeBlockchainDataCentersSet;
+    private Collection<EdgeBlockchainDevice> edgeBlockchainDataCentersSet;
+    @Getter
+    private Collection<BlockchainDevice> minerDevices;
     private static Network singleInstance = null;
 
     private Network() {
         blockchainDevicesSet = new HashSet<>();
         ioTBlockchainDevicesSet = new HashSet<>();
         edgeBlockchainDataCentersSet = new HashSet<>();
+        minerDevices = new HashSet<>();
+        consensusAlgorithm = new ProofOfWork();
     }
 
     public static Network getInstance() {
@@ -50,15 +54,30 @@ public class Network {
         return singleInstance;
     }
 
-    public void pickNewMiner() {
-
+    public BlockchainDevice pickNewMiningDevice() {
+        Set<MinerNode> minerNodes = new HashSet<>();
+        for (BlockchainDevice device : minerDevices) {
+            minerNodes.add((MinerNode) device.getBlockchainNode());
+        }
+        MinerNode miner = consensusAlgorithm.pickMiner(minerNodes);
+        for (BlockchainDevice device : minerDevices) {
+            if (miner == device.getBlockchainNode()) {
+                return device;
+            }
+        }
+        return null;
     }
 
     private void addBlockchainNodes(Set<BlockchainDevice> blockchainDevices) {
-        this.blockchainDevicesSet.addAll(blockchainDevices);
+        for (BlockchainDevice device: blockchainDevices){
+            addBlockchainNode(device);
+        }
     }
 
     private void addBlockchainNode(BlockchainDevice device) {
+        if (device.getBlockchainNode() instanceof MinerNode) {
+            minerDevices.add(device);
+        }
         this.blockchainDevicesSet.add(device);
     }
 

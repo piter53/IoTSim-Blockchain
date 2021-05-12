@@ -28,6 +28,7 @@ public class MinerNode extends BaseNode {
     public MinerNode(Integer blockchainDepth, Long hashpower) {
         super(blockchainDepth);
         noOfMinedBlocks = 0;
+        this.hashpower = hashpower;
     }
 
     private Collection<Transaction> getTransactionsForNewBlock() {
