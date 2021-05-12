@@ -31,8 +31,8 @@ public abstract class ConsensusAlgorithm {
     private int baseTransationSize;
 
     public ConsensusAlgorithm(){
-         globalTransmissionPolicy = new TransmissionPolicySizeBased((long)100);
-         blockInterval = 20.0;
+         globalTransmissionPolicy = new TransmissionPolicySizeBased((long)200);
+         blockInterval = 8.0;
          transactionComparator = Comparator.comparingDouble(Transaction::getCreationTimestamp);
          blockGenerationReward = 1;
          baseTransactionFee = 0.01;

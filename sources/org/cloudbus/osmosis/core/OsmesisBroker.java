@@ -294,4 +294,8 @@ public class OsmesisBroker extends DatacenterBroker {
     public void setEdgeSDNController(EdgeSDNController controller) {
         this.edgeController = controller;
     }
+
+    public List<OsmesisAppDescription> getAppList() {
+        return appList;
+    }
 }

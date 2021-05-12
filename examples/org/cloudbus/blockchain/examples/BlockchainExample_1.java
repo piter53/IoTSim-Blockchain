@@ -13,6 +13,7 @@ package org.cloudbus.blockchain.examples;
 
 import org.cloudbus.blockchain.BlockchainBroker;
 import org.cloudbus.blockchain.BlockchainBuilder;
+import org.cloudbus.blockchain.BlockchainTags;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
@@ -81,7 +82,7 @@ public class BlockchainExample_1 {
 		maestro.setSdnControllers(controllers);
 		osmesisBroker.submitOsmesisApps(OsmesisAppsParser.appList);
 		osmesisBroker.setDatacenters(topologyBuilder.getOsmesisDatacentres());
-		
+
 		double startTime = CloudSim.startSimulation();
   
 		LogUtil.simulationFinished();

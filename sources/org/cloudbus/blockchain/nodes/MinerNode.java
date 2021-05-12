@@ -36,12 +36,13 @@ public class MinerNode extends BaseNode {
         Set<Transaction> appendableTransactions = new HashSet<>();
         long currentSize=0;
         while (true) {
-            assert getTransactionPool().peek() != null;
-            if (!((currentSize + getTransactionPool().peek().getSize()) <= maxSize))
-                break;
-            Transaction transaction = getTransactionPool().poll();
-            appendableTransactions.add(transaction);
-            currentSize += transaction.getSize();
+            if (!getTransactionPool().isEmpty()){
+                if (!((currentSize + getTransactionPool().peek().getSize()) <= maxSize))
+                    break;
+                Transaction transaction = getTransactionPool().poll();
+                appendableTransactions.add(transaction);
+                currentSize += transaction.getSize();
+            }
         }
         return appendableTransactions;
     }
@@ -49,7 +50,8 @@ public class MinerNode extends BaseNode {
     public Block mineBlock(BlockchainDevice device) {
         Collection<Transaction> transactions = getTransactionsForNewBlock();
         Block newBlock = new Block(getBlockchain().getLastBlock(),this, transactions);
-        getBlockchain().getLedger().add(newBlock);
+        getBlockchain().addBlockwithoutChecking(newBlock);
+        trimBlockchain();
         device.broadcastBlockchainItem(newBlock);
         noOfMinedBlocks++;
         return newBlock;

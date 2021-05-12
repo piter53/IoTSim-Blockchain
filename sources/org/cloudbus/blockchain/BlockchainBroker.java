@@ -33,17 +33,26 @@ public class BlockchainBroker extends OsmesisBroker {
     }
 
     public void generateBlock() {
-        BlockchainDevice device = blockchainNetwork.pickNewMiningDevice();
-        ((MinerNode) device.getBlockchainNode()).mineBlock(device);
+        for (OsmesisAppDescription app : getAppList()) {
+            if (CloudSim.clock() < app.getStopDataGenerationTime()){
+                BlockchainDevice device = blockchainNetwork.pickNewMiningDevice();
+                ((MinerNode) device.getBlockchainNode()).mineBlock(device);
+                double blockGenerationDelay = blockchainNetwork.getConsensusAlgorithm().getBlockInterval();
+                send(this.getId(), blockGenerationDelay, BlockchainTags.GENERATE_BLOCK, null);
+                break;
+            }
+        }
+    }
+
+    @Override
+    protected void processResourceCharacteristicsRequest(SimEvent ev) {
+        super.processResourceCharacteristicsRequest(ev);
         double blockGenerationDelay = blockchainNetwork.getConsensusAlgorithm().getBlockInterval();
         send(this.getId(), blockGenerationDelay, BlockchainTags.GENERATE_BLOCK, null);
     }
 
     @Override
-    public void processVmCreate(SimEvent ev) {
-        super.processVmCreate(ev);
-        double blockGenerationDelay = blockchainNetwork.getConsensusAlgorithm().getBlockInterval();
-        send(this.getId(), blockGenerationDelay, BlockchainTags.GENERATE_BLOCK, null);
+    protected void createVmsInDatacenter(int datacenterId) {
+        super.createVmsInDatacenter(datacenterId);
     }
-
 }

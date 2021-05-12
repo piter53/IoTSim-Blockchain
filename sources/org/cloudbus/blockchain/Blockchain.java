@@ -32,6 +32,7 @@ public class Blockchain {
 
     public void addBlockwithoutChecking(Block block) {
         ledger.add(block);
+
     }
 
     public boolean isBlockValid(Block block){
