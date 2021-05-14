@@ -41,12 +41,7 @@ public interface BlockchainDevice {
     }
 
     default void broadcastBlockchainItem(BlockchainItem blockchainItem) {
-        int tag = -1;
-        if (blockchainItem instanceof Transaction) {
-            tag = BlockchainTags.BROADCAST_TRANSACTION;
-        } else if (blockchainItem instanceof Block) {
-            tag = BlockchainTags.BROADCAST_BLOCK;
-        }
+        int tag = blockchainItem.getBROADCAST_TAG();
         for (BlockchainDevice n : getNetwork().getBlockchainDevicesSet()) {
             if (n != this) {
                 sendNow(((SimEntity) n).getId(), tag, blockchainItem);
@@ -85,24 +80,7 @@ public interface BlockchainDevice {
 
     default void processAcceptedTransactions(Block block){
         for (Transaction transaction : block.getTransactionList()) {
-            if (transaction.getRecipentNode() == this.getBlockchainNode()){
-                transaction.setReceptionTimestamp(CloudSim.clock());
-                if (transaction instanceof DataTransaction) {
-                    SimEvent event = (SimEvent)((DataTransaction) transaction).getData();
-                    Flow flow = (Flow) event.getData();
-                    sendNow(flow.getDatacenterId(), OsmosisTags.TRANSMIT_IOT_DATA, flow);
-                }
-                else {
-                    getBlockchainNode().addBalance(((CoinTransaction) transaction).getCurrencyAmount());
-                }
-                // TODO finish method and include currency deduction based on fee
-            }
-            if (transaction.getSenderNode() == this.getBlockchainNode()) {
-                getBlockchainNode().addBalance(transaction.getFee() * -1);
-                if (transaction instanceof CoinTransaction) {
-                    getBlockchainNode().addBalance(((CoinTransaction) transaction).getCurrencyAmount() * -1);
-                }
-            }
+            transaction.processTransaction(this);
         }
     }
 

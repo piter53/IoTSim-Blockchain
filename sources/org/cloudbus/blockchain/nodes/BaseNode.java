@@ -52,9 +52,7 @@ public abstract class BaseNode {
             updateTransactionsPool();
             return true;
         }
-        else {
-            throw new IllegalArgumentException("appendLocalBlockchain(): Block is not valid");
-        }
+        return false;
     }
 
 

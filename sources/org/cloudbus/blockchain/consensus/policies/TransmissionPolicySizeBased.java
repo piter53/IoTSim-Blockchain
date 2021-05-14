@@ -17,14 +17,8 @@ public class TransmissionPolicySizeBased implements TransmissionPolicy{
         if (o instanceof Flow) {
             return ((Flow) o).getAmountToBeProcessed() <= maxSize;
         } else if (o instanceof Transaction) {
-            if (o instanceof DataTransaction) {
-                return ((DataTransaction) o).getSize() <= maxSize;
-            } else {
-                return true;
-            }
+            return ((Transaction)o).getSize() <= maxSize;
         }
-        // TODO different object types
-
         return false;
     }
 

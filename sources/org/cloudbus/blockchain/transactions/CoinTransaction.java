@@ -1,6 +1,7 @@
 package org.cloudbus.blockchain.transactions;
 
 import lombok.Getter;
+import org.cloudbus.blockchain.devices.BlockchainDevice;
 import org.cloudbus.blockchain.nodes.BaseNode;
 import org.cloudbus.cloudsim.core.CloudSim;
 
@@ -19,4 +20,12 @@ public class CoinTransaction extends Transaction {
         this.setFee(getConsensus().calculateTransactionFee(this));
     }
 
+    @Override
+    public void processTransaction(BlockchainDevice device) {
+        if (device.getBlockchainNode() == getRecipentNode()) {
+            device.getBlockchainNode().addBalance(getCurrencyAmount());
+        } else if (device.getBlockchainNode() == getSenderNode()) {
+            device.getBlockchainNode().addBalance(getCurrencyAmount() * -1);
+        }
+    }
 }

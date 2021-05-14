@@ -3,8 +3,10 @@ package org.cloudbus.blockchain.transactions;
 import lombok.Getter;
 import lombok.Setter;
 import org.cloudbus.blockchain.BlockchainItem;
+import org.cloudbus.blockchain.BlockchainTags;
 import org.cloudbus.blockchain.Network;
 import org.cloudbus.blockchain.consensus.ConsensusAlgorithm;
+import org.cloudbus.blockchain.devices.BlockchainDevice;
 import org.cloudbus.blockchain.nodes.BaseNode;
 import org.cloudbus.cloudsim.core.CloudSim;
 
@@ -32,6 +34,9 @@ public abstract class Transaction implements BlockchainItem {
 
     @Getter
     long size = 1;
+
+    @Getter
+    final int BROADCAST_TAG = BlockchainTags.BROADCAST_TRANSACTION;
 
     @Getter
     private final static Network network = Network.getInstance();
@@ -101,5 +106,13 @@ public abstract class Transaction implements BlockchainItem {
         return network.doesNodeExist(transaction.recipentNode) &&
             network.doesNodeExist(transaction.senderNode) &&
             transaction.senderNode != transaction.recipentNode;
+    }
+
+    public void processTransaction(BlockchainDevice device){
+        if (getRecipentNode() == device.getBlockchainNode()) {
+            setReceptionTimestamp(CloudSim.clock());
+        } else if (getSenderNode() == device.getBlockchainNode()) {
+            device.getBlockchainNode().addBalance(getFee() * -1);
+        }
     }
 }

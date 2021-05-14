@@ -186,7 +186,7 @@
                         "blockchainDepth": "100"
                     },
                     "transmissionPolicy": {
-                        "className": "org.cloudbus.blockchain.policies.TransmissionPolicySizeBased",
+                        "className": "org.cloudbus.blockchain.consensus.policies.TransmissionPolicySizeBased",
                         "object": 100
                     }
                 },
@@ -214,7 +214,7 @@
                         "blockchainDepth": "100"
                     },
                     "transmissionPolicy": {
-                        "className": "org.cloudbus.blockchain.policies.TransmissionPolicySizeBased",
+                        "className": "org.cloudbus.blockchain.consensus.policies.TransmissionPolicySizeBased",
                         "object": 100
                     }
                 },
@@ -242,7 +242,7 @@
                         "blockchainDepth": "100"
                     },
                     "transmissionPolicy": {
-                        "className": "org.cloudbus.blockchain.policies.TransmissionPolicySizeBased",
+                        "className": "org.cloudbus.blockchain.consensus.policies.TransmissionPolicySizeBased",
                         "object": 100
                     }
                 },
@@ -270,7 +270,7 @@
                         "blockchainDepth": "100"
                     },
                     "transmissionPolicy": {
-                        "className": "org.cloudbus.blockchain.policies.TransmissionPolicySizeBased",
+                        "className": "org.cloudbus.blockchain.consensus.policies.TransmissionPolicySizeBased",
                         "object": 100
                     }
                 }
@@ -403,7 +403,7 @@
                 "hashpower": 1000
             },
             "transmissionPolicy": {
-                "className": "org.cloudbus.blockchain.policies.TransmissionPolicySizeBased",
+                "className": "org.cloudbus.blockchain.consensus.policies.TransmissionPolicySizeBased",
                 "object": 1000
             }
         }
