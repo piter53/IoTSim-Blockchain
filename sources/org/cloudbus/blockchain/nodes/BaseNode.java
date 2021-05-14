@@ -108,6 +108,10 @@ public abstract class BaseNode {
         transactionPool.addAll(transactions);
     }
 
+    public void addBalance(double amount) {
+        currencyBalance += amount;
+    }
+
     private static Block getGenesisBlock(){
         return Block.GENESIS_BLOCK;
     }

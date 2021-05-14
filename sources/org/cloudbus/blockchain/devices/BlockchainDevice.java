@@ -2,7 +2,8 @@ package org.cloudbus.blockchain.devices;
 
 import org.cloudbus.blockchain.*;
 import org.cloudbus.blockchain.nodes.BaseNode;
-import org.cloudbus.blockchain.policies.TransmissionPolicy;
+import org.cloudbus.blockchain.consensus.policies.TransmissionPolicy;
+import org.cloudbus.blockchain.transactions.CoinTransaction;
 import org.cloudbus.blockchain.transactions.DataTransaction;
 import org.cloudbus.blockchain.transactions.Transaction;
 import org.cloudbus.cloudsim.core.CloudSim;
@@ -88,9 +89,19 @@ public interface BlockchainDevice {
                 transaction.setReceptionTimestamp(CloudSim.clock());
                 if (transaction instanceof DataTransaction) {
                     SimEvent event = (SimEvent)((DataTransaction) transaction).getData();
-                    processBlockchainEvent(event);
+                    Flow flow = (Flow) event.getData();
+                    sendNow(flow.getDatacenterId(), OsmosisTags.TRANSMIT_IOT_DATA, flow);
+                }
+                else {
+                    getBlockchainNode().addBalance(((CoinTransaction) transaction).getCurrencyAmount());
                 }
                 // TODO finish method and include currency deduction based on fee
+            }
+            if (transaction.getSenderNode() == this.getBlockchainNode()) {
+                getBlockchainNode().addBalance(transaction.getFee() * -1);
+                if (transaction instanceof CoinTransaction) {
+                    getBlockchainNode().addBalance(((CoinTransaction) transaction).getCurrencyAmount() * -1);
+                }
             }
         }
     }

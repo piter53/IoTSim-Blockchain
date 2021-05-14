@@ -13,7 +13,7 @@ package org.cloudbus.blockchain.devices.sensors;
 
 import org.cloudbus.blockchain.devices.IoTBlockchainDevice;
 import org.cloudbus.blockchain.nodes.BaseNode;
-import org.cloudbus.blockchain.policies.TransmissionPolicy;
+import org.cloudbus.blockchain.consensus.policies.TransmissionPolicy;
 import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.cloudsim.edge.iot.network.EdgeNetworkInfo;
 

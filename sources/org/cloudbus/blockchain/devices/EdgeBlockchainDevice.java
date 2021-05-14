@@ -2,10 +2,8 @@ package org.cloudbus.blockchain.devices;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.cloudbus.blockchain.BlockchainTags;
 import org.cloudbus.blockchain.nodes.BaseNode;
-import org.cloudbus.blockchain.policies.TransmissionPolicy;
-import org.cloudbus.blockchain.transactions.Transaction;
+import org.cloudbus.blockchain.consensus.policies.TransmissionPolicy;
 import org.cloudbus.cloudsim.DatacenterCharacteristics;
 import org.cloudbus.cloudsim.Storage;
 import org.cloudbus.cloudsim.VmAllocationPolicy;

@@ -6,10 +6,11 @@ import org.cloudbus.blockchain.BlockchainItem;
 import org.cloudbus.blockchain.Network;
 import org.cloudbus.blockchain.consensus.ConsensusAlgorithm;
 import org.cloudbus.blockchain.nodes.BaseNode;
-import org.cloudbus.blockchain.policies.TransmissionPolicy;
 import org.cloudbus.cloudsim.core.CloudSim;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class Transaction implements BlockchainItem {
 
@@ -53,6 +54,27 @@ public abstract class Transaction implements BlockchainItem {
                 return false;
             }
         }
+        Map<BaseNode, Double> payerNodesToBalanceMap = new HashMap<>();
+        for (Transaction transaction : transactions) {
+            BaseNode sender = transaction.senderNode;
+            BaseNode receiver = transaction.recipentNode;
+            if (!payerNodesToBalanceMap.containsKey(sender)) {
+                payerNodesToBalanceMap.put(sender, sender.getCurrencyBalance());
+            }
+            if (!payerNodesToBalanceMap.containsKey(receiver)) {
+                payerNodesToBalanceMap.put(receiver, receiver.getCurrencyBalance());
+            }
+            payerNodesToBalanceMap.put(sender, payerNodesToBalanceMap.get(sender) - transaction.getFee());
+            if (transaction instanceof CoinTransaction) {
+                payerNodesToBalanceMap.put(sender, payerNodesToBalanceMap.get(sender) - ((CoinTransaction)transaction).getCurrencyAmount());
+                payerNodesToBalanceMap.put(receiver, payerNodesToBalanceMap.get(receiver) + ((CoinTransaction)transaction).getCurrencyAmount());
+            }
+        }
+        for (Double balance : payerNodesToBalanceMap.values()) {
+            if (balance < 0) {
+                return false;
+            }
+        }
         return true;
     }
 
@@ -76,6 +98,8 @@ public abstract class Transaction implements BlockchainItem {
     }
 
     public static boolean hasCorrectSenderAndRecipent(Transaction transaction) {
-        return network.doesNodeExist(transaction.recipentNode) && network.doesNodeExist(transaction.senderNode);
+        return network.doesNodeExist(transaction.recipentNode) &&
+            network.doesNodeExist(transaction.senderNode) &&
+            transaction.senderNode != transaction.recipentNode;
     }
 }

@@ -9,13 +9,9 @@ import org.cloudbus.blockchain.devices.EdgeBlockchainDevice;
 import org.cloudbus.blockchain.devices.IoTBlockchainDevice;
 import org.cloudbus.blockchain.nodes.BaseNode;
 import org.cloudbus.blockchain.nodes.MinerNode;
-import org.cloudbus.blockchain.policies.TransmissionPolicy;
-import org.cloudbus.blockchain.policies.TransmissionPolicySizeBased;
-import org.cloudbus.blockchain.transactions.Transaction;
 import org.cloudbus.cloudsim.core.SimEntity;
 
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,8 +25,6 @@ public class Network {
     private ConsensusAlgorithm consensusAlgorithm;
     @Getter @Setter
     private Collection<BlockchainDevice> blockchainDevicesSet;
-    @Getter
-    private long maxBlockSize = 1000;
     @Getter
     private Collection<IoTBlockchainDevice> ioTBlockchainDevicesSet;
     @Setter

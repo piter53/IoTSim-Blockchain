@@ -3,8 +3,8 @@ package org.cloudbus.blockchain.consensus;
 import lombok.Getter;
 import lombok.Setter;
 import org.cloudbus.blockchain.nodes.MinerNode;
-import org.cloudbus.blockchain.policies.TransmissionPolicy;
-import org.cloudbus.blockchain.policies.TransmissionPolicySizeBased;
+import org.cloudbus.blockchain.consensus.policies.TransmissionPolicy;
+import org.cloudbus.blockchain.consensus.policies.TransmissionPolicySizeBased;
 import org.cloudbus.blockchain.transactions.Transaction;
 
 import java.util.Collection;
@@ -29,6 +29,8 @@ public abstract class ConsensusAlgorithm {
     private double feePerMb;
     @Getter
     private int baseTransationSize;
+    @Getter
+    private long maxBlockSize;
 
     public ConsensusAlgorithm(){
          globalTransmissionPolicy = new TransmissionPolicySizeBased((long)200);
@@ -38,6 +40,7 @@ public abstract class ConsensusAlgorithm {
          baseTransactionFee = 0.01;
          feePerMb = 0.001;
          baseTransationSize = 1;
+         maxBlockSize = 1000;
     }
 
     public abstract double calculateTransactionFee(Transaction transaction);

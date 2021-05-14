@@ -14,10 +14,6 @@ package org.cloudbus.cloudsim.edge.core.edge;
 
 import java.util.List;
 
-import lombok.EqualsAndHashCode;
-import org.cloudbus.blockchain.devices.EdgeBlockchainDevice;
-import org.cloudbus.blockchain.nodes.BaseNode;
-import org.cloudbus.blockchain.policies.TransmissionPolicy;
 import org.cloudbus.cloudsim.edge.core.edge.Mobility.Location;
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-package org.cloudbus.blockchain.policies;
+package org.cloudbus.blockchain.consensus.policies;
 
 import org.cloudbus.blockchain.transactions.DataTransaction;
 import org.cloudbus.blockchain.transactions.Transaction;

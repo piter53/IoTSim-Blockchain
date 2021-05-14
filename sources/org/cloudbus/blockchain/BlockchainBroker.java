@@ -51,8 +51,4 @@ public class BlockchainBroker extends OsmesisBroker {
         send(this.getId(), blockGenerationDelay, BlockchainTags.GENERATE_BLOCK, null);
     }
 
-    @Override
-    protected void createVmsInDatacenter(int datacenterId) {
-        super.createVmsInDatacenter(datacenterId);
-    }
 }

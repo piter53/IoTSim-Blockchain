@@ -14,6 +14,10 @@ package org.cloudbus.blockchain.examples;
 import org.cloudbus.blockchain.BlockchainBroker;
 import org.cloudbus.blockchain.BlockchainBuilder;
 import org.cloudbus.blockchain.BlockchainTags;
+import org.cloudbus.blockchain.Network;
+import org.cloudbus.blockchain.devices.EdgeBlockchainDevice;
+import org.cloudbus.blockchain.devices.IoTBlockchainDevice;
+import org.cloudbus.cloudsim.Datacenter;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
@@ -82,6 +86,11 @@ public class BlockchainExample_1 {
 		maestro.setSdnControllers(controllers);
 		osmesisBroker.submitOsmesisApps(OsmesisAppsParser.appList);
 		osmesisBroker.setDatacenters(topologyBuilder.getOsmesisDatacentres());
+
+		// Add 5 units of currency to each IoTBlockchainDevice so that they can afford to broadcast transactions with sensed data
+        for (IoTBlockchainDevice device : Network.getInstance().getIoTBlockchainDevicesSet()) {
+            device.getBlockchainNode().addBalance(5);
+        }
 
 		double startTime = CloudSim.startSimulation();
   

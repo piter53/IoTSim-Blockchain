@@ -32,7 +32,7 @@ public class MinerNode extends BaseNode {
     }
 
     private Collection<Transaction> getTransactionsForNewBlock() {
-        long maxSize = Network.getInstance().getMaxBlockSize();
+        long maxSize = Network.getInstance().getConsensusAlgorithm().getMaxBlockSize();
         Set<Transaction> appendableTransactions = new HashSet<>();
         long currentSize=0;
         while (true) {
