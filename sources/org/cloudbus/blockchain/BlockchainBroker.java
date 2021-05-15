@@ -33,14 +33,11 @@ public class BlockchainBroker extends OsmesisBroker {
     }
 
     public void generateBlock() {
-        for (OsmesisAppDescription app : getAppList()) {
-            if (CloudSim.clock() < app.getStopDataGenerationTime()){
-                BlockchainDevice device = blockchainNetwork.pickNewMiningDevice();
-                ((MinerNode) device.getBlockchainNode()).mineBlock(device);
-                double blockGenerationDelay = blockchainNetwork.getConsensusAlgorithm().getBlockInterval();
-                send(this.getId(), blockGenerationDelay, BlockchainTags.GENERATE_BLOCK, null);
-                break;
-            }
+        if (blockchainNetwork.existPendingTransactions()) {
+            BlockchainDevice device = blockchainNetwork.pickNewMiningDevice();
+            ((MinerNode) device.getBlockchainNode()).mineBlock(device);
+            double blockGenerationDelay = blockchainNetwork.getConsensusAlgorithm().getBlockInterval();
+            send(this.getId(), blockGenerationDelay, BlockchainTags.GENERATE_BLOCK, null);
         }
     }
 

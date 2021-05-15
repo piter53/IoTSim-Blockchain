@@ -115,4 +115,13 @@ public class Network {
         return null;
     }
 
+    public boolean existPendingTransactions() {
+        for (BlockchainDevice miner : minerDevices) {
+            if (!((MinerNode) miner.getBlockchainNode()).getTransactionPool().isEmpty()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
