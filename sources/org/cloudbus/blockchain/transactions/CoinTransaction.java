@@ -3,6 +3,7 @@ package org.cloudbus.blockchain.transactions;
 import lombok.Getter;
 import org.cloudbus.blockchain.devices.BlockchainDevice;
 import org.cloudbus.blockchain.nodes.BaseNode;
+import org.cloudbus.blockchain.nodes.MinerNode;
 import org.cloudbus.cloudsim.core.CloudSim;
 
 public class CoinTransaction extends Transaction {
@@ -21,7 +22,8 @@ public class CoinTransaction extends Transaction {
     }
 
     @Override
-    public void processTransaction(BlockchainDevice device) {
+    public void processTransaction(BlockchainDevice device, MinerNode miner) {
+        super.processTransaction(device, miner);
         if (device.getBlockchainNode() == getRecipentNode()) {
             device.getBlockchainNode().addBalance(getCurrencyAmount());
         } else if (device.getBlockchainNode() == getSenderNode()) {

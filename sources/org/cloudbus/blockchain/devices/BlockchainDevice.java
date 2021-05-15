@@ -80,7 +80,7 @@ public interface BlockchainDevice {
 
     default void processAcceptedTransactions(Block block){
         for (Transaction transaction : block.getTransactionList()) {
-            transaction.processTransaction(this);
+            transaction.processTransaction(this, block.getMiner());
         }
     }
 

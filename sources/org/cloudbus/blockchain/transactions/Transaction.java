@@ -8,6 +8,7 @@ import org.cloudbus.blockchain.Network;
 import org.cloudbus.blockchain.consensus.ConsensusAlgorithm;
 import org.cloudbus.blockchain.devices.BlockchainDevice;
 import org.cloudbus.blockchain.nodes.BaseNode;
+import org.cloudbus.blockchain.nodes.MinerNode;
 import org.cloudbus.cloudsim.core.CloudSim;
 
 import java.util.Collection;
@@ -108,11 +109,18 @@ public abstract class Transaction implements BlockchainItem {
             transaction.senderNode != transaction.recipentNode;
     }
 
-    public void processTransaction(BlockchainDevice device){
+    /**
+     *
+     * @param device Identity of a calling BlockchainDevice
+     * @param miner miner of the block in which the transaction got included.
+     */
+    public void processTransaction(BlockchainDevice device, MinerNode miner){
         if (getRecipentNode() == device.getBlockchainNode()) {
             setReceptionTimestamp(CloudSim.clock());
         } else if (getSenderNode() == device.getBlockchainNode()) {
             device.getBlockchainNode().addBalance(getFee() * -1);
+        } else if (miner == device.getBlockchainNode()) {
+            device.getBlockchainNode().addBalance(getFee());
         }
     }
 }

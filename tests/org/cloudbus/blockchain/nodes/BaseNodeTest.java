@@ -78,22 +78,22 @@ class NodeTest {
         assertEquals(expectedLocalList, node.getBlockchain().getLedger());
     }
 
-    @Test
-    void testUpdateTransactionsPool() {
-        Collection<Transaction> transactionPool = TransactionTest.generateRandomTransactionSet(50);
-        node.appendTransactionsPool(transactionPool);
-        Set<Transaction> dataTransactions = new HashSet<>();
-        Set<Transaction> coinTransactions = new HashSet<>();
-        for (Transaction t : transactionPool) {
-            if (t instanceof DataTransaction){
-                dataTransactions.add(t);
-            } else if (t instanceof CoinTransaction) {
-                coinTransactions.add(t);
-            }
-        }
-        Block block = new Block(null, new MinerNode(), dataTransactions);
-        node.updateTransactionsPool(block);
-        assertNotSame(coinTransactions, node.getTransactionPool());
-        assertEquals(coinTransactions, node.getTransactionPool());
-    }
+//    @Test
+//    void testUpdateTransactionsPool() {
+//        Collection<Transaction> transactionPool = TransactionTest.generateRandomTransactionSet(50);
+//        node.appendTransactionsPool(transactionPool);
+//        Set<Transaction> dataTransactions = new HashSet<>();
+//        Set<Transaction> coinTransactions = new HashSet<>();
+//        for (Transaction t : transactionPool) {
+//            if (t instanceof DataTransaction){
+//                dataTransactions.add(t);
+//            } else if (t instanceof CoinTransaction) {
+//                coinTransactions.add(t);
+//            }
+//        }
+//        Block block = new Block(null, new MinerNode(), dataTransactions);
+//        node.updateTransactionsPool(block);
+//        assertNotSame(coinTransactions, node.getTransactionPool());
+//        assertEquals(coinTransactions, node.getTransactionPool());
+//    }
 }

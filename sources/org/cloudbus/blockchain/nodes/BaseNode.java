@@ -18,9 +18,6 @@ public abstract class BaseNode {
     // Local blockchain
     @Setter @Getter
     private Blockchain blockchain;
-    // Local transaction pool
-    @Getter
-    private Queue<Transaction> transactionPool;
     // Currency balance
     @Getter
     private double currencyBalance;
@@ -35,8 +32,6 @@ public abstract class BaseNode {
     public BaseNode(Integer blockchainDepth) {
         blockchain = new Blockchain();
         blockchain.addBlock(getGenesisBlock());
-        // Transactions are inserted into a queue sorted by creation time.
-        transactionPool = new PriorityQueue<Transaction>(1, Network.getInstance().getConsensusAlgorithm().getTransactionComparator());
         currencyBalance = 0;
         this.blockchainDepth = blockchainDepth;
     }
@@ -49,7 +44,6 @@ public abstract class BaseNode {
             else {
                 blockchain.addBlockwithoutChecking(block);
             }
-            updateTransactionsPool();
             return true;
         }
         return false;
@@ -74,37 +68,7 @@ public abstract class BaseNode {
         }
     }
 
-    public void updateTransactionsPool() {
-        for (Block b : blockchain.getLedger()) {
-            updateTransactionsPool(b);
-        }
-    }
-
-    /**
-     * Update the transactions pool upon receiving new block, i.e. remove
-     * transactions that are included in the block.
-     * @author Piotr Grela, based on original python implementation in BlockSim
-     * @param block
-     */
-    public void updateTransactionsPool(Block block) {
-        if (!(block.getTransactionList() == null || block.getTransactionList().isEmpty())) {
-            for (Object t : block.getTransactionList()) {
-                for (Object n : transactionPool) {
-                    if (t == n) {
-                        transactionPool.remove(n);
-                        break;
-                    }
-                }
-            }
-        }    }
-
-    public void appendTransactionsPool(Transaction transaction) {
-        transactionPool.add(transaction);
-    }
-
-    public void appendTransactionsPool(Collection<Transaction> transactions) {
-        transactionPool.addAll(transactions);
-    }
+    public void appendTransactionsPool(Transaction transaction){}
 
     public void addBalance(double amount) {
         currencyBalance += amount;

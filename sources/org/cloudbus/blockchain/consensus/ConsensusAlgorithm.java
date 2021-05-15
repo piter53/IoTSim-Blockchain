@@ -20,7 +20,7 @@ public abstract class ConsensusAlgorithm {
     @Getter
     private Double blockInterval;
     @Getter
-    private Comparator<Transaction> transactionComparator;
+    Comparator<Transaction> transactionComparator;
     @Getter @Setter
     private double blockGenerationReward;
     @Getter
@@ -33,14 +33,14 @@ public abstract class ConsensusAlgorithm {
     private long maxBlockSize;
 
     public ConsensusAlgorithm(){
+        // TODO read data from file
          globalTransmissionPolicy = new TransmissionPolicySizeBased((long)200);
          blockInterval = 8.0;
-         transactionComparator = Comparator.comparingDouble(Transaction::getCreationTimestamp);
          blockGenerationReward = 1;
          baseTransactionFee = 0.01;
          feePerMb = 0.001;
          baseTransationSize = 1;
-         maxBlockSize = 1000;
+         maxBlockSize = 10000;
     }
 
     public abstract double calculateTransactionFee(Transaction transaction);

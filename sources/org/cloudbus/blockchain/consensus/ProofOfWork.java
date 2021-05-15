@@ -3,10 +3,7 @@ package org.cloudbus.blockchain.consensus;
 import org.cloudbus.blockchain.nodes.MinerNode;
 import org.cloudbus.blockchain.transactions.Transaction;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * @author Piotr Grela
@@ -15,6 +12,11 @@ public class ProofOfWork extends ConsensusAlgorithm {
 
     private WeightedRandomMiner randomMiner;
     private static ProofOfWork singleInstance = null;
+
+    public ProofOfWork(){
+        super();
+        transactionComparator = Comparator.comparingDouble(Transaction::getFee).reversed();
+    }
 
     @Override
     public MinerNode pickMiner(Collection<MinerNode> minerNodes) {

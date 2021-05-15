@@ -21,7 +21,7 @@ public class Block implements BlockchainItem {
     @Getter
     private long sizeMb = 0;
     @Getter
-    static final int BROADCAST_TAG = BlockchainTags.BROADCAST_BLOCK;
+    final int BROADCAST_TAG = BlockchainTags.BROADCAST_BLOCK;
 
     public static final Block GENESIS_BLOCK = new Block(null, null, null);
     private final static Network network = Network.getInstance();
