@@ -182,8 +182,9 @@
                         "networkType": "wifi"
                     },
                     "baseNodeEntity": {
-                        "className": "org.cloudbus.blockchain.nodes.Node",
-                        "blockchainDepth": "100"
+                        "className": "org.cloudbus.blockchain.nodes.MinerNode",
+                        "blockchainDepth": 100,
+                        "hashpower": 100
                     },
                     "transmissionPolicy": {
                         "className": "org.cloudbus.blockchain.consensus.policies.TransmissionPolicySizeBased",

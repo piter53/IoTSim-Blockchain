@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.cloudbus.blockchain.consensus.ConsensusProtocol;
 import org.cloudbus.blockchain.consensus.ProofOfWork;
+import org.cloudbus.blockchain.consensus.policies.TransmissionPolicySizeBased;
 import org.cloudbus.blockchain.devices.BlockchainDevice;
 import org.cloudbus.blockchain.devices.EdgeBlockchainDevice;
 import org.cloudbus.blockchain.devices.IoTBlockchainDevice;
@@ -33,19 +34,23 @@ public class Network {
     private Collection<BlockchainDevice> minerDevices;
     private static Network singleInstance = null;
 
-    private Network() {
+    private Network(ConsensusProtocol consensusProtocol) {
         blockchainDevicesSet = new HashSet<>();
         ioTBlockchainDevicesSet = new HashSet<>();
         edgeBlockchainDataCentersSet = new HashSet<>();
         minerDevices = new HashSet<>();
-        consensusProtocol = new ProofOfWork();
+        this.consensusProtocol = consensusProtocol;
     }
 
     public static Network getInstance() {
         if (singleInstance == null) {
-            singleInstance = new Network();
+            singleInstance = new Network(new ProofOfWork(new TransmissionPolicySizeBased((long)100), 8.0, 1, 1, 0.001, 0.01, 500));
         }
         return singleInstance;
+    }
+
+    public static void setConsensus(ConsensusProtocol consensusProtocol) {
+        getInstance().consensusProtocol = consensusProtocol;
     }
 
     public BlockchainDevice pickNewMiningDevice() {

@@ -60,7 +60,6 @@ public class BlockchainExample_1_Dissertation {
 		int num_user = 1; // number of users
 		Calendar calendar = Calendar.getInstance();
 		boolean trace_flag = false; // mean trace events
-
 		// Initialize the CloudSim library
 		CloudSim.init(num_user, calendar, trace_flag);
 		osmesisBroker  = new BlockchainBroker("OsmesisBroker");
@@ -89,6 +88,7 @@ public class BlockchainExample_1_Dissertation {
             device.getBlockchainNode().addBalance(5);
         }
 
+        // Perform the simulation and print results
 		double startTime = CloudSim.startSimulation();
   
 		LogUtil.simulationFinished();

@@ -1,5 +1,6 @@
 package org.cloudbus.blockchain.consensus;
 
+import org.cloudbus.blockchain.consensus.policies.TransmissionPolicy;
 import org.cloudbus.blockchain.nodes.MinerNode;
 import org.cloudbus.blockchain.transactions.Transaction;
 
@@ -13,8 +14,8 @@ public class ProofOfWork extends ConsensusProtocol {
     private WeightedRandomMiner randomMiner;
     private static ProofOfWork singleInstance = null;
 
-    public ProofOfWork(){
-        super();
+    public ProofOfWork(TransmissionPolicy transmissionPolicy, double blockInterval, double blockGenerationReward, int baseTransactionSize, double feePerMb, double baseTransactionFee, long maxBlockSize){
+        super(transmissionPolicy, blockInterval, blockGenerationReward, baseTransactionSize, feePerMb, baseTransactionFee, maxBlockSize);
         transactionComparator = Comparator.comparingDouble(Transaction::getFee).reversed();
     }
 

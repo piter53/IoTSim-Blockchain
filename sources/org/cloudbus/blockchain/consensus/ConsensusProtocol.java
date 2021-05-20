@@ -32,15 +32,14 @@ public abstract class ConsensusProtocol {
     @Getter
     private long maxBlockSize;
 
-    public ConsensusProtocol(){
-        // TODO read data from file
-         globalTransmissionPolicy = new TransmissionPolicySizeBased((long)200);
-         blockInterval = 8.0;
-         blockGenerationReward = 1;
-         baseTransactionFee = 0.01;
-         feePerMb = 0.001;
-         baseTransationSize = 1;
-         maxBlockSize = 1000;
+    public ConsensusProtocol(TransmissionPolicy transmissionPolicy, double blockInterval, double blockGenerationReward, int baseTransactionSize, double feePerMb, double baseTransactionFee, long maxBlockSize){
+         this.globalTransmissionPolicy = transmissionPolicy;
+         this.blockInterval = blockInterval;
+         this.blockGenerationReward = blockGenerationReward;
+         this.baseTransactionFee = baseTransactionFee;
+         this.feePerMb = feePerMb;
+         this.baseTransationSize = baseTransactionSize;
+         this.maxBlockSize = maxBlockSize;
     }
 
     public abstract double calculateTransactionFee(Transaction transaction);
