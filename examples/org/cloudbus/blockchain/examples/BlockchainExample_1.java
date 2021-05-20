@@ -13,15 +13,12 @@ package org.cloudbus.blockchain.examples;
 
 import org.cloudbus.blockchain.BlockchainBroker;
 import org.cloudbus.blockchain.BlockchainBuilder;
-import org.cloudbus.blockchain.BlockchainTags;
 import org.cloudbus.blockchain.Network;
-import org.cloudbus.blockchain.devices.EdgeBlockchainDevice;
 import org.cloudbus.blockchain.devices.IoTBlockchainDevice;
-import org.cloudbus.cloudsim.Datacenter;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
-import org.cloudbus.cloudsim.edge.core.edge.ConfiguationEntity;
+import org.cloudbus.cloudsim.edge.core.edge.ConfigurationEntity;
 import org.cloudbus.cloudsim.edge.core.edge.MEL;
 import org.cloudbus.cloudsim.edge.utils.LogUtil;
 import org.cloudbus.cloudsim.osmesis.examples.uti.LogPrinter;
@@ -44,8 +41,8 @@ import java.util.List;
 **/
 
 public class BlockchainExample_1 {
-	public static final String configurationFile = "inputFiles/Example1_configuration.json";
-	public static final String osmesisAppFile =  "inputFiles/Example1_Worload.csv";
+	public static final String configurationFile = "inputFiles/BlockchainExample1_configuration_1.json";
+	public static final String osmesisAppFile =  "inputFiles/Example1_Workload.csv";
     OsmosisBuilder topologyBuilder;
 	OsmesisBroker osmesisBroker;
 	List<OsmesisDatacenter> datacenters;
@@ -68,7 +65,7 @@ public class BlockchainExample_1 {
 		CloudSim.init(num_user, calendar, trace_flag);
 		osmesisBroker  = new BlockchainBroker("OsmesisBroker");
 		topologyBuilder = new BlockchainBuilder(osmesisBroker);
-		ConfiguationEntity config = buildTopologyFromFile(configurationFile);
+		ConfigurationEntity config = buildTopologyFromFile(configurationFile);
         if(config !=  null) {
         	topologyBuilder.buildTopology(config);
         }
@@ -113,9 +110,9 @@ public class BlockchainExample_1 {
 
 	}
 	
-    private ConfiguationEntity buildTopologyFromFile(String filePath) throws Exception {
+    private ConfigurationEntity buildTopologyFromFile(String filePath) throws Exception {
         System.out.println("Creating topology from file " + filePath);
-        ConfiguationEntity conf  = null;
+        ConfigurationEntity conf  = null;
         try (FileReader jsonFileReader = new FileReader(filePath)){
         	conf = topologyBuilder.parseTopology(jsonFileReader);
         } catch (FileNotFoundException e) {

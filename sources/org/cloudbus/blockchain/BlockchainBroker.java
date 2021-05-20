@@ -2,11 +2,8 @@ package org.cloudbus.blockchain;
 
 import org.cloudbus.blockchain.devices.BlockchainDevice;
 import org.cloudbus.blockchain.nodes.MinerNode;
-import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.SimEvent;
-import org.cloudbus.osmosis.core.OsmesisAppDescription;
 import org.cloudbus.osmosis.core.OsmesisBroker;
-import org.cloudbus.osmosis.core.OsmosisTags;
 
 /**
  * @author Piotr Grela
@@ -36,7 +33,7 @@ public class BlockchainBroker extends OsmesisBroker {
         if (blockchainNetwork.existPendingTransactions()) {
             BlockchainDevice device = blockchainNetwork.pickNewMiningDevice();
             ((MinerNode) device.getBlockchainNode()).mineBlock(device);
-            double blockGenerationDelay = blockchainNetwork.getConsensusAlgorithm().getBlockInterval();
+            double blockGenerationDelay = blockchainNetwork.getConsensusProtocol().getBlockInterval();
             send(this.getId(), blockGenerationDelay, BlockchainTags.GENERATE_BLOCK, null);
         }
     }
@@ -44,7 +41,7 @@ public class BlockchainBroker extends OsmesisBroker {
     @Override
     protected void processResourceCharacteristicsRequest(SimEvent ev) {
         super.processResourceCharacteristicsRequest(ev);
-        double blockGenerationDelay = blockchainNetwork.getConsensusAlgorithm().getBlockInterval();
+        double blockGenerationDelay = blockchainNetwork.getConsensusProtocol().getBlockInterval();
         send(this.getId(), blockGenerationDelay, BlockchainTags.GENERATE_BLOCK, null);
     }
 

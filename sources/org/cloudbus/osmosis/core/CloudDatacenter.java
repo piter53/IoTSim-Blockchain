@@ -24,9 +24,9 @@ import org.cloudbus.cloudsim.VmAllocationPolicy;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.cloudsim.edge.core.edge.EdgeDevice;
-import org.cloudbus.cloudsim.edge.core.edge.ConfiguationEntity.HostEntity;
-import org.cloudbus.cloudsim.edge.core.edge.ConfiguationEntity.LinkEntity;
-import org.cloudbus.cloudsim.edge.core.edge.ConfiguationEntity.SwitchEntity;
+import org.cloudbus.cloudsim.edge.core.edge.ConfigurationEntity.HostEntity;
+import org.cloudbus.cloudsim.edge.core.edge.ConfigurationEntity.LinkEntity;
+import org.cloudbus.cloudsim.edge.core.edge.ConfigurationEntity.SwitchEntity;
 import org.cloudbus.cloudsim.sdn.SDNHost;
 import org.cloudbus.cloudsim.sdn.Switch;
 

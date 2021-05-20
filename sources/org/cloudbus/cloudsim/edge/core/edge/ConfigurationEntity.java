@@ -26,7 +26,7 @@ import lombok.Data;
 **/
 
 @Data
-public class ConfiguationEntity {
+public class ConfigurationEntity {
 	private LogEntity logEntity;
 	private boolean trace_flag;
 

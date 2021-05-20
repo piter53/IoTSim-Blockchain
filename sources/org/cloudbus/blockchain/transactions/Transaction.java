@@ -5,7 +5,7 @@ import lombok.Setter;
 import org.cloudbus.blockchain.BlockchainItem;
 import org.cloudbus.blockchain.BlockchainTags;
 import org.cloudbus.blockchain.Network;
-import org.cloudbus.blockchain.consensus.ConsensusAlgorithm;
+import org.cloudbus.blockchain.consensus.ConsensusProtocol;
 import org.cloudbus.blockchain.devices.BlockchainDevice;
 import org.cloudbus.blockchain.nodes.BaseNode;
 import org.cloudbus.blockchain.nodes.MinerNode;
@@ -42,7 +42,7 @@ public abstract class Transaction implements BlockchainItem {
     @Getter
     private final static Network network = Network.getInstance();
     @Getter
-    private static final ConsensusAlgorithm consensus = network.getConsensusAlgorithm();
+    private static final ConsensusProtocol consensus = network.getConsensusProtocol();
 
     Transaction(double creationTimestamp, BaseNode senderNode, BaseNode recipentNode){
         this.creationTimestamp = creationTimestamp;
@@ -96,7 +96,7 @@ public abstract class Transaction implements BlockchainItem {
 
     public static boolean canBeTransmittedThroughBlockchain(Transaction o) {
         try {
-            return network.getConsensusAlgorithm().getGlobalTransmissionPolicy().canTransmitThroughBlockchain(o);
+            return network.getConsensusProtocol().getGlobalTransmissionPolicy().canTransmitThroughBlockchain(o);
         } catch (NullPointerException e) {
             e.printStackTrace();
         }

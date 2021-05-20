@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.cloudbus.cloudsim.Vm;
-import org.cloudbus.cloudsim.edge.core.edge.ConfiguationEntity.LinkEntity;
-import org.cloudbus.cloudsim.edge.core.edge.ConfiguationEntity.SwitchEntity;
+import org.cloudbus.cloudsim.edge.core.edge.ConfigurationEntity.LinkEntity;
+import org.cloudbus.cloudsim.edge.core.edge.ConfigurationEntity.SwitchEntity;
 import org.cloudbus.cloudsim.sdn.Link;
 import org.cloudbus.cloudsim.sdn.NetworkNIC;
 import org.cloudbus.cloudsim.sdn.Switch;

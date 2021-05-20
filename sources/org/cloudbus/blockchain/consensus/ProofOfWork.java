@@ -8,7 +8,7 @@ import java.util.*;
 /**
  * @author Piotr Grela
  */
-public class ProofOfWork extends ConsensusAlgorithm {
+public class ProofOfWork extends ConsensusProtocol {
 
     private WeightedRandomMiner randomMiner;
     private static ProofOfWork singleInstance = null;

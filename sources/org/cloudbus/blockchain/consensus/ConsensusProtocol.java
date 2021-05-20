@@ -13,7 +13,7 @@ import java.util.Comparator;
 /**
  * @author Piotr Grela
  */
-public abstract class ConsensusAlgorithm {
+public abstract class ConsensusProtocol {
 
     @Getter
     private TransmissionPolicy globalTransmissionPolicy;
@@ -32,7 +32,7 @@ public abstract class ConsensusAlgorithm {
     @Getter
     private long maxBlockSize;
 
-    public ConsensusAlgorithm(){
+    public ConsensusProtocol(){
         // TODO read data from file
          globalTransmissionPolicy = new TransmissionPolicySizeBased((long)200);
          blockInterval = 8.0;
@@ -40,7 +40,7 @@ public abstract class ConsensusAlgorithm {
          baseTransactionFee = 0.01;
          feePerMb = 0.001;
          baseTransationSize = 1;
-         maxBlockSize = 10000;
+         maxBlockSize = 1000;
     }
 
     public abstract double calculateTransactionFee(Transaction transaction);

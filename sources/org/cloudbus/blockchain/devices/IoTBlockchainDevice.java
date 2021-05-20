@@ -66,7 +66,7 @@ public abstract class IoTBlockchainDevice extends IoTDevice implements Blockchai
         OsmesisBroker.workflowTag.add(workflowTag);
         flow.addPacketSize(app.getIoTDeviceOutputSize());
         updateBandwidth();
-        broadcastThroughBlockchainIfPossible(flow, flow.getDatacenterId());
+        broadcastThroughBlockchainIfPossible(flow, flow.getDatacenterId(), OsmosisTags.TRANSMIT_IOT_DATA);
     }
 
     @Override

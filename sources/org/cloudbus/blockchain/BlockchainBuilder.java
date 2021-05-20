@@ -36,14 +36,14 @@ public class BlockchainBuilder extends OsmosisBuilder {
     }
 
     @Override
-    public List<EdgeDataCenter> buildEdgeDatacentres(List<ConfiguationEntity.EdgeDataCenterEntity> edgeDatacenerEntites) {
+    public List<EdgeDataCenter> buildEdgeDatacentres(List<ConfigurationEntity.EdgeDataCenterEntity> edgeDatacenerEntites) {
         List<EdgeDataCenter> edgeDC = new ArrayList<EdgeDataCenter>();
-        for (ConfiguationEntity.EdgeDataCenterEntity edgeDCEntity : edgeDatacenerEntites) {
-            List<ConfiguationEntity.EdgeDeviceEntity> hostListEntities = edgeDCEntity.getHosts();
+        for (ConfigurationEntity.EdgeDataCenterEntity edgeDCEntity : edgeDatacenerEntites) {
+            List<ConfigurationEntity.EdgeDeviceEntity> hostListEntities = edgeDCEntity.getHosts();
             List<EdgeDevice> hostList = new ArrayList<EdgeDevice>();
             try {
-                for (ConfiguationEntity.EdgeDeviceEntity hostEntity : hostListEntities) {
-                    ConfiguationEntity.VmAllcationPolicyEntity vmSchedulerEntity = edgeDCEntity.getVmAllocationPolicy();
+                for (ConfigurationEntity.EdgeDeviceEntity hostEntity : hostListEntities) {
+                    ConfigurationEntity.VmAllcationPolicyEntity vmSchedulerEntity = edgeDCEntity.getVmAllocationPolicy();
                     String vmSchedulerClassName = vmSchedulerEntity.getClassName();
                     LinkedList<Pe> peList = new LinkedList<Pe>();
                     int peId = 0;
@@ -65,7 +65,7 @@ public class BlockchainBuilder extends OsmosisBuilder {
                 e.printStackTrace();
             }
 
-            ConfiguationEntity.EdgeDatacenterCharacteristicsEntity characteristicsEntity = edgeDCEntity.getCharacteristics();
+            ConfigurationEntity.EdgeDatacenterCharacteristicsEntity characteristicsEntity = edgeDCEntity.getCharacteristics();
             String architecture = characteristicsEntity.getArchitecture();
             String os = characteristicsEntity.getOs();
             String vmm = characteristicsEntity.getVmm();
@@ -81,7 +81,7 @@ public class BlockchainBuilder extends OsmosisBuilder {
             DatacenterCharacteristics characteristics = new DatacenterCharacteristics(architecture, os, vmm,
                 hostList, timeZone, cost, costPerMem, costPerStorage, costPerBw);
 
-            ConfiguationEntity.VmAllcationPolicyEntity vmAllcationPolicyEntity = edgeDCEntity.getVmAllocationPolicy();
+            ConfigurationEntity.VmAllcationPolicyEntity vmAllcationPolicyEntity = edgeDCEntity.getVmAllocationPolicy();
             String className = vmAllcationPolicyEntity.getClassName();
 
             // 6. Finally, we need to create a PowerDatacenter object.
@@ -103,7 +103,7 @@ public class BlockchainBuilder extends OsmosisBuilder {
                 datacenter = (EdgeDataCenter) constructor.newInstance(edgeDCEntity.getName(), characteristics, vmAllocationPolicy, storageList,
                     edgeDCEntity.getSchedulingInterval());
                 if (datacenter instanceof EdgeBlockchainDevice) {
-                    ConfiguationEntity.EdgeBlockchainDeviceEntity blockchainEntity = (ConfiguationEntity.EdgeBlockchainDeviceEntity) edgeDCEntity;
+                    ConfigurationEntity.EdgeBlockchainDeviceEntity blockchainEntity = (ConfigurationEntity.EdgeBlockchainDeviceEntity) edgeDCEntity;
                     BaseNode node = createBaseNode(blockchainEntity.getBaseNodeEntity());
                     TransmissionPolicy policy = createTransmissionPolicy(blockchainEntity.getTransmissionPolicy());
                     ((EdgeBlockchainDevice) datacenter).setBlockchainNode(node);
@@ -115,7 +115,7 @@ public class BlockchainBuilder extends OsmosisBuilder {
                 e.printStackTrace();
             }
 
-            for (ConfiguationEntity.ControllerEntity controller : edgeDCEntity.getControllers()) {
+            for (ConfigurationEntity.ControllerEntity controller : edgeDCEntity.getControllers()) {
                 SDNController edgeSDNController = creatEdgeSDNController(controller);
                 datacenter.setSdnController(edgeSDNController);
                 edgeSDNController.setDatacenter(datacenter);
@@ -136,33 +136,34 @@ public class BlockchainBuilder extends OsmosisBuilder {
             this.getBroker().mapVmNameToId(datacenter.getVmNameToIdList());
             datacenter.getVmAllocationPolicy().setUpVmTopology(hostList);
             datacenter.getSdnController().addVmsToSDNhosts(MELList);
-
-            List<IoTDevice> devices = createIoTDevice(edgeDCEntity.getIoTDevices());
-            this.getBroker().setIoTDevices(devices);
-            edgeDC.add(datacenter);
+            List<IoTDevice> devices;
+            if (edgeDCEntity.getIoTDevices() != null && !edgeDCEntity.getIoTDevices().isEmpty()){
+                devices = createIoTDevice(edgeDCEntity.getIoTDevices());
+                this.getBroker().setIoTDevices(devices);
+            }
             if (datacenter instanceof EdgeBlockchainDevice) {
                 blockchainNetwork.addEdgeBlockchainDevice((EdgeBlockchainDevice) datacenter);
-                List<ConfiguationEntity.IotDeviceEntity> entities = new ArrayList<>(edgeDCEntity.getIoTBlockchainDevices());
+                List<ConfigurationEntity.IotDeviceEntity> entities = new ArrayList<>(edgeDCEntity.getIoTBlockchainDevices());
                 devices = createIoTDevice(entities);
                 this.getBroker().setIoTDevices(devices);
             }
-
+            edgeDC.add(datacenter);
         }
         return edgeDC;
     }
 
 
     @Override
-    public void buildTopology(ConfiguationEntity topologyEntity) throws Exception {
-        List<ConfiguationEntity.CloudDataCenterEntity> datacentreEntities = topologyEntity.getCloudDatacenter();
+    public void buildTopology(ConfigurationEntity topologyEntity) throws Exception {
+        List<ConfigurationEntity.CloudDataCenterEntity> datacentreEntities = topologyEntity.getCloudDatacenter();
         this.setCloudDatacentres(buildCloudDatacentres(datacentreEntities));
         getOsmesisDatacentres().addAll(this.getCloudDatacentres());
 
-        List<ConfiguationEntity.EdgeDataCenterEntity> edgeDatacenerEntites = topologyEntity.getEdgeDatacenter();
+        List<ConfigurationEntity.EdgeDataCenterEntity> edgeDatacenerEntites = topologyEntity.getEdgeDatacenter();
         if (edgeDatacenerEntites != null && !edgeDatacenerEntites.isEmpty()) {
             edgeDatacentres = buildEdgeDatacentres(edgeDatacenerEntites);
         }
-        List<ConfiguationEntity.EdgeDataCenterEntity> edgeBlockchainDatacenterEntities = new ArrayList<>(topologyEntity.getEdgeBlockchainDatacentre());
+        List<ConfigurationEntity.EdgeDataCenterEntity> edgeBlockchainDatacenterEntities = new ArrayList<>(topologyEntity.getEdgeBlockchainDatacentre());
         if (!edgeBlockchainDatacenterEntities.isEmpty()) {
             edgeDatacentres = new ArrayList<>();
             edgeDatacentres.addAll(buildEdgeDatacentres(edgeBlockchainDatacenterEntities));
@@ -178,18 +179,18 @@ public class BlockchainBuilder extends OsmosisBuilder {
             datacenterGateways.add(osmesisDC.getSdnController().getGateway());
 
         }
-        List<ConfiguationEntity.WanEntity> wanEntities = topologyEntity.getSdwan();
+        List<ConfigurationEntity.WanEntity> wanEntities = topologyEntity.getSdwan();
         this.setSdWanController(buildWan(wanEntities, datacenterGateways));
         setWanControllerToDatacenters(getSdWanController(), getOsmesisDatacentres());
         getSdWanController().addAllDatacenters(getOsmesisDatacentres());
     }
 
     @Override
-    public List<IoTDevice> createIoTDevice(List<ConfiguationEntity.IotDeviceEntity> iotDeviceEntityList) {
+    public List<IoTDevice> createIoTDevice(List<ConfigurationEntity.IotDeviceEntity> iotDeviceEntityList) {
         List<IoTDevice> devices = new ArrayList<>();
-        for (ConfiguationEntity.IotDeviceEntity iotDevice : iotDeviceEntityList) {
+        for (ConfigurationEntity.IotDeviceEntity iotDevice : iotDeviceEntityList) {
             String ioTClassName = iotDevice.getIoTClassName();
-            ConfiguationEntity.NetworkModelEntity networkModelEntity = iotDevice.getNetworkModelEntity();
+            ConfigurationEntity.NetworkModelEntity networkModelEntity = iotDevice.getNetworkModelEntity();
             // xmpp, mqtt, coap, amqp
             EdgeNetworkInfo networkModel = this.SetEdgeNetworkModel(networkModelEntity);
             try {
@@ -217,7 +218,7 @@ public class BlockchainBuilder extends OsmosisBuilder {
                 newInstance.setMobility(location);
                 if (newInstance instanceof IoTBlockchainDevice) {
                     IoTBlockchainDevice blockchainDevice = (IoTBlockchainDevice)newInstance;
-                    ConfiguationEntity.IoTBlockchainDeviceEntity blockchainDeviceEntity = (ConfiguationEntity.IoTBlockchainDeviceEntity)iotDevice;
+                    ConfigurationEntity.IoTBlockchainDeviceEntity blockchainDeviceEntity = (ConfigurationEntity.IoTBlockchainDeviceEntity)iotDevice;
                     blockchainDevice.setBlockchainNode(createBaseNode(blockchainDeviceEntity.getBaseNodeEntity()));
                     blockchainDevice.setTransmissionPolicy(createTransmissionPolicy(blockchainDeviceEntity.getTransmissionPolicy()));
                     blockchainNetwork.addIoTBlockchainDevice(blockchainDevice);
@@ -243,7 +244,7 @@ public class BlockchainBuilder extends OsmosisBuilder {
      * @return
      * @author Piotr Grela
      */
-    private BaseNode createBaseNode(ConfiguationEntity.BaseNodeEntity baseNodeEntity) {
+    private BaseNode createBaseNode(ConfigurationEntity.BaseNodeEntity baseNodeEntity) {
         try {
             Class<?> aClass = Class.forName(baseNodeEntity.getClassName());
             if (!BaseNode.class.isAssignableFrom(aClass)) {
@@ -282,7 +283,7 @@ public class BlockchainBuilder extends OsmosisBuilder {
      * @return
      * @author Piotr Grela
      */
-    private TransmissionPolicy createTransmissionPolicy(ConfiguationEntity.TransmissionPolicyEntity transmissionPolicyEntity) {
+    private TransmissionPolicy createTransmissionPolicy(ConfigurationEntity.TransmissionPolicyEntity transmissionPolicyEntity) {
         try {
             Class<?> aClass = Class.forName(transmissionPolicyEntity.getClassName());
             if (!TransmissionPolicy.class.isAssignableFrom(aClass)) {

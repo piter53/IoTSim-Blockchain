@@ -3,14 +3,12 @@ package org.cloudbus.blockchain.devices;
 import org.cloudbus.blockchain.*;
 import org.cloudbus.blockchain.nodes.BaseNode;
 import org.cloudbus.blockchain.consensus.policies.TransmissionPolicy;
-import org.cloudbus.blockchain.transactions.CoinTransaction;
 import org.cloudbus.blockchain.transactions.DataTransaction;
 import org.cloudbus.blockchain.transactions.Transaction;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.SimEntity;
 import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.osmosis.core.Flow;
-import org.cloudbus.osmosis.core.OsmosisTags;
 
 /**
  * @author Piotr Grela
@@ -18,21 +16,21 @@ import org.cloudbus.osmosis.core.OsmosisTags;
  */
 public interface BlockchainDevice {
 
-    default void broadcastThroughBlockchainIfPossible(Object object, int destinationId) {
+    default void broadcastThroughBlockchainIfPossible(Object object, int destinationId, int tag) {
         try {
             if (getTransmissionPolicy().canTransmitThroughBlockchain(object) &&
-                getNetwork().getConsensusAlgorithm().getGlobalTransmissionPolicy().canTransmitThroughBlockchain(object)) {
+                getNetwork().getConsensusProtocol().getGlobalTransmissionPolicy().canTransmitThroughBlockchain(object)) {
                 if (object instanceof BlockchainItem) {
                     broadcastBlockchainItem((BlockchainItem) object);
                 } else if (object instanceof Flow) {
                     Flow flow = (Flow) object;
                     BaseNode recipentNode = getNetwork().getNodeByEntityId(flow.getDatacenterId());
-                    Transaction transaction = new DataTransaction(CloudSim.clock(), getBlockchainNode(), recipentNode, flow, flow.getSize());
+                    Transaction transaction = new DataTransaction(CloudSim.clock(), getBlockchainNode(), recipentNode, flow, destinationId, tag, flow.getSize());
                     broadcastBlockchainItem(transaction);
                 }
             }
             else {
-                sendNow(destinationId, OsmosisTags.TRANSMIT_IOT_DATA, (Flow) object);
+                sendNow(destinationId, tag, (Flow) object);
             }
         }
         catch (NullPointerException e){

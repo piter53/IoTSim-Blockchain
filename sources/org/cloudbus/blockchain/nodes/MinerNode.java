@@ -7,7 +7,6 @@ import org.cloudbus.blockchain.Network;
 import org.cloudbus.blockchain.devices.BlockchainDevice;
 import org.cloudbus.blockchain.transactions.Transaction;
 
-import javax.print.DocFlavor;
 import java.util.*;
 
 public class MinerNode extends BaseNode {
@@ -32,11 +31,11 @@ public class MinerNode extends BaseNode {
         noOfMinedBlocks = 0;
         this.hashpower = hashpower;
         // Transactions are inserted into a queue sorted by creation time.
-        transactionPool = new PriorityQueue<Transaction>(1, Network.getInstance().getConsensusAlgorithm().getTransactionComparator());
+        transactionPool = new PriorityQueue<Transaction>(1, Network.getInstance().getConsensusProtocol().getTransactionComparator());
     }
 
     private Collection<Transaction> getTransactionsForNewBlock() {
-        long maxSize = Network.getInstance().getConsensusAlgorithm().getMaxBlockSize();
+        long maxSize = Network.getInstance().getConsensusProtocol().getMaxBlockSize();
         Set<Transaction> appendableTransactions = new HashSet<>();
         long currentSize=0;
         while (true) {

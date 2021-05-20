@@ -14,24 +14,23 @@ package org.cloudbus.osmosis.core;
 
 import com.google.gson.Gson;
 import org.cloudbus.cloudsim.*;
-import org.cloudbus.cloudsim.edge.core.edge.ConfiguationEntity;
+import org.cloudbus.cloudsim.edge.core.edge.ConfigurationEntity;
 import org.cloudbus.cloudsim.edge.core.edge.EdgeDataCenter;
 import org.cloudbus.cloudsim.edge.core.edge.EdgeDevice;
 import org.cloudbus.cloudsim.edge.core.edge.MEL;
 import org.cloudbus.cloudsim.edge.core.edge.Mobility;
-import org.cloudbus.cloudsim.edge.core.edge.ConfiguationEntity.CloudDataCenterEntity;
-import org.cloudbus.cloudsim.edge.core.edge.ConfiguationEntity.ControllerEntity;
-import org.cloudbus.cloudsim.edge.core.edge.ConfiguationEntity.EdgeDataCenterEntity;
-import org.cloudbus.cloudsim.edge.core.edge.ConfiguationEntity.EdgeDatacenterCharacteristicsEntity;
-import org.cloudbus.cloudsim.edge.core.edge.ConfiguationEntity.EdgeDeviceEntity;
-import org.cloudbus.cloudsim.edge.core.edge.ConfiguationEntity.IotDeviceEntity;
-import org.cloudbus.cloudsim.edge.core.edge.ConfiguationEntity.LogEntity;
-import org.cloudbus.cloudsim.edge.core.edge.ConfiguationEntity.MELEntities;
-import org.cloudbus.cloudsim.edge.core.edge.ConfiguationEntity.MobilityEntity;
-import org.cloudbus.cloudsim.edge.core.edge.ConfiguationEntity.NetworkModelEntity;
-import org.cloudbus.cloudsim.edge.core.edge.ConfiguationEntity.VMEntity;
-import org.cloudbus.cloudsim.edge.core.edge.ConfiguationEntity.VmAllcationPolicyEntity;
-import org.cloudbus.cloudsim.edge.core.edge.ConfiguationEntity.WanEntity;
+import org.cloudbus.cloudsim.edge.core.edge.ConfigurationEntity.CloudDataCenterEntity;
+import org.cloudbus.cloudsim.edge.core.edge.ConfigurationEntity.ControllerEntity;
+import org.cloudbus.cloudsim.edge.core.edge.ConfigurationEntity.EdgeDataCenterEntity;
+import org.cloudbus.cloudsim.edge.core.edge.ConfigurationEntity.EdgeDatacenterCharacteristicsEntity;
+import org.cloudbus.cloudsim.edge.core.edge.ConfigurationEntity.EdgeDeviceEntity;
+import org.cloudbus.cloudsim.edge.core.edge.ConfigurationEntity.IotDeviceEntity;
+import org.cloudbus.cloudsim.edge.core.edge.ConfigurationEntity.LogEntity;
+import org.cloudbus.cloudsim.edge.core.edge.ConfigurationEntity.MELEntities;
+import org.cloudbus.cloudsim.edge.core.edge.ConfigurationEntity.NetworkModelEntity;
+import org.cloudbus.cloudsim.edge.core.edge.ConfigurationEntity.VMEntity;
+import org.cloudbus.cloudsim.edge.core.edge.ConfigurationEntity.VmAllcationPolicyEntity;
+import org.cloudbus.cloudsim.edge.core.edge.ConfigurationEntity.WanEntity;
 import org.cloudbus.cloudsim.edge.core.edge.Mobility.MovingRange;
 import org.cloudbus.cloudsim.edge.iot.IoTDevice;
 import org.cloudbus.cloudsim.edge.iot.network.EdgeNetwork;
@@ -113,13 +112,13 @@ public class OsmosisBuilder {
 		return osmesisDatacentres;
 	}
 
-	public ConfiguationEntity parseTopology(FileReader jsonFileReader) {
+	public ConfigurationEntity parseTopology(FileReader jsonFileReader) {
         Gson gson = new Gson();
-        ConfiguationEntity conf = gson.fromJson(jsonFileReader, ConfiguationEntity.class);
+        ConfigurationEntity conf = gson.fromJson(jsonFileReader, ConfigurationEntity.class);
         return conf;
     }
 
-    public void buildTopology(ConfiguationEntity topologyEntity) throws Exception {
+    public void buildTopology(ConfigurationEntity topologyEntity) throws Exception {
         List<CloudDataCenterEntity> datacentreEntities = topologyEntity.getCloudDatacenter();
         this.cloudDatacentres = buildCloudDatacentres(datacentreEntities);
         List<EdgeDataCenterEntity> edgeDatacenerEntites = topologyEntity.getEdgeDatacenter();
@@ -537,7 +536,7 @@ public class OsmosisBuilder {
 		return networkModel;
 	}
 
-	public void initLog(ConfiguationEntity conf) {
+	public void initLog(ConfigurationEntity conf) {
 		LogEntity logEntity = conf.getLogEntity();
 		boolean saveLogToFile = logEntity.isSaveLogToFile();
 		if (saveLogToFile) {

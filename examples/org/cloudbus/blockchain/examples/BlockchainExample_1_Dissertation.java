@@ -9,15 +9,12 @@
  * 
  */
 
-package org.cloudbus.cloudsim.osmesis.examples;
+package org.cloudbus.blockchain.examples;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
+import org.cloudbus.blockchain.BlockchainBroker;
+import org.cloudbus.blockchain.BlockchainBuilder;
+import org.cloudbus.blockchain.Network;
+import org.cloudbus.blockchain.devices.IoTBlockchainDevice;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
@@ -27,26 +24,25 @@ import org.cloudbus.cloudsim.edge.utils.LogUtil;
 import org.cloudbus.cloudsim.osmesis.examples.uti.LogPrinter;
 import org.cloudbus.cloudsim.osmesis.examples.uti.PrintResults;
 import org.cloudbus.cloudsim.sdn.Switch;
-import org.cloudbus.osmosis.core.EdgeSDNController;
-import org.cloudbus.osmosis.core.OsmesisBroker;
-import org.cloudbus.osmosis.core.OsmesisDatacenter;
-import org.cloudbus.osmosis.core.OsmosisBuilder;
-import org.cloudbus.osmosis.core.OsmosisOrchestrator;
-import org.cloudbus.osmosis.core.SDNController;
+import org.cloudbus.osmosis.core.*;
 
-import org.cloudbus.osmosis.core.OsmesisAppsParser;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 /**
  * 
- * @author Khaled Alwasel
- * @contact kalwasel@gmail.com
- * @since IoTSim-Osmosis 1.0
+ * @author Khaled Alwasel, modified by Piotr Grela
+ * @since IoTSim-Blockchain 1.0
  * 
 **/
 
-public class OsmesisExample_1 {
-	public static final String configurationFile = "inputFiles/OsmosisExample1_configuration.json";
-	public static final String osmesisAppFile =  "inputFiles/Example1_Workload.csv";
+public class BlockchainExample_1_Dissertation {
+	public static final String configurationFile = "inputFiles/BlockchainExample1_configuration_Dissertation.json";
+	public static final String osmesisAppFile =  "inputFiles/Example_Workload_Dissertation.csv";
     OsmosisBuilder topologyBuilder;
 	OsmesisBroker osmesisBroker;
 	List<OsmesisDatacenter> datacenters;
@@ -55,7 +51,7 @@ public class OsmesisExample_1 {
 	List<Vm> vmList;
 
 	public static void main(String[] args) throws Exception {
-		OsmesisExample_1 osmesis = new OsmesisExample_1();
+		BlockchainExample_1_Dissertation osmesis = new BlockchainExample_1_Dissertation();
 		osmesis.start();
 	}
 	
@@ -67,8 +63,8 @@ public class OsmesisExample_1 {
 
 		// Initialize the CloudSim library
 		CloudSim.init(num_user, calendar, trace_flag);
-		osmesisBroker  = new OsmesisBroker("OsmesisBroker");
-		topologyBuilder = new OsmosisBuilder(osmesisBroker);
+		osmesisBroker  = new BlockchainBroker("OsmesisBroker");
+		topologyBuilder = new BlockchainBuilder(osmesisBroker);
 		ConfigurationEntity config = buildTopologyFromFile(configurationFile);
         if(config !=  null) {
         	topologyBuilder.buildTopology(config);
@@ -87,7 +83,12 @@ public class OsmesisExample_1 {
 		maestro.setSdnControllers(controllers);
 		osmesisBroker.submitOsmesisApps(OsmesisAppsParser.appList);
 		osmesisBroker.setDatacenters(topologyBuilder.getOsmesisDatacentres());
-		
+
+		// Add 5 units of currency to each IoTBlockchainDevice so that they can afford to broadcast transactions with sensed data
+        for (IoTBlockchainDevice device : Network.getInstance().getIoTBlockchainDevicesSet()) {
+            device.getBlockchainNode().addBalance(5);
+        }
+
 		double startTime = CloudSim.startSimulation();
   
 		LogUtil.simulationFinished();

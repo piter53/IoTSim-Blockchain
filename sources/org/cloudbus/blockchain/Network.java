@@ -2,7 +2,7 @@ package org.cloudbus.blockchain;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.cloudbus.blockchain.consensus.ConsensusAlgorithm;
+import org.cloudbus.blockchain.consensus.ConsensusProtocol;
 import org.cloudbus.blockchain.consensus.ProofOfWork;
 import org.cloudbus.blockchain.devices.BlockchainDevice;
 import org.cloudbus.blockchain.devices.EdgeBlockchainDevice;
@@ -22,7 +22,7 @@ import java.util.Set;
 public class Network {
 
     @Getter
-    private ConsensusAlgorithm consensusAlgorithm;
+    private ConsensusProtocol consensusProtocol;
     @Getter @Setter
     private Collection<BlockchainDevice> blockchainDevicesSet;
     @Getter
@@ -38,7 +38,7 @@ public class Network {
         ioTBlockchainDevicesSet = new HashSet<>();
         edgeBlockchainDataCentersSet = new HashSet<>();
         minerDevices = new HashSet<>();
-        consensusAlgorithm = new ProofOfWork();
+        consensusProtocol = new ProofOfWork();
     }
 
     public static Network getInstance() {
@@ -53,7 +53,7 @@ public class Network {
         for (BlockchainDevice device : minerDevices) {
             minerNodes.add((MinerNode) device.getBlockchainNode());
         }
-        MinerNode miner = consensusAlgorithm.pickMiner(minerNodes);
+        MinerNode miner = consensusProtocol.pickMiner(minerNodes);
         for (BlockchainDevice device : minerDevices) {
             if (miner == device.getBlockchainNode()) {
                 return device;
