@@ -44,7 +44,7 @@ public class Network {
 
     public static Network getInstance() {
         if (singleInstance == null) {
-            singleInstance = new Network(new ProofOfWork(new TransmissionPolicySizeBased((long)100), 8.0, 1, 1, 0.001, 0.01, 500));
+            singleInstance = new Network(new ProofOfWork(new TransmissionPolicySizeBased((long)100), 10.0, 1, 1, 0.001, 0.01, 100));
         }
         return singleInstance;
     }

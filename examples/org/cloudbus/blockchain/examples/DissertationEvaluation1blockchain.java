@@ -9,7 +9,22 @@
  * 
  */
 
-package org.cloudbus.cloudsim.osmesis.examples;
+package org.cloudbus.blockchain.examples;
+
+import org.cloudbus.blockchain.BlockchainBroker;
+import org.cloudbus.blockchain.BlockchainBuilder;
+import org.cloudbus.blockchain.Network;
+import org.cloudbus.blockchain.consensus.ProofOfWork;
+import org.cloudbus.blockchain.consensus.policies.TransmissionPolicySizeBased;
+import org.cloudbus.blockchain.devices.BlockchainDevice;
+import org.cloudbus.blockchain.examples.util.BlockchainPrintResults;
+import org.cloudbus.cloudsim.Log;
+import org.cloudbus.cloudsim.Vm;
+import org.cloudbus.cloudsim.core.CloudSim;
+import org.cloudbus.cloudsim.edge.core.edge.ConfigurationEntity;
+import org.cloudbus.cloudsim.edge.core.edge.MEL;
+import org.cloudbus.cloudsim.edge.utils.LogUtil;
+import org.cloudbus.osmosis.core.*;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -18,44 +33,25 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import org.cloudbus.cloudsim.Log;
-import org.cloudbus.cloudsim.Vm;
-import org.cloudbus.cloudsim.core.CloudSim;
-import org.cloudbus.cloudsim.edge.core.edge.ConfigurationEntity;
-import org.cloudbus.cloudsim.edge.core.edge.MEL;
-import org.cloudbus.cloudsim.edge.utils.LogUtil;
-import org.cloudbus.cloudsim.osmesis.examples.uti.LogPrinter;
-import org.cloudbus.cloudsim.osmesis.examples.uti.PrintResults;
-import org.cloudbus.cloudsim.sdn.Switch;
-import org.cloudbus.osmosis.core.EdgeSDNController;
-import org.cloudbus.osmosis.core.OsmesisBroker;
-import org.cloudbus.osmosis.core.OsmesisDatacenter;
-import org.cloudbus.osmosis.core.OsmosisBuilder;
-import org.cloudbus.osmosis.core.OsmosisOrchestrator;
-import org.cloudbus.osmosis.core.SDNController;
-
-import org.cloudbus.osmosis.core.OsmesisAppsParser;
-
 /**
  * 
- * @author Khaled Alwasel
- * @contact kalwasel@gmail.com
- * @since IoTSim-Osmosis 1.0
+ * @author Khaled Alwasel, modified by Piotr Grela
+ * @since IoTSim-Blockchain 1.0
  * 
 **/
 
-public class OsmesisExample_1 {
-	public static final String configurationFile = "inputFiles/dissertation/evaluation/OsmosisConfiguration-Evaluation.json";
+public class DissertationEvaluation1blockchain {
+	public static final String configurationFile = "inputFiles/dissertation/evaluation/Configuration-Evaluation1.json";
 	public static final String osmesisAppFile =  "inputFiles/dissertation/evaluation/Workload_Evaluation1.csv";
     OsmosisBuilder topologyBuilder;
-	OsmesisBroker osmesisBroker;
+	OsmesisBroker broker;
 	List<OsmesisDatacenter> datacenters;
 	List<MEL> melList;	
 	EdgeSDNController edgeSDNController;
 	List<Vm> vmList;
 
 	public static void main(String[] args) throws Exception {
-		OsmesisExample_1 osmesis = new OsmesisExample_1();
+		DissertationEvaluation1blockchain osmesis = new DissertationEvaluation1blockchain();
 		osmesis.start();
 	}
 	
@@ -64,46 +60,56 @@ public class OsmesisExample_1 {
 		int num_user = 1; // number of users
 		Calendar calendar = Calendar.getInstance();
 		boolean trace_flag = false; // mean trace events
-
 		// Initialize the CloudSim library
 		CloudSim.init(num_user, calendar, trace_flag);
-		osmesisBroker  = new OsmesisBroker("OsmesisBroker");
-		topologyBuilder = new OsmosisBuilder(osmesisBroker);
+		broker = new BlockchainBroker("OsmesisBroker");
+		topologyBuilder = new BlockchainBuilder(broker);
 		ConfigurationEntity config = buildTopologyFromFile(configurationFile);
         if(config !=  null) {
         	topologyBuilder.buildTopology(config);
         }
-        
+
         OsmosisOrchestrator maestro = new OsmosisOrchestrator();
         
 		OsmesisAppsParser.startParsingExcelAppFile(osmesisAppFile);
 		List<SDNController> controllers = new ArrayList<>();
 		for(OsmesisDatacenter osmesisDC : topologyBuilder.getOsmesisDatacentres()){
-			osmesisBroker.submitVmList(osmesisDC.getVmList(), osmesisDC.getId());
+			broker.submitVmList(osmesisDC.getVmList(), osmesisDC.getId());
 			controllers.add(osmesisDC.getSdnController());
 			osmesisDC.getSdnController().setWanOorchestrator(maestro);			
 		}
 		controllers.add(topologyBuilder.getSdWanController());
 		maestro.setSdnControllers(controllers);
-		osmesisBroker.submitOsmesisApps(OsmesisAppsParser.appList);
-		osmesisBroker.setDatacenters(topologyBuilder.getOsmesisDatacentres());
-		
+		broker.submitOsmesisApps(OsmesisAppsParser.appList);
+		broker.setDatacenters(topologyBuilder.getOsmesisDatacentres());
+
+		// Set each BlockchainDevice to possess some initial amount of currency so that they can afford to broadcast transactions.
+        for (BlockchainDevice device : Network.getInstance().getBlockchainDevicesSet()) {
+            device.getBlockchainNode().addBalance(Integer.MAX_VALUE/2.0);
+        }
+        Network.setConsensus(new ProofOfWork(new TransmissionPolicySizeBased((long)100), 2.0, 1, 1, 0.001, 0.01, 190));
+
+        // Perform the simulation and print results
 		double startTime = CloudSim.startSimulation();
   
 		LogUtil.simulationFinished();
-		PrintResults pr = new PrintResults();
-		pr.printOsmesisNetwork();
+		BlockchainPrintResults blockchainPrintResults = new BlockchainPrintResults();
+		blockchainPrintResults.readAverageOsmoticAppTimes();
+//		blockchainPrintResults.printOsmesisApps();
+        blockchainPrintResults.writeOsmesisAppsToFile("blockchainEval.txt");
+//		PrintResults printResults = new PrintResults();
+//		printResults.printOsmesisNetwork();
 			
 		Log.printLine();
 
-		for(OsmesisDatacenter osmesisDC : topologyBuilder.getOsmesisDatacentres()){		
-			List<Switch> switchList = osmesisDC.getSdnController().getSwitchList();
-			LogPrinter.printEnergyConsumption(osmesisDC.getName(), osmesisDC.getSdnhosts(), switchList, startTime);
-			Log.printLine();
-		}
+//		for(OsmesisDatacenter osmesisDC : topologyBuilder.getOsmesisDatacentres()){
+//			List<Switch> switchList = osmesisDC.getSdnController().getSwitchList();
+//			LogPrinter.printEnergyConsumption(osmesisDC.getName(), osmesisDC.getSdnhosts(), switchList, startTime);
+//			Log.printLine();
+//		}
 		
-		Log.printLine();		
-		LogPrinter.printEnergyConsumption(topologyBuilder.getSdWanController().getName(), null, topologyBuilder.getSdWanController().getSwitchList(), startTime);
+//		Log.printLine();
+//		LogPrinter.printEnergyConsumption(topologyBuilder.getSdWanController().getName(), null, topologyBuilder.getSdWanController().getSwitchList(), startTime);
 		Log.printLine();
 		Log.printLine("Simulation Finished!");
 

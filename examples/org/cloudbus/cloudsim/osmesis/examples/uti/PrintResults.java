@@ -16,6 +16,11 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.cloudbus.blockchain.Block;
+import org.cloudbus.blockchain.Blockchain;
+import org.cloudbus.blockchain.Network;
+import org.cloudbus.blockchain.devices.BlockchainDevice;
+import org.cloudbus.blockchain.transactions.Transaction;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.osmosis.core.Flow;
 import org.cloudbus.osmosis.core.OsmesisAppDescription;
@@ -32,7 +37,29 @@ import org.cloudbus.osmosis.core.WorkflowInfo;
  * 
 **/
 
-public class PrintResults {	
+public class PrintResults {
+
+    public void writeBlockchainDetails(String filename){
+        // Get the longest blockchain
+        Blockchain blockchain = new Blockchain();
+        for (BlockchainDevice device : Network.getInstance().getBlockchainDevicesSet()){
+            if (blockchain.getLastBlock().getGenerationTimestamp() < device.getBlockchainNode().getBlockchain().getLastBlock().getGenerationTimestamp()) {
+                blockchain = device.getBlockchainNode().getBlockchain();
+            }
+        }
+        long blockchainLength = blockchain.getLength();
+        long avgBlockSize = 0;
+        double avgTransactionLifespan = 0.0;
+        for (Block block : blockchain.getLedger()) {
+            avgBlockSize += block.getSizeMb();
+            for (Transaction transaction : block.getTransactionList()) {
+                avgTransactionLifespan += transaction.getReceptionTimestamp() - transaction.getCreationTimestamp();
+            }
+            avgTransactionLifespan /= block.getTransactionList().size();
+        }
+        avgBlockSize /= blockchainLength;
+
+    }
 		
 	public void printOsmesisNetwork() {
 		

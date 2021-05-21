@@ -1,3 +1,4 @@
 # IoTSim-Blockchain
-
-TODO description
+In short, **IoTSim-Blockchain** is a toolkit for simulation and modelling of Blockchain-backed IoT networks.  
+The most significant contribution to **IoTSim-Blockchain** is what it builds upon: [**IoTSim-Osmosis**](https://github.com/kalwasel/IoTSim-Osmosis) - Java based simulation framework for IoT networks deployed under osmotic paradigm. **IoTSim-Osmosis** per se is one of many iterations of [**CloudSim**](http://www.cloudbus.org/cloudsim/) - *"...a framework for modelling and simulation of cloud computing infrastructures and services. Originally built primarily at the Cloud Computing and Distributed Systems (CLOUDS) Laboratory, the University of Melbourne, Australia, CloudSim has become one of the most popular open source cloud simulators in the research and academia."*  
+The architecture of Blockchain base model implemented in the simulator is rooted in that of **BlockSim** - *"An Extensible Simulation Tool for Blockchain Systems"*  

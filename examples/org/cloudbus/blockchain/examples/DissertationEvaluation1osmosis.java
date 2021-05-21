@@ -9,15 +9,9 @@
  * 
  */
 
-package org.cloudbus.cloudsim.osmesis.examples;
+package org.cloudbus.blockchain.examples;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
+import org.cloudbus.blockchain.examples.util.BlockchainPrintResults;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
@@ -25,16 +19,14 @@ import org.cloudbus.cloudsim.edge.core.edge.ConfigurationEntity;
 import org.cloudbus.cloudsim.edge.core.edge.MEL;
 import org.cloudbus.cloudsim.edge.utils.LogUtil;
 import org.cloudbus.cloudsim.osmesis.examples.uti.LogPrinter;
-import org.cloudbus.cloudsim.osmesis.examples.uti.PrintResults;
-import org.cloudbus.cloudsim.sdn.Switch;
-import org.cloudbus.osmosis.core.EdgeSDNController;
-import org.cloudbus.osmosis.core.OsmesisBroker;
-import org.cloudbus.osmosis.core.OsmesisDatacenter;
-import org.cloudbus.osmosis.core.OsmosisBuilder;
-import org.cloudbus.osmosis.core.OsmosisOrchestrator;
-import org.cloudbus.osmosis.core.SDNController;
+import org.cloudbus.osmosis.core.*;
 
-import org.cloudbus.osmosis.core.OsmesisAppsParser;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 /**
  * 
@@ -44,7 +36,7 @@ import org.cloudbus.osmosis.core.OsmesisAppsParser;
  * 
 **/
 
-public class OsmesisExample_1 {
+public class DissertationEvaluation1osmosis {
 	public static final String configurationFile = "inputFiles/dissertation/evaluation/OsmosisConfiguration-Evaluation.json";
 	public static final String osmesisAppFile =  "inputFiles/dissertation/evaluation/Workload_Evaluation1.csv";
     OsmosisBuilder topologyBuilder;
@@ -55,7 +47,7 @@ public class OsmesisExample_1 {
 	List<Vm> vmList;
 
 	public static void main(String[] args) throws Exception {
-		OsmesisExample_1 osmesis = new OsmesisExample_1();
+		DissertationEvaluation1osmosis osmesis = new DissertationEvaluation1osmosis();
 		osmesis.start();
 	}
 	
@@ -91,19 +83,24 @@ public class OsmesisExample_1 {
 		double startTime = CloudSim.startSimulation();
   
 		LogUtil.simulationFinished();
-		PrintResults pr = new PrintResults();
-		pr.printOsmesisNetwork();
+//		PrintResults pr = new PrintResults();
+//		pr.printOsmesisNetwork();
+        BlockchainPrintResults blockchainPrintResults = new BlockchainPrintResults();
+        blockchainPrintResults.readAverageOsmoticAppTimes();
+//        blockchainPrintResults.printOsmesisApps();
+        blockchainPrintResults.writeOsmesisAppsToFile("osmosisEval.txt");
+
 			
 		Log.printLine();
 
-		for(OsmesisDatacenter osmesisDC : topologyBuilder.getOsmesisDatacentres()){		
-			List<Switch> switchList = osmesisDC.getSdnController().getSwitchList();
-			LogPrinter.printEnergyConsumption(osmesisDC.getName(), osmesisDC.getSdnhosts(), switchList, startTime);
-			Log.printLine();
-		}
+//		for(OsmesisDatacenter osmesisDC : topologyBuilder.getOsmesisDatacentres()){
+//			List<Switch> switchList = osmesisDC.getSdnController().getSwitchList();
+//			LogPrinter.printEnergyConsumption(osmesisDC.getName(), osmesisDC.getSdnhosts(), switchList, startTime);
+//			Log.printLine();
+//		}
 		
-		Log.printLine();		
-		LogPrinter.printEnergyConsumption(topologyBuilder.getSdWanController().getName(), null, topologyBuilder.getSdWanController().getSwitchList(), startTime);
+//		Log.printLine();
+//		LogPrinter.printEnergyConsumption(topologyBuilder.getSdWanController().getName(), null, topologyBuilder.getSdWanController().getSwitchList(), startTime);
 		Log.printLine();
 		Log.printLine("Simulation Finished!");
 

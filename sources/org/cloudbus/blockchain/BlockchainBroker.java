@@ -2,7 +2,9 @@ package org.cloudbus.blockchain;
 
 import org.cloudbus.blockchain.devices.BlockchainDevice;
 import org.cloudbus.blockchain.nodes.MinerNode;
+import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.core.SimEvent;
+import org.cloudbus.osmosis.core.OsmesisAppDescription;
 import org.cloudbus.osmosis.core.OsmesisBroker;
 
 /**
@@ -30,7 +32,14 @@ public class BlockchainBroker extends OsmesisBroker {
     }
 
     public void generateBlock() {
-        if (blockchainNetwork.existPendingTransactions()) {
+        boolean sensingFinished = true;
+        for (OsmesisAppDescription app : getAppList()) {
+            if (!app.getIsIoTDeviceDied() && app.getStopDataGenerationTime() > CloudSim.clock()) {
+                sensingFinished = false;
+                break;
+            }
+        }
+        if (blockchainNetwork.existPendingTransactions() || !sensingFinished) {
             BlockchainDevice device = blockchainNetwork.pickNewMiningDevice();
             ((MinerNode) device.getBlockchainNode()).mineBlock(device);
             double blockGenerationDelay = blockchainNetwork.getConsensusProtocol().getBlockInterval();

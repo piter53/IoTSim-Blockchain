@@ -1,7 +1,7 @@
 {
     "edgeBlockchainDatacentre": [
         {
-            "className" : "org.cloudbus.blockchain.devices.EdgeBlockchainDevice",
+            "className": "org.cloudbus.blockchain.devices.EdgeBlockchainDevice",
             "name": "Edge_1",
             "type": "edge",
             "schedulingInterval": 1.0,
@@ -23,18 +23,18 @@
                 {
                     "name": "edgeDevice_1",
                     "pes": 4,
-                    "ramSize": 10000,
+                    "ramSize": 4000,
                     "bwSize": 100,
-                    "storage": 10000,
-                    "mips": 10000
+                    "storage": 200000,
+                    "mips": 250
                 },
                 {
                     "name": "edgeDevice_2",
                     "pes": 4,
-                    "ramSize": 10000,
+                    "ramSize": 4000,
                     "bwSize": 100,
-                    "storage": 10000,
-                    "mips": 10000
+                    "storage": 200000,
+                    "mips": 250
                 }
             ],
             "MELEntities": [
@@ -42,7 +42,7 @@
                     "name": "MEL_1",
                     "bw": 100,
                     "mips": 250,
-                    "ram": 10000,
+                    "ram": 4000,
                     "pesNumber": 1,
                     "vmm": "xxx",
                     "cloudletSchedulerClassName": "org.cloudbus.cloudsim.CloudletSchedulerTimeShared"
@@ -51,7 +51,7 @@
                     "name": "MEL_2",
                     "bw": 100,
                     "mips": 250,
-                    "ram": 10000,
+                    "ram": 4000,
                     "pesNumber": 1,
                     "vmm": "xxx",
                     "cloudletSchedulerClassName": "org.cloudbus.cloudsim.CloudletSchedulerTimeShared"
@@ -181,13 +181,13 @@
                         "communicationProtocol": "xmpp",
                         "networkType": "wifi"
                     },
-                    "baseNodeEntity" : {
-                        "className" : "org.cloudbus.blockchain.nodes.Node",
-                        "blockchainDepth" : "100"
+                    "baseNodeEntity": {
+                        "className": "org.cloudbus.blockchain.nodes.Node",
+                        "blockchainDepth": "30"
                     },
-                    "transmissionPolicy" : {
-                        "className" : "org.cloudbus.blockchain.policies.TransmissionPolicySizeBased",
-                        "object" : 100
+                    "transmissionPolicy": {
+                        "className": "org.cloudbus.blockchain.consensus.policies.TransmissionPolicySizeBased",
+                        "object": 100
                     }
                 },
                 {
@@ -209,13 +209,13 @@
                         "communicationProtocol": "xmpp",
                         "networkType": "wifi"
                     },
-                    "baseNodeEntity" : {
-                        "className" : "org.cloudbus.blockchain.nodes.Node",
-                        "blockchainDepth" : "100"
+                    "baseNodeEntity": {
+                        "className": "org.cloudbus.blockchain.nodes.Node",
+                        "blockchainDepth": "30"
                     },
-                    "transmissionPolicy" : {
-                        "className" : "org.cloudbus.blockchain.policies.TransmissionPolicySizeBased",
-                        "object" : 100
+                    "transmissionPolicy": {
+                        "className": "org.cloudbus.blockchain.consensus.policies.TransmissionPolicySizeBased",
+                        "object": 100
                     }
                 },
                 {
@@ -237,13 +237,13 @@
                         "communicationProtocol": "xmpp",
                         "networkType": "wifi"
                     },
-                    "baseNodeEntity" : {
-                        "className" : "org.cloudbus.blockchain.nodes.Node",
-                        "blockchainDepth" : "100"
+                    "baseNodeEntity": {
+                        "className": "org.cloudbus.blockchain.nodes.Node",
+                        "blockchainDepth": "30"
                     },
-                    "transmissionPolicy" : {
-                        "className" : "org.cloudbus.blockchain.policies.TransmissionPolicySizeBased",
-                        "object" : 100
+                    "transmissionPolicy": {
+                        "className": "org.cloudbus.blockchain.consensus.policies.TransmissionPolicySizeBased",
+                        "object": 100
                     }
                 },
                 {
@@ -265,24 +265,22 @@
                         "communicationProtocol": "xmpp",
                         "networkType": "wifi"
                     },
-                    "baseNodeEntity" : {
-                        "className" : "org.cloudbus.blockchain.nodes.Node",
-                        "blockchainDepth" : "100"
+                    "baseNodeEntity": {
+                        "className": "org.cloudbus.blockchain.nodes.Node",
+                        "blockchainDepth": "30"
                     },
-                    "transmissionPolicy" : {
-                        "className" : "org.cloudbus.blockchain.policies.TransmissionPolicySizeBased",
-                        "object" : 100
+                    "transmissionPolicy": {
+                        "className": "org.cloudbus.blockchain.consensus.policies.TransmissionPolicySizeBased",
+                        "object": 100
                     }
-                }
-            ],
-            "ioTDevices": [
+                },
                 {
                     "name": "temperature_5",
                     "bw": 100,
                     "max_battery_capacity": 100.0,
                     "battery_sensing_rate": 0.001,
                     "battery_sending_rate": 0.001,
-                    "ioTClassName": "org.cloudbus.cloudsim.edge.iot.TemperatureSensor",
+                    "ioTClassName": "org.cloudbus.blockchain.devices.sensors.TemperatureSensor",
                     "mobilityEntity": {
                         "movable": false,
                         "location": {
@@ -294,6 +292,14 @@
                     "networkModelEntity": {
                         "communicationProtocol": "xmpp",
                         "networkType": "wifi"
+                    },
+                    "baseNodeEntity": {
+                        "className": "org.cloudbus.blockchain.nodes.Node",
+                        "blockchainDepth": "30"
+                    },
+                    "transmissionPolicy": {
+                        "className": "org.cloudbus.blockchain.consensus.policies.TransmissionPolicySizeBased",
+                        "object": 100
                     }
                 },
                 {
@@ -302,7 +308,7 @@
                     "max_battery_capacity": 100.0,
                     "battery_sensing_rate": 0.001,
                     "battery_sending_rate": 0.001,
-                    "ioTClassName": "org.cloudbus.cloudsim.edge.iot.TemperatureSensor",
+                    "ioTClassName": "org.cloudbus.blockchain.devices.sensors.TemperatureSensor",
                     "mobilityEntity": {
                         "movable": false,
                         "location": {
@@ -314,6 +320,14 @@
                     "networkModelEntity": {
                         "communicationProtocol": "xmpp",
                         "networkType": "wifi"
+                    },
+                    "baseNodeEntity": {
+                        "className": "org.cloudbus.blockchain.nodes.Node",
+                        "blockchainDepth": "30"
+                    },
+                    "transmissionPolicy": {
+                        "className": "org.cloudbus.blockchain.consensus.policies.TransmissionPolicySizeBased",
+                        "object": 100
                     }
                 },
                 {
@@ -322,7 +336,7 @@
                     "max_battery_capacity": 100.0,
                     "battery_sensing_rate": 0.001,
                     "battery_sending_rate": 0.001,
-                    "ioTClassName": "org.cloudbus.cloudsim.edge.iot.TemperatureSensor",
+                    "ioTClassName": "org.cloudbus.blockchain.devices.sensors.TemperatureSensor",
                     "mobilityEntity": {
                         "movable": false,
                         "location": {
@@ -334,6 +348,14 @@
                     "networkModelEntity": {
                         "communicationProtocol": "xmpp",
                         "networkType": "wifi"
+                    },
+                    "baseNodeEntity": {
+                        "className": "org.cloudbus.blockchain.nodes.Node",
+                        "blockchainDepth": "30"
+                    },
+                    "transmissionPolicy": {
+                        "className": "org.cloudbus.blockchain.consensus.policies.TransmissionPolicySizeBased",
+                        "object": 100
                     }
                 },
                 {
@@ -342,7 +364,7 @@
                     "max_battery_capacity": 100.0,
                     "battery_sensing_rate": 0.001,
                     "battery_sending_rate": 0.001,
-                    "ioTClassName": "org.cloudbus.cloudsim.edge.iot.TemperatureSensor",
+                    "ioTClassName": "org.cloudbus.blockchain.devices.sensors.TemperatureSensor",
                     "mobilityEntity": {
                         "movable": false,
                         "location": {
@@ -354,6 +376,14 @@
                     "networkModelEntity": {
                         "communicationProtocol": "xmpp",
                         "networkType": "wifi"
+                    },
+                    "baseNodeEntity": {
+                        "className": "org.cloudbus.blockchain.nodes.Node",
+                        "blockchainDepth": "30"
+                    },
+                    "transmissionPolicy": {
+                        "className": "org.cloudbus.blockchain.consensus.policies.TransmissionPolicySizeBased",
+                        "object": 100
                     }
                 },
                 {
@@ -362,7 +392,7 @@
                     "max_battery_capacity": 100.0,
                     "battery_sensing_rate": 0.001,
                     "battery_sending_rate": 0.001,
-                    "ioTClassName": "org.cloudbus.cloudsim.edge.iot.TemperatureSensor",
+                    "ioTClassName": "org.cloudbus.blockchain.devices.sensors.TemperatureSensor",
                     "mobilityEntity": {
                         "movable": false,
                         "location": {
@@ -374,6 +404,14 @@
                     "networkModelEntity": {
                         "communicationProtocol": "xmpp",
                         "networkType": "wifi"
+                    },
+                    "baseNodeEntity": {
+                        "className": "org.cloudbus.blockchain.nodes.Node",
+                        "blockchainDepth": "30"
+                    },
+                    "transmissionPolicy": {
+                        "className": "org.cloudbus.blockchain.consensus.policies.TransmissionPolicySizeBased",
+                        "object": 100
                     }
                 },
                 {
@@ -382,7 +420,7 @@
                     "max_battery_capacity": 100.0,
                     "battery_sensing_rate": 0.001,
                     "battery_sending_rate": 0.001,
-                    "ioTClassName": "org.cloudbus.cloudsim.edge.iot.TemperatureSensor",
+                    "ioTClassName": "org.cloudbus.blockchain.devices.sensors.TemperatureSensor",
                     "mobilityEntity": {
                         "movable": false,
                         "location": {
@@ -394,16 +432,25 @@
                     "networkModelEntity": {
                         "communicationProtocol": "xmpp",
                         "networkType": "wifi"
+                    },
+                    "baseNodeEntity": {
+                        "className": "org.cloudbus.blockchain.nodes.Node",
+                        "blockchainDepth": "30"
+                    },
+                    "transmissionPolicy": {
+                        "className": "org.cloudbus.blockchain.consensus.policies.TransmissionPolicySizeBased",
+                        "object": 100
                     }
                 }
             ],
-            "baseNodeEntity" : {
-                "className" : "org.cloudbus.blockchain.nodes.MinerNode",
-                "blockchainDepth" : "100"
+            "baseNodeEntity": {
+                "className": "org.cloudbus.blockchain.nodes.MinerNode",
+                "blockchainDepth": 100,
+                "hashpower": 1000
             },
-            "transmissionPolicy" : {
-                "className" : "org.cloudbus.blockchain.policies.TransmissionPolicySizeBased",
-                "object" : 1000
+            "transmissionPolicy": {
+                "className": "org.cloudbus.blockchain.consensus.policies.TransmissionPolicySizeBased",
+                "object": 150
             }
         }
     ],
@@ -424,17 +471,17 @@
                     "name": "host1",
                     "pes": 4,
                     "mips": 1250,
-                    "ram": 32750,
-                    "bw": 10000,
-                    "storage": 6400000000000
+                    "ram": 8000,
+                    "bw": 1000,
+                    "storage": 500000
                 },
                 {
                     "name": "host2",
                     "pes": 4,
                     "mips": 1250,
-                    "ram": 32750,
-                    "bw": 10000,
-                    "storage": 6400000000000
+                    "ram": 8000,
+                    "bw": 1000,
+                    "storage": 500000
                 }
             ],
             "VMs": [
@@ -442,18 +489,18 @@
                     "name": "VM_1",
                     "pes": 2,
                     "mips": 250,
-                    "ram": 512,
-                    "storage": 10000,
-                    "bw": 1000,
+                    "ram": 2000,
+                    "storage": 200000,
+                    "bw": 100,
                     "cloudletPolicy": "TimeShared"
                 },
                 {
                     "name": "VM_2",
                     "pes": 2,
                     "mips": 250,
-                    "ram": 512,
-                    "storage": 10000,
-                    "bw": 1000,
+                    "ram": 2000,
+                    "storage": 200000,
+                    "bw": 100,
                     "cloudletPolicy": "TimeShared"
                 }
             ],
@@ -596,192 +643,192 @@
                 {
                     "source": "core1",
                     "destination": "dc1_gateway",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "core2",
                     "destination": "dc1_gateway",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "core3",
                     "destination": "dc1_gateway",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "core4",
                     "destination": "dc1_gateway",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "core1",
                     "destination": "aggregate1",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "core1",
                     "destination": "aggregate3",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "core1",
                     "destination": "aggregate5",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "core1",
                     "destination": "aggregate7",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "core2",
                     "destination": "aggregate1",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "core2",
                     "destination": "aggregate3",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "core2",
                     "destination": "aggregate5",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "core2",
                     "destination": "aggregate7",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "core3",
                     "destination": "aggregate2",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "core3",
                     "destination": "aggregate4",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "core3",
                     "destination": "aggregate6",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "core3",
                     "destination": "aggregate8",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "core4",
                     "destination": "aggregate2",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "core4",
                     "destination": "aggregate4",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "core4",
                     "destination": "aggregate6",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "core4",
                     "destination": "aggregate8",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "aggregate1",
                     "destination": "edge1",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "aggregate1",
                     "destination": "edge2",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "aggregate2",
                     "destination": "edge1",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "aggregate2",
                     "destination": "edge2",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "aggregate3",
                     "destination": "edge3",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "aggregate3",
                     "destination": "edge4",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "aggregate4",
                     "destination": "edge3",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "aggregate4",
                     "destination": "edge4",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "aggregate5",
                     "destination": "edge5",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "aggregate5",
                     "destination": "edge6",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "aggregate6",
                     "destination": "edge5",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "aggregate6",
                     "destination": "edge6",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "aggregate7",
                     "destination": "edge7",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "aggregate7",
                     "destination": "edge8",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "aggregate8",
                     "destination": "edge7",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "aggregate8",
                     "destination": "edge8",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "edge1",
                     "destination": "host1",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "edge1",
                     "destination": "host2",
-                    "bw": 1000
+                    "bw": 100
                 }
             ]
         }
@@ -835,52 +882,52 @@
                 {
                     "source": "edge1_gateway",
                     "destination": "sdwan_router_1",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "sdwan_router_1",
                     "destination": "sdwan_router_2",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "sdwan_router_1",
                     "destination": "sdwan_router_3",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "sdwan_router_2",
                     "destination": "sdwan_router_4",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "sdwan_router_2",
                     "destination": "sdwan_router_5",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "sdwan_router_3",
                     "destination": "sdwan_router_4",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "sdwan_router_3",
                     "destination": "sdwan_router_5",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "sdwan_router_4",
                     "destination": "sdwan_router_6",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "sdwan_router_5",
                     "destination": "sdwan_router_6",
-                    "bw": 1000
+                    "bw": 100
                 },
                 {
                     "source": "dc1_gateway",
                     "destination": "sdwan_router_6",
-                    "bw": 1000
+                    "bw": 100
                 }
             ]
         }
