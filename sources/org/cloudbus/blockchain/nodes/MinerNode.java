@@ -40,11 +40,11 @@ public class MinerNode extends BaseNode {
         long currentSize=0;
         while (true) {
             if (!getTransactionPool().isEmpty()) {
-                if (!((currentSize + getTransactionPool().peek().getSize()) <= maxSize))
+                if (!((currentSize + getTransactionPool().peek().getSizeMB()) <= maxSize))
                     break;
                 Transaction transaction = getTransactionPool().poll();
                 appendableTransactions.add(transaction);
-                currentSize += transaction.getSize();
+                currentSize += transaction.getSizeMB();
             } else {
                 break;
             }
@@ -54,13 +54,16 @@ public class MinerNode extends BaseNode {
 
     public Block mineBlock(BlockchainDevice device) {
         Collection<Transaction> transactions = getTransactionsForNewBlock();
-        Block newBlock = new Block(getBlockchain().getLastBlock(),this, transactions);
-        getBlockchain().addBlockwithoutChecking(newBlock);
-        device.processAcceptedTransactions(newBlock);
-        trimBlockchain();
-        device.broadcastBlockchainItem(newBlock);
-        noOfMinedBlocks++;
-        return newBlock;
+        if (!transactions.isEmpty()) {
+            Block newBlock = new Block(getBlockchain().getLastBlock(), this, transactions);
+            getBlockchain().addBlockwithoutChecking(newBlock);
+            device.processAcceptedTransactions(newBlock);
+            trimBlockchain();
+            device.broadcastBlockchainItem(newBlock);
+            noOfMinedBlocks++;
+            return newBlock;
+        }
+        return null;
     }
 
     /**

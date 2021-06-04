@@ -17,7 +17,7 @@ import org.cloudbus.blockchain.Network;
 import org.cloudbus.blockchain.consensus.ProofOfWork;
 import org.cloudbus.blockchain.consensus.policies.TransmissionPolicySizeBased;
 import org.cloudbus.blockchain.devices.BlockchainDevice;
-import org.cloudbus.blockchain.examples.util.BlockchainPrintResults;
+import org.cloudbus.blockchain.examples.util.PrintBlockchainResults;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
@@ -51,10 +51,15 @@ public class DissertationEvaluation1blockchain {
 	List<Vm> vmList;
 
 	public static void main(String[] args) throws Exception {
-		DissertationEvaluation1blockchain osmesis = new DissertationEvaluation1blockchain();
-		osmesis.start();
-	}
-	
+	    ProofOfWork proofOfWork = new ProofOfWork(new TransmissionPolicySizeBased((long)100), 3, 1, 1, 0.001, 0.01, 300);
+        DissertationEvaluation1blockchain osmesis = new DissertationEvaluation1blockchain();
+        Network.setConsensus(proofOfWork);
+        osmesis.start();
+        PrintBlockchainResults printBlockchainResults = new PrintBlockchainResults();
+        printBlockchainResults.printAverageBlockchainStats();
+        printBlockchainResults.printTransactionDestinationShares();
+    }
+
 	public void start() throws Exception{
 
 		int num_user = 1; // number of users
@@ -87,16 +92,18 @@ public class DissertationEvaluation1blockchain {
         for (BlockchainDevice device : Network.getInstance().getBlockchainDevicesSet()) {
             device.getBlockchainNode().addBalance(Integer.MAX_VALUE/2.0);
         }
-        Network.setConsensus(new ProofOfWork(new TransmissionPolicySizeBased((long)100), 2.0, 1, 1, 0.001, 0.01, 190));
 
         // Perform the simulation and print results
 		double startTime = CloudSim.startSimulation();
   
 		LogUtil.simulationFinished();
-		BlockchainPrintResults blockchainPrintResults = new BlockchainPrintResults();
-		blockchainPrintResults.readAverageOsmoticAppTimes();
+//		PrintBlockchainResults printBlockchainResults = new PrintBlockchainResults();
+//		printBlockchainResults.readAverageOsmoticAppTimes();
 //		blockchainPrintResults.printOsmesisApps();
-        blockchainPrintResults.writeOsmesisAppsToFile("blockchainEval.txt");
+//        printBlockchainResults.writeOsmesisAppsToFile("blockchainEval.txt");
+//        printBlockchainResults.printAverageBlockchainStats();
+//        printBlockchainResults.printTransactionDestinationShares();
+//        printBlockchainResults.writeAverageBlockchainStats("avgBlockchainStats.csv", false, 1);
 //		PrintResults printResults = new PrintResults();
 //		printResults.printOsmesisNetwork();
 			

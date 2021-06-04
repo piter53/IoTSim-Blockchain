@@ -5,9 +5,7 @@ import org.cloudbus.blockchain.devices.BlockchainDevice;
 import org.cloudbus.blockchain.nodes.BaseNode;
 import org.cloudbus.blockchain.nodes.MinerNode;
 import org.cloudbus.cloudsim.core.CloudSim;
-import org.cloudbus.cloudsim.core.SimEvent;
 import org.cloudbus.osmosis.core.Flow;
-import org.cloudbus.osmosis.core.OsmosisTags;
 
 /**
  * @author Piotr Grela
@@ -25,7 +23,7 @@ public class DataTransaction extends Transaction {
     public DataTransaction(double creationTime, BaseNode senderNode, BaseNode receiverNode, Object data, int recipentID, int tag, long size) {
         super(creationTime, senderNode, receiverNode);
         this.data = data;
-        this.size += size;
+        this.sizeMB += size;
         this.recipentID = recipentID;
         this.tag = tag;
         this.setFee(getConsensus().calculateTransactionFee(this));

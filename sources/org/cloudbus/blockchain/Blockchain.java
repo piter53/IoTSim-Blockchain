@@ -3,8 +3,14 @@ package org.cloudbus.blockchain;
 import lombok.Getter;
 import lombok.Setter;
 import org.cloudbus.blockchain.nodes.BaseNode;
+import org.cloudbus.blockchain.transactions.Transaction;
 
+import java.text.DecimalFormat;
+import java.text.Format;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Blockchain {
 
@@ -97,4 +103,86 @@ public class Blockchain {
         }
         return list;
     }
+
+    public List<String> getOverallCsvStatistics(){
+        List<String> statList = new ArrayList<>();
+        long length = getLength();
+        long totalNoOfTransactions = 0;
+        long avgBlockSize = 0;
+        long avgTransactionSize = 0;
+        double avgTransactionTransmissionTime = 0.0;
+        double avgTransactionFee = 0.0;
+        for (Block block : getLedger()) {
+            if (!block.isGenesis()) {
+                avgBlockSize += block.getSizeMB();
+                for (Transaction transaction : block.getTransactionList()) {
+                    avgTransactionSize += transaction.getSizeMB();
+                    avgTransactionTransmissionTime += transaction.getTransmissionTime();
+                    avgTransactionFee += transaction.getFee();
+                    BaseNode recipient = transaction.getRecipentNode();
+                    totalNoOfTransactions++;
+                }
+            }
+        }
+        avgTransactionSize /= totalNoOfTransactions;
+        avgTransactionTransmissionTime /= totalNoOfTransactions;
+        avgBlockSize /= length;
+        Format format = new DecimalFormat("0.00");
+        statList.add("totalNoOfBlocks,avgBlockSize,totalNoOfTransactions,avgTransactionSize,avgTransactionTransmissionTime,avgTransactionFee");
+        statList.add(length + "," + format.format(avgBlockSize) + "," + totalNoOfTransactions + "," + format.format(avgTransactionSize) + "," + format.format(avgTransactionTransmissionTime) + "," + format.format(avgTransactionFee));
+        return statList;
+    }
+
+    public List<String> getAverageTransactionTimeStats(){
+        List<String> statList = new ArrayList<>();
+        long length = getLength();
+        long totalNoOfTransactions = 0;
+        long avgBlockSize = 0;
+        long avgTransactionSize = 0;
+        double avgTransactionTransmissionTime = 0.0;
+        double avgTransactionFee = 0.0;
+        for (Block block : getLedger()) {
+            if (!block.isGenesis()) {
+                avgBlockSize += block.getSizeMB();
+                for (Transaction transaction : block.getTransactionList()) {
+                    avgTransactionSize += transaction.getSizeMB();
+                    avgTransactionTransmissionTime += transaction.getTransmissionTime();
+                    avgTransactionFee += transaction.getFee();
+                    BaseNode recipient = transaction.getRecipentNode();
+                    totalNoOfTransactions++;
+                }
+            }
+        }
+        avgTransactionSize /= totalNoOfTransactions;
+        avgTransactionTransmissionTime /= totalNoOfTransactions;
+        avgBlockSize /= length;
+        Format format = new DecimalFormat("0.00");
+        statList.add("totalNoOfBlocks,avgBlockSize,totalNoOfTransactions,avgTransactionSize,avgTransactionTransmissionTime,avgTransactionFee");
+        statList.add(length + "," + format.format(avgBlockSize) + "," + totalNoOfTransactions + "," + format.format(avgTransactionSize) + "," + format.format(avgTransactionTransmissionTime) + "," + format.format(avgTransactionFee));
+        return statList;
+    }
+
+    public Map<BaseNode, String> getShareOfNoOfReceivedTransactionsPerNode(){
+        Map<BaseNode, Long> nodeToAmountOfRecipientTransactions = new HashMap<>();
+        for (Block block : getLedger()) {
+            for (Transaction transaction : block.getTransactionList()) {
+                BaseNode recipient = transaction.getRecipentNode();
+                nodeToAmountOfRecipientTransactions.put(recipient, nodeToAmountOfRecipientTransactions.getOrDefault(recipient, (long)0) + 1);
+            }
+        }
+        Map<BaseNode, String> nodeToReceivedTransactionPercent = new HashMap<>();
+        for (Map.Entry<BaseNode, Long> entry : nodeToAmountOfRecipientTransactions.entrySet()) {
+            nodeToReceivedTransactionPercent.put(entry.getKey(), new DecimalFormat("0.0").format((double)entry.getValue() / getTotalNoOfTransactions() * 100));
+        }
+        return nodeToReceivedTransactionPercent;
+    }
+
+    public long getTotalNoOfTransactions() {
+        long number = 0;
+        for (Block block : ledger) {
+            number += block.getTransactionList().size();
+        }
+        return number;
+    }
+
 }

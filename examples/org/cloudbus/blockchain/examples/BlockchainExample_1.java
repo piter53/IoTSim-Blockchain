@@ -14,7 +14,12 @@ package org.cloudbus.blockchain.examples;
 import org.cloudbus.blockchain.BlockchainBroker;
 import org.cloudbus.blockchain.BlockchainBuilder;
 import org.cloudbus.blockchain.Network;
+import org.cloudbus.blockchain.consensus.ConsensusProtocol;
+import org.cloudbus.blockchain.consensus.ProofOfWork;
+import org.cloudbus.blockchain.consensus.policies.TransmissionPolicy;
+import org.cloudbus.blockchain.consensus.policies.TransmissionPolicySizeBased;
 import org.cloudbus.blockchain.devices.IoTBlockchainDevice;
+import org.cloudbus.blockchain.examples.util.PrintBlockchainResults;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
@@ -44,27 +49,28 @@ public class BlockchainExample_1 {
 	public static final String configurationFile = "inputFiles/BlockchainExample1_configuration_1.json";
 	public static final String osmesisAppFile =  "inputFiles/Example1_Workload.csv";
     OsmosisBuilder topologyBuilder;
-	OsmesisBroker osmesisBroker;
+	OsmesisBroker blockchainBroker;
 	List<OsmesisDatacenter> datacenters;
 	List<MEL> melList;	
 	EdgeSDNController edgeSDNController;
 	List<Vm> vmList;
 
 	public static void main(String[] args) throws Exception {
-		BlockchainExample_1 osmesis = new BlockchainExample_1();
-		osmesis.start();
+		BlockchainExample_1 simulation = new BlockchainExample_1();
+		simulation.start();
 	}
 	
 	public void start() throws Exception{
 
-		int num_user = 1; // number of users
+	    // number of users
+		int num_user = 1;
 		Calendar calendar = Calendar.getInstance();
 		boolean trace_flag = false; // mean trace events
 
 		// Initialize the CloudSim library
 		CloudSim.init(num_user, calendar, trace_flag);
-		osmesisBroker  = new BlockchainBroker("OsmesisBroker");
-		topologyBuilder = new BlockchainBuilder(osmesisBroker);
+		blockchainBroker = new BlockchainBroker("blockchainBroker");
+		topologyBuilder = new BlockchainBuilder(blockchainBroker);
 		ConfigurationEntity config = buildTopologyFromFile(configurationFile);
         if(config !=  null) {
         	topologyBuilder.buildTopology(config);
@@ -75,36 +81,30 @@ public class BlockchainExample_1 {
 		OsmesisAppsParser.startParsingExcelAppFile(osmesisAppFile);
 		List<SDNController> controllers = new ArrayList<>();
 		for(OsmesisDatacenter osmesisDC : topologyBuilder.getOsmesisDatacentres()){
-			osmesisBroker.submitVmList(osmesisDC.getVmList(), osmesisDC.getId());
+			blockchainBroker.submitVmList(osmesisDC.getVmList(), osmesisDC.getId());
 			controllers.add(osmesisDC.getSdnController());
 			osmesisDC.getSdnController().setWanOorchestrator(maestro);			
 		}
 		controllers.add(topologyBuilder.getSdWanController());
 		maestro.setSdnControllers(controllers);
-		osmesisBroker.submitOsmesisApps(OsmesisAppsParser.appList);
-		osmesisBroker.setDatacenters(topologyBuilder.getOsmesisDatacentres());
+		blockchainBroker.submitOsmesisApps(OsmesisAppsParser.appList);
+		blockchainBroker.setDatacenters(topologyBuilder.getOsmesisDatacentres());
 
 		// Add 5 units of currency to each IoTBlockchainDevice so that they can afford to broadcast transactions with sensed data
         for (IoTBlockchainDevice device : Network.getInstance().getIoTBlockchainDevicesSet()) {
             device.getBlockchainNode().addBalance(5);
         }
 
+//        TransmissionPolicy transmissionPolicy = new TransmissionPolicySizeBased((long)100);
+//        ConsensusProtocol consensusProtocol = new ProofOfWork(transmissionPolicy,10,1,1,0.01,0.01, 300);
+//        Network.setConsensus(consensusProtocol);
+
 		double startTime = CloudSim.startSimulation();
   
 		LogUtil.simulationFinished();
-		PrintResults pr = new PrintResults();
-		pr.printOsmesisNetwork();
-			
-		Log.printLine();
-
-		for(OsmesisDatacenter osmesisDC : topologyBuilder.getOsmesisDatacentres()){		
-			List<Switch> switchList = osmesisDC.getSdnController().getSwitchList();
-			LogPrinter.printEnergyConsumption(osmesisDC.getName(), osmesisDC.getSdnhosts(), switchList, startTime);
-			Log.printLine();
-		}
-		
-		Log.printLine();		
-		LogPrinter.printEnergyConsumption(topologyBuilder.getSdWanController().getName(), null, topologyBuilder.getSdWanController().getSwitchList(), startTime);
+		PrintBlockchainResults printer = new PrintBlockchainResults();
+		printer.printAverageBlockchainStats();
+		printer.printTransactionDestinationShares();
 		Log.printLine();
 		Log.printLine("Simulation Finished!");
 

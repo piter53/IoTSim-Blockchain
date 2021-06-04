@@ -45,8 +45,8 @@ import org.cloudbus.osmosis.core.OsmesisAppsParser;
 **/
 
 public class OsmesisExample_1 {
-	public static final String configurationFile = "inputFiles/dissertation/evaluation/OsmosisConfiguration-Evaluation.json";
-	public static final String osmesisAppFile =  "inputFiles/dissertation/evaluation/Workload_Evaluation1.csv";
+	public static final String configurationFile = "inputFiles/OsmosisExample1_configuration-experiment.json";
+	public static final String osmesisAppFile =  "inputFiles/Example1_Workload-experiment.csv";
     OsmosisBuilder topologyBuilder;
 	OsmesisBroker osmesisBroker;
 	List<OsmesisDatacenter> datacenters;

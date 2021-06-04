@@ -17,6 +17,15 @@ public class ProofOfWork extends ConsensusProtocol {
     public ProofOfWork(TransmissionPolicy transmissionPolicy, double blockInterval, double blockGenerationReward, int baseTransactionSize, double feePerMb, double baseTransactionFee, long maxBlockSize){
         super(transmissionPolicy, blockInterval, blockGenerationReward, baseTransactionSize, feePerMb, baseTransactionFee, maxBlockSize);
         transactionComparator = Comparator.comparingDouble(Transaction::getFee).reversed();
+//        transactionComparator = (t1, t2) -> {
+//            double t1fee = t1.getFee();
+//            double t2fee = t2.getFee();
+//            if (t1fee != t2fee) {
+//                return Double.compare(t2fee,t1fee);
+//            } else {
+//                return Double.compare(t1.getCreationTimestamp(),t2.getCreationTimestamp());
+//            }
+//        };
     }
 
     @Override
@@ -36,7 +45,7 @@ public class ProofOfWork extends ConsensusProtocol {
     @Override
     public double calculateTransactionFee(Transaction transaction) {
         double fee = getBaseTransactionFee();
-        fee += (double)transaction.getSize() * getFeePerMb();
+        fee += (double)transaction.getSizeMB() * getFeePerMb();
         return fee;
     }
 }

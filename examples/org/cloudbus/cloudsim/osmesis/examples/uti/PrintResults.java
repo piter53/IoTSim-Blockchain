@@ -39,28 +39,7 @@ import org.cloudbus.osmosis.core.WorkflowInfo;
 
 public class PrintResults {
 
-    public void writeBlockchainDetails(String filename){
-        // Get the longest blockchain
-        Blockchain blockchain = new Blockchain();
-        for (BlockchainDevice device : Network.getInstance().getBlockchainDevicesSet()){
-            if (blockchain.getLastBlock().getGenerationTimestamp() < device.getBlockchainNode().getBlockchain().getLastBlock().getGenerationTimestamp()) {
-                blockchain = device.getBlockchainNode().getBlockchain();
-            }
-        }
-        long blockchainLength = blockchain.getLength();
-        long avgBlockSize = 0;
-        double avgTransactionLifespan = 0.0;
-        for (Block block : blockchain.getLedger()) {
-            avgBlockSize += block.getSizeMb();
-            for (Transaction transaction : block.getTransactionList()) {
-                avgTransactionLifespan += transaction.getReceptionTimestamp() - transaction.getCreationTimestamp();
-            }
-            avgTransactionLifespan /= block.getTransactionList().size();
-        }
-        avgBlockSize /= blockchainLength;
 
-    }
-		
 	public void printOsmesisNetwork() {
 		
 		List<WorkflowInfo> tags = new ArrayList<>();

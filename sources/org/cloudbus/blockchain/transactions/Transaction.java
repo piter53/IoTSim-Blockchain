@@ -34,7 +34,7 @@ public abstract class Transaction implements BlockchainItem {
     private double fee;
 
     @Getter
-    long size = 1;
+    long sizeMB = 1;
 
     @Getter
     final int BROADCAST_TAG = BlockchainTags.BROADCAST_TRANSACTION;
@@ -122,5 +122,13 @@ public abstract class Transaction implements BlockchainItem {
         } else if (miner == device.getBlockchainNode()) {
             device.getBlockchainNode().addBalance(getFee());
         }
+    }
+
+    public double getTransmissionTime() {
+        if (receptionTimestamp != 0) {
+            return receptionTimestamp - creationTimestamp;
+        } else {
+            return 0;
+        } 
     }
 }

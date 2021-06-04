@@ -129,4 +129,13 @@ public class Network {
         return false;
     }
 
+    public Blockchain getLongestBlockchain(){
+        Blockchain blockchain = new Blockchain();
+        for (BlockchainDevice device : getBlockchainDevicesSet()){
+            if (blockchain.getLedger().isEmpty() || blockchain.getLastBlock().getGenerationTimestamp() < device.getBlockchainNode().getBlockchain().getLastBlock().getGenerationTimestamp()) {
+                blockchain = device.getBlockchainNode().getBlockchain();
+            }
+        }
+        return blockchain;
+    }
 }

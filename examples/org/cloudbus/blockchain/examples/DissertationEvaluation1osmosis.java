@@ -11,14 +11,13 @@
 
 package org.cloudbus.blockchain.examples;
 
-import org.cloudbus.blockchain.examples.util.BlockchainPrintResults;
+import org.cloudbus.blockchain.examples.util.PrintBlockchainResults;
 import org.cloudbus.cloudsim.Log;
 import org.cloudbus.cloudsim.Vm;
 import org.cloudbus.cloudsim.core.CloudSim;
 import org.cloudbus.cloudsim.edge.core.edge.ConfigurationEntity;
 import org.cloudbus.cloudsim.edge.core.edge.MEL;
 import org.cloudbus.cloudsim.edge.utils.LogUtil;
-import org.cloudbus.cloudsim.osmesis.examples.uti.LogPrinter;
 import org.cloudbus.osmosis.core.*;
 
 import java.io.FileNotFoundException;
@@ -85,10 +84,10 @@ public class DissertationEvaluation1osmosis {
 		LogUtil.simulationFinished();
 //		PrintResults pr = new PrintResults();
 //		pr.printOsmesisNetwork();
-        BlockchainPrintResults blockchainPrintResults = new BlockchainPrintResults();
-        blockchainPrintResults.readAverageOsmoticAppTimes();
+        PrintBlockchainResults printBlockchainResults = new PrintBlockchainResults();
+        printBlockchainResults.readAverageOsmoticAppTimes();
 //        blockchainPrintResults.printOsmesisApps();
-        blockchainPrintResults.writeOsmesisAppsToFile("osmosisEval.txt");
+        printBlockchainResults.writeOsmesisAppsToFile("osmosisEval.txt");
 
 			
 		Log.printLine();

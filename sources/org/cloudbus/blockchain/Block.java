@@ -6,7 +6,6 @@ import org.cloudbus.blockchain.transactions.Transaction;
 import org.cloudbus.cloudsim.core.CloudSim;
 
 import java.util.Collection;
-import java.util.Set;
 
 public class Block implements BlockchainItem {
     @Getter
@@ -19,7 +18,7 @@ public class Block implements BlockchainItem {
     @Getter
     private final Collection<Transaction> transactionList;
     @Getter
-    private long sizeMb = 0;
+    private long sizeMB = 0;
     @Getter
     final int BROADCAST_TAG = BlockchainTags.BROADCAST_BLOCK;
 
@@ -40,7 +39,7 @@ public class Block implements BlockchainItem {
         this.transactionList = transactionList;
         if (transactionList != null){
             for (Transaction transaction : transactionList) {
-                sizeMb += transaction.getSize();
+                sizeMB += transaction.getSizeMB();
             }
         }
     }
